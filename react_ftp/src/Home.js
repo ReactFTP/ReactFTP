@@ -63,13 +63,13 @@ class Home extends React.Component {
                 <header>
                     <div className="header-wrap">
                         <div className="logo-wrap">
-                            <img src={process.env.PUBLIC_URL + '/logo.png'} onClick={()=>{ this.props.history.push('/Home') }} />                                
+                            <img src={process.env.PUBLIC_URL + '/logo.png'} onClick={()=>{ this.props.history.push('/home') }} />                                
                         </div>
                         <div className="top-menu-wrap">
-                            <div className="company-manage-wrap">
+                            <div className="company-manage-wrap" onClick={ ()=>{ this.props.history.push('/companymanage') } }>
                                 <span>회사 관리</span>
                             </div>
-                            <div className="user-manage-wrap">
+                            <div className="user-manage-wrap" onClick={ ()=>{ this.props.history.push('/usermanage') } }>
                                 <span>사용자 관리</span>
                             </div>
                             <div className="my-infomation-wrap">

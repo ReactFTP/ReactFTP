@@ -1,6 +1,7 @@
 // import Login from "./Login";
 import Home from "./Home";
-import Test from "./Test";
+import CompanyManage from "./CompanyManage";
+import UserManage from "./UserManage";
 import { Link, Route, BrowserRouter as Router } from "react-router-dom";
 
 function App() {
@@ -8,7 +9,8 @@ function App() {
     <Router>
       {/* <Route exact path="/" component={Login} /> */}
       <Route path="/home" component={Home} onLoad={ Home.HomedataLoad }/>
-      <Route path="/test" component={Test}/>
+      <Route exact path="/companymanage" component={CompanyManage} />
+      <Route exact path="/usermanage" component={UserManage} />
     </Router>
   );
 }
