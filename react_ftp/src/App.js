@@ -1,6 +1,6 @@
 // import Login from "./Login";
 // import Home from "./Home";
-import SignUp from "./SignUp.js";
+import userManager from "./UserManager";
 import { Link, Route, BrowserRouter as Router } from "react-router-dom";
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
     <Router>
       {/* <Route exact path="/" component={Login} /> */}
       {/* <Route path="/home" component={Home} onLoad={ Home.HomedataLoad }/> */}
-      <Route path="/testYS" component={SignUp}/>
+      <Route path="/testYS" component={userManager}/>
     </Router>
   );
 }
