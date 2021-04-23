@@ -12,7 +12,7 @@ function App() {
       <Route path="/home" component={Home} onLoad={ Home.HomedataLoad }/>
       <Route exact path="/companymanage" component={CompanyManage} />
       <Route exact path="/usermanage" component={UserManage} />
-      <Route path="/testYS" component={userManager}/>
+      <Route exact path="/testys" component={userManager}/>
     </Router>
   );
 }

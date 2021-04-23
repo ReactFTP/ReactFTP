@@ -7,7 +7,7 @@ import FingerprintIcon from '@material-ui/icons/Fingerprint';
 import LocationCityIcon from '@material-ui/icons/LocationCity';
 import HomeIcon from '@material-ui/icons/Home';
 import PhoneIcon from '@material-ui/icons/Phone';
-import axios from './axios.js'
+import * as axios from './axios.js'
 
 class SignUp extends Component{
     state = {
@@ -24,8 +24,10 @@ class SignUp extends Component{
     } 
 
     idCheckSubmit = async() => {
-        let id = this.state.idCheck;
-        await 
+        const id = this.state.idCheck;
+        console.log(id);
+        // await axios.idCheck(id);
+        await axios.idCheck(id);
         
         console.log("id");
     }

@@ -8,14 +8,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/testys")
+@RequestMapping("/")
 public class SignUpController {
-	
-	@PostMapping("/idCheck")
+	public SignUpController() {
+		System.out.println("hello");
+	}
+	@PostMapping("idCheck")
 	@ResponseBody
-	public boolean idCheck (HttpServletRequest request) {
+	public String idCheck (HttpServletRequest request) {
 		System.out.println("idcheck");
-		return false;
+		return "hello";
 	}
 	
 }
