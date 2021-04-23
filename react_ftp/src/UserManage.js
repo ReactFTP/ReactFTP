@@ -63,16 +63,19 @@ class CompanyManage extends React.Component {
                 <header>
                     <div className="header-wrap">
                         <div className="logo-wrap">
-                            <img src={process.env.PUBLIC_URL + '/logo.png'} onClick={()=>{ this.props.history.push('/Home') }} />                                
+                            <img src={process.env.PUBLIC_URL + '/logo.png'} onClick={()=>{ this.props.history.push('/home') }} /> 
                         </div>
                         <div className="top-menu-wrap">
-                            <div className="company-manage-wrap">
+                            <div className="company-manage-wrap" onClick={ ()=>{ this.props.history.push('/companymanage') } }>
                                 <span>회사 관리</span>
                             </div>
-                            <div className="user-manage-wrap">
+                            <div className="user-manage-wrap" onClick={ ()=>{ this.props.history.push('/usermanage') } }>
                                 <span>사용자 관리</span>
                             </div>
-                            <div className="my-infomation-wrap">
+                            {/* <div className="my-infomation-wrap" onClick={ ()=>{  } }>
+                                <span>내 정보 관리</span>
+                            </div> */}
+                            <div className="sessionNone" onClick={ ()=>{  } }>
                                 <span>내 정보 관리</span>
                             </div>
                         </div>
@@ -92,16 +95,31 @@ class CompanyManage extends React.Component {
                             <div className="title-wrap">
                                 사용자 관리
                             </div>
-                            <div className="search-wrap">
+                            <div className="search-wrap administrator">
+                                <div className="search-select-company-wrap">
+                                    <select name="company">
+                                        <option value="">회사 선택</option>
+                                        <option value="">임시회사1</option>
+                                        <option value="">임시회사2</option>
+                                    </select>
+                                </div>
                                 <div className="search-input-wrap">
-                                    <input type="text" placeholder="직원이름 검색" maxLength="50"></input>
+                                    <input type="text" placeholder="사용자 이름 검색" maxLength="50"></input>
                                 </div>
                                 <div className="search-button-wrap" onClick={ ()=>{ alert("회사 검색 버튼 클릭") } }>
                                     검 색
                                 </div>
                             </div>
-                            <div className="add-button-wrap" onClick={ ()=>{ alert("회사 추가 버튼 클릭") } }>
-                                직원 추가
+                            <div className="search-wrap">
+                                <div className="search-input-wrap">
+                                    <input type="text" placeholder="사용자 이름 검색" maxLength="50"></input>
+                                </div>
+                                <div className="search-button-wrap" onClick={ ()=>{ alert("회사 검색 버튼 클릭") } }>
+                                    검 색
+                                </div>
+                            </div>
+                            <div className="add-button-wrap u" onClick={ ()=>{ alert("회사 추가 버튼 클릭") } }>
+                                사용자 추가
                             </div>
                             <div className="search-list-wrap">
                                 <div className="search-count-wrap">
