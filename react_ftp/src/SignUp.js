@@ -7,17 +7,27 @@ import FingerprintIcon from '@material-ui/icons/Fingerprint';
 import LocationCityIcon from '@material-ui/icons/LocationCity';
 import HomeIcon from '@material-ui/icons/Home';
 import PhoneIcon from '@material-ui/icons/Phone';
+import axios from './axios.js'
+
 class SignUp extends Component{
     state = {
-       idCheck:'',
+       idCheck: '',
        pwCheck: '',
        pwCheckResult: '일치여부'
     }
 
-    handleChangeID = async(e) => {
-        //await axios로 중복체크 e.target.value
+    // handleChangeID = async(e) => {
+    //     await this.setState({
+    //         idCheck : e.target.value
+    //     });
         
-      }
+    //   }
+    idCheckSubmit = (e) => {
+        e.preventDefault();
+        //let id = e.target.id.value;
+        
+        console.log("id");
+    }
 
     handleChangePW1 = async(e) => {
         await this.setState({
@@ -53,10 +63,12 @@ class SignUp extends Component{
 
             <div className="row margin">
                 <div className="input-field col s12">
-                <icon className ="material-icons"><FingerprintIcon/></icon>
-                <label for="id"> 아이디  </label>
-                <input id="id" name="id" type="text" onChange={this.handleChangeID}/> 
-                {this.state.idCheck}
+                {/* <form onSubmit={this.idCheckSubmit} method="post"> */}
+                    <icon className ="material-icons"><FingerprintIcon/></icon>
+                    <label for="id"> 아이디  </label>
+                    <input id="id" name="id" type="text" /> 
+                    <input id="id-btn" type="button" value="중복확인" className="submit-btn" onClick={this.idCheckSubmit}/>
+                {/* </form> */}
                 </div>
             </div>
             

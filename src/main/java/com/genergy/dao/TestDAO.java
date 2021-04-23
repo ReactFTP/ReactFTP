@@ -7,11 +7,11 @@ import org.hibernate.query.Query;
 import com.genergy.ftp.resources.HibernateUtil;
 import com.genergy.model.Test;
 
-public class TestDao {
+public class TestDAO {
 	
 	   private static SessionFactory factory;
 	   
-	   public TestDao() {
+	   public TestDAO() {
 	      factory = HibernateUtil.getSessionFactory();
 	   }
 	   
