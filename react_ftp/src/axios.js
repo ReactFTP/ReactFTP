@@ -17,5 +17,20 @@ export function idCheck(id) {
     });
 }
 
+// get <REACT FTP> home folder
+export function getHomeContents_BK(uid) {
+    return axios({
+        method: 'post',
+        url : '/com.genergy.bk.soa/getContents.jsp',
+        params : {
+            uid : uid,
+        }
+    }).then(function(response){
+        console.log(response.data);
+        return response.data;
+    }).catch(function(error){
+    });
+}
+
 
 export default axios;
