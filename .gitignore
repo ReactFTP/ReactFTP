@@ -5,6 +5,7 @@
 ### Java ###
 # Compiled class file
 *.class
+pom.properties
 
 # Log file
 *.log
