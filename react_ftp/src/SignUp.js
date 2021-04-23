@@ -16,15 +16,16 @@ class SignUp extends Component{
        pwCheckResult: '일치여부'
     }
 
-    // handleChangeID = async(e) => {
-    //     await this.setState({
-    //         idCheck : e.target.value
-    //     });
+    handleChangeID = async(e) => {
+        await this.setState({
+            idCheck : e.target.value
+        });
         
-    //   }
-    idCheckSubmit = (e) => {
-        e.preventDefault();
-        //let id = e.target.id.value;
+    } 
+
+    idCheckSubmit = async() => {
+        let id = this.state.idCheck;
+        await 
         
         console.log("id");
     }
@@ -66,7 +67,7 @@ class SignUp extends Component{
                 {/* <form onSubmit={this.idCheckSubmit} method="post"> */}
                     <icon className ="material-icons"><FingerprintIcon/></icon>
                     <label for="id"> 아이디  </label>
-                    <input id="id" name="id" type="text" /> 
+                    <input id="id" name="id" type="text" onChange={this.handleChangeID}/> 
                     <input id="id-btn" type="button" value="중복확인" className="submit-btn" onClick={this.idCheckSubmit}/>
                 {/* </form> */}
                 </div>
