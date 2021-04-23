@@ -51,7 +51,7 @@ h4 {
     margin-right : 0px;
     height : 1rem;
 }
-input {
+input#password, input#type, input#id, input#password_a, input#username, input#email, input#email1, input#phone, input#addr1, input#addr2, input#company{
     border: none;
     margin-left: 3px;
     height : 2rem;
@@ -90,4 +90,15 @@ input#company{
 
 .pwcheck{
     text-align: right;
+}
+
+.s10 {
+    color: #414141;
+    vertical-align: middle;
+    border: 1px solid #dedede;
+    background: #fff;
+    line-height: 3;
+    padding-top: 5px;
+    font-size: 15px;
+
 }
