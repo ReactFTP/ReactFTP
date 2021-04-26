@@ -37,7 +37,7 @@ export function getHomeContents_BK() {
         method: 'post',
         url : '/home/gethomecontents',
         params : {
-            // uid : uid,
+            folder_id : 0,
         }
     }).then(function(response){
         // console.log(response.data);
