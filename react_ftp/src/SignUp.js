@@ -27,6 +27,7 @@ class SignUp extends Component{
 
     componentWillMount() {
         Modal.setAppElement('body');
+        axios.getCompanies();    
     }
 
     handleChangeID = async(e) => {
@@ -108,10 +109,7 @@ class SignUp extends Component{
         text: '회사명'
     }];
     
-    getCompanies = async() => {
-        await axios.getCompanies();
-    }
-
+   
     render(){
         return(
         <div id="login-page" className="row">

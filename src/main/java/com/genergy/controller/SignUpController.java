@@ -2,7 +2,6 @@ package com.genergy.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.hibernate.Session;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,6 +28,7 @@ public class SignUpController {
 	@ResponseBody
 	public void getCompanies (HttpServletRequest request) {
 		
+		System.out.println("gg");
 	}
 	
 }
