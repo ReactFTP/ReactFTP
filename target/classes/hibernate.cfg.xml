@@ -25,6 +25,7 @@
       
       <!-- <mapping class = "com.orm.model.Member"/> -->
       <mapping class = "com.genergy.model.Test"/>
+      <mapping class = "com.genergy.model.Member"/>
       
        <!--  참조 :ㅣ https://hayden-archive.tistory.com/362 -->
        <!-- hibernate 공식 홈페이지 참조 코드 -->

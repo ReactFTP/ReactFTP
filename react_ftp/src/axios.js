@@ -17,6 +17,19 @@ export function idCheck(id) {
     }).catch(function(error){
     });
 }
+//회사 목록 가져오기
+export function getCompanies() {
+    return axios({
+        method: 'post',
+        url : '/getCompanies',
+        headers : {
+            'Access-Control-Allow-Origin': '*'
+           }
+    }).then(function(response){
+        return response.data;
+    }).catch(function(error){
+    });
+}
 
 // get <REACT FTP> home folder
 export function getHomeContents_BK(uid) {
