@@ -259,23 +259,20 @@
 	border-bottom-color: rgba(180, 180, 180, 0.7); */
 	background: rgba(180, 180, 180, 0.2);
 }
-.Home .item-wrap .tableName {
-	width : 200px;
+.Home .item-wrap .fileName {
+	width : 250px;
 }
-.Home .item-wrap .tableRev {
-	width : 70px;
+.Home .item-wrap .lastModDate {
+	width : 170px;
 	text-align: center;
 }
-.Home .item-wrap .tableType {
+.Home .item-wrap .type {
+	width : 120px;
+	text-align: center;
+}
+.Home .item-wrap .size {
 	width : 100px;
 	text-align: center;
-}
-.Home .item-wrap .tableMod {
-	width : 140px;
-	text-align: center;
-}
-.Home .item-wrap .tableOwner {
-	width : 150px;
 }
 .Home .item-wrap .content > li {
 	padding: 8px;

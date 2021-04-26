@@ -1,6 +1,6 @@
 import React from 'react';
 
-class TableItem extends React.Component {
+class CompanyItem extends React.Component {
     render() {
         return (
             // <ul className="content">
@@ -19,7 +19,7 @@ class TableItem extends React.Component {
             //     <li className="delete">{this.props.data.owning_user}</li>
             // </ul>
             <ul className="content">
-            <li className="no">1</li>
+                <li className="no">1</li>
                 <li className="code">0001</li>
                 <li className="name">제너지</li>
                 <li className="desc">PLM 솔루션 서울 강서구 마곡중앙로 165 안강프라이빗타워 1차 816, 817호</li>
@@ -33,4 +33,4 @@ class TableItem extends React.Component {
     }
 }
 
-export default TableItem;
+export default CompanyItem;

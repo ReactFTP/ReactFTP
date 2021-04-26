@@ -3,7 +3,7 @@ import './css/ManagePage.css';
 
 // import * as axios from './axios';
 import Tree from './Tree';
-import TableItem from './CompanyTableItem';
+import CompanyItem from './CompanyItem';
 
 class CompanyManage extends React.Component {
     // constructor(props){
@@ -119,7 +119,7 @@ class CompanyManage extends React.Component {
                                     <li className="email">이메일</li>
                                     <li className="delete"></li>
                                 </ul>
-                                <TableItem />
+                                <CompanyItem />
                             </div>
                         </section>
                     </div>

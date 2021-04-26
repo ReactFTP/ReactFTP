@@ -39,7 +39,8 @@ class Home extends React.Component {
     // 처음 로딩되면서 홈 contents 가져옴
     getHome = async() => {
         const info = await Promise.all([
-            axios.getHomeContents_BK(window.sessionStorage.getItem('homeUid'))
+            // axios.getHomeContents_BK(window.sessionStorage.getItem('homeUid'))
+            axios.getHomeContents_BK()
         ]);
 
         console.log(info[0]);

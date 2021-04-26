@@ -152,6 +152,8 @@
 }
 .Manage .search-wrap .search-input-wrap{
 	width: 90%;
+    margin-left: 10px;
+    padding-left: 10px;
 }
 .Manage .search-wrap .search-input-wrap input{
 	width: 100%;
@@ -161,7 +163,7 @@
 	border: 1px solid #dadada;
 	box-shadow: 0 1px 2px rgb(0 0 0 / 5%), 0 4px 8px rgb(0 0 0 / 10%);
 }
-.Manage .search-wrap.administrator select{
+.Manage .search-wrap select{
 	width: 150px;
 	height: 40px;
 	font-size: 18px;
@@ -170,20 +172,22 @@
 	color: rgb(117 117 117);
 	box-shadow: 0 1px 2px rgb(0 0 0 / 5%), 0 4px 8px rgb(0 0 0 / 10%);
 }
+.Manage .search-wrap.search-wrap.administrator .search-select-type-wrap {
+	padding-left: 10px;
+}
 .Manage .search-wrap.administrator option{
 	color: rgb(117 117 117);
 }
 .Manage .search-wrap.administrator input{
-	width: 95%;
+	width: 100%;
 	height: 40px;
 	font-size: 18px;
-	margin-left: 30px;
 	padding-left: 30px;
 	border: 1px solid #dadada;
 	box-shadow: 0 1px 2px rgb(0 0 0 / 5%), 0 4px 8px rgb(0 0 0 / 10%);
 }
 .Manage .search-wrap .search-button-wrap{
-	width: 100px;
+	width: 110px;
 	height: 40px;
 	margin-left: 20px;
 	padding: 8px 30px;
@@ -196,7 +200,7 @@
 	box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 4px 8px rgb(0 0 0 / 10%);
 }
 .Manage .search-wrap.administrator .search-button-wrap{
-	width: 110px;
+	width: 130px;
 }
 .Manage .search-wrap .search-button-wrap:hover{
 	box-shadow: 0 1px 2px 0 rgb(66 133 244 / 30%), 0 1px 3px 1px rgb(66 133 244 / 15%);
@@ -277,6 +281,47 @@
 }
 .Manage .search-list-wrap .delete {
 	width : 80px;
+	text-align: center;
+}
+.Manage .search-list-wrap .com {
+	width : 100px;
+	text-align: center;
+}
+.Manage .search-list-wrap .user_id {
+	width : 80px;
+	text-align: center;
+}
+.Manage .search-list-wrap .user_name {
+	width : 100px;
+	text-align: center;
+}
+/* .Manage .search-list-wrap .user_email {
+	width : 80px;
+	text-align: center;
+	border: 1px solid black;
+} */
+.Manage .search-list-wrap .user_phone {
+	width : 80px;
+	text-align: center;
+}
+.Manage .search-list-wrap .auth {
+	width : 60px;
+	text-align: center;
+}
+.Manage .search-list-wrap .role {
+	width : 100px;
+	text-align: center;
+}
+.Manage .search-list-wrap .joined-date {
+	width : 80px;
+	text-align: center;
+}
+.Manage .search-list-wrap .active {
+	width : 100px;
+	text-align: center;
+}
+.Manage .search-list-wrap .manage {
+	width : 50px;
 	text-align: center;
 }
 .Manage .search-list-wrap .content > li {
