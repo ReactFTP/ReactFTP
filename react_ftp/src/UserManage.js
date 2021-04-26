@@ -3,7 +3,7 @@ import './css/ManagePage.css';
 
 // import * as axios from './axios';
 import Tree from './Tree';
-import TableItem from './CompanyTableItem';
+import UserItem from './UserItem';
 
 class CompanyManage extends React.Component {
     // constructor(props){
@@ -103,6 +103,12 @@ class CompanyManage extends React.Component {
                                         <option value="">임시회사2</option>
                                     </select>
                                 </div>
+                                <div className="search-select-type-wrap">
+                                    <select name="select-type">
+                                        <option value="">이름 검색</option>
+                                        <option value="">아이디 검색</option>
+                                    </select>
+                                </div>
                                 <div className="search-input-wrap">
                                     <input type="text" placeholder="사용자 이름 검색" maxLength="50"></input>
                                 </div>
@@ -111,6 +117,12 @@ class CompanyManage extends React.Component {
                                 </div>
                             </div>
                             <div className="search-wrap">
+                                <div className="search-select-type-wrap">
+                                    <select name="select-type">
+                                        <option value="">이름 검색</option>
+                                        <option value="">아이디 검색</option>
+                                    </select>
+                                </div>
                                 <div className="search-input-wrap">
                                     <input type="text" placeholder="사용자 이름 검색" maxLength="50"></input>
                                 </div>
@@ -133,14 +145,25 @@ class CompanyManage extends React.Component {
                                     <li className="tableOwner">이메일</li>
                                     <li className="tableDelete">삭제</li> */}
                                     <li className="no"></li>
-                                    <li className="code">회사코드</li>
-                                    <li className="name">회사명</li>
-                                    <li className="desc">회사 설명</li>
-                                    <li className="phone">대표 번호</li>
+                                    <li className="com">소속회사</li>
+                                    <li className="user_id">아이디</li>
+                                    <li className="user_name">이름</li>
                                     <li className="email">이메일</li>
+                                    <li className="phone">연락처</li>
+                                    {/* <li className="auth">권한</li>
+                                    <li className="role">역할</li>
+                                    <li className="joined-date">승인일</li> */}
+                                    <li className="active">활성 상태</li>
+                                    <li className="manage"></li>
                                     <li className="delete"></li>
+                                    {/* 
+                                    // admin : 소속회사, 아이디, 이름, 이메일, 연락처, 권한, 역할, 승인여부, 활성화여부, 삭제
+                                    //              기본주소, 상세주소, 회원가입일, 승인일
+                                    // manager : 아이디, 이름, 권한, 역할, 승인여부, 활성화여부, 삭제
+                                    // 아이디, 패스워드, 이름, 메일, 연락처, 기본주소, 상세주소, 회사명(회사코드), 권한, 역할, 가입일, 승인여부, 활성화여부, 가입승인일, 실패횟수
+                                    */}
                                 </ul>
-                                <TableItem />
+                                <UserItem />
                             </div>
                         </section>
                     </div>

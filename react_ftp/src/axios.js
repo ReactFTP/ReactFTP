@@ -19,15 +19,15 @@ export function idCheck(id) {
 }
 
 // get <REACT FTP> home folder
-export function getHomeContents_BK(uid) {
+export function getHomeContents_BK() {
     return axios({
         method: 'post',
-        url : '/com.genergy.bk.soa/getContents.jsp',
+        url : '/home/gethomecontents',
         params : {
-            uid : uid,
+            // uid : uid,
         }
     }).then(function(response){
-        console.log(response.data);
+        // console.log(response.data);
         return response.data;
     }).catch(function(error){
     });

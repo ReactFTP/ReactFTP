@@ -1,5 +1,5 @@
 import React from 'react';
-import TableItem from './TableItem';
+import CompanyItem from './CompanyItem';
 // import * as axios from './axios';
 
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
@@ -100,11 +100,10 @@ class Table extends React.Component {
                     선택한 폴더 : {this.props.selectedTreeData.object_string}
                 </div>
                 <ul className="tableHead">
-                    <li className="tableName">이름</li>
-                    <li className="tableRev">리비전</li>
-                    <li className="tableType">타입</li>
-                    <li className="tableMod">마지막 수정일</li>
-                    <li className="tableOwner">소유자</li>
+                    <li className="fileName">파일명치</li>
+                    <li className="lastModDate">수정된 날쫘이야</li>
+                    <li className="type">타입술</li>
+                    <li className="size">크기가찬다</li>
                 </ul>
                 {/* {mapToComponent(this.props.data)} */}
             </div>
