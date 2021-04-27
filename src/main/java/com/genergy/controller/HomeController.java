@@ -23,16 +23,17 @@ public class HomeController {
 		System.out.println("hello, home");
 	}
 
-	@GetMapping("/getFolderList")
+	@GetMapping("/getfolderlist")
 	@ResponseBody
 	public Map idCheck (HttpServletRequest request) {
 		String folder_id = request.getParameter("folder_id");
 		FileDAO filedao = new FileDAO();
 		FolderDAO folderdao = new FolderDAO();
 		
-		System.out.println("/gethomecontents 호출");
 		Map<String, Object> result = new HashMap<String, Object>();
-		
+
+		result.put("fid", folder_id);
+		result.put("fname", folderdao.getFolderNameByFolder_id(folder_id));
 		result.put("folderList", folderdao.getFolderListByFolder_id(folder_id));
 		result.put("fileList", filedao.getFileListByFolder_id(folder_id));
 		

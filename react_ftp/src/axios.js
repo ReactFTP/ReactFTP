@@ -32,10 +32,23 @@ export function getCompanies() {
 }
 
 // get <REACT FTP> home folder
+// export function getHomeContents_BK() {
+//     return axios({
+//         method: 'post',
+//         url : '/home/gethomecontents',
+//         params : {
+//             folder_id : 0,
+//         }
+//     }).then(function(response){
+//         // console.log(response.data);
+//         return response.data;
+//     }).catch(function(error){
+//     });
+// }
 export function getHomeContents_BK() {
     return axios({
-        method: 'post',
-        url : '/home/gethomecontents',
+        method: 'get',
+        url : '/home/getfolderlist',
         params : {
             folder_id : 0,
         }

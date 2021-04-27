@@ -46,7 +46,7 @@ class Tree extends React.Component {
             })
         };
         const setTreeItem = (data) => {
-            if(data.contents_Folder.length > 0){
+            if(data.folderList.length > 0){
                 this.setState({
                     parentData : data,
                 })
@@ -203,6 +203,43 @@ class Tree extends React.Component {
 
         }
 */
+
+        const treeLoad = (folderList) => {
+            console.log(folderList);
+            if(folderList){
+                return folderList.map((content, i) => {
+                    let children = undefined;
+                    if(content.folder && content.folder.length > 0){
+                        children = treeLoad(content.folder);
+                    }
+                    return (
+                        <>
+                            <ContextMenuTrigger id={content.fid} >
+                                {/* <TreeItem key={content.fid} nodeId={content} label={content.fname} children={ children } selected={this.props.data} onClick={ ()=>{ getContents(content)} } */}
+                                <TreeItem key={content.fid} nodeId={content} label={content.fname} children={ children } selected={this.props.data} onClick={ () => {  } }
+                                />
+                                <ContextMenu id={content.fid}>
+                                    <MenuItem data={content} onClick={ () => {/*createFolder(content)*/} }>
+                                        폴더 생성
+                                    </MenuItem>
+                                    <MenuItem data={content} onClick={ () => {/*deleteFolder(content)*/} }>
+                                        폴더 삭제
+                                    </MenuItem>
+                                    <MenuItem data={content} onClick={ () => {/*modifyFolder(content)*/} }>
+                                        폴더 변경
+                                    </MenuItem>
+                                    <MenuItem data={content} onClick={ () => {/*createItem(content)*/} }>
+                                        아이템 생성
+                                    </MenuItem>
+                                </ContextMenu>
+                            </ContextMenuTrigger>
+                        </>
+                    );
+                });
+            }
+
+        }
+
         return (
             <div className="browser-wrap">
                 
@@ -218,8 +255,9 @@ class Tree extends React.Component {
                         onContextMenu={handleSelect}
                     >
                         <ContextMenuTrigger id="homeMenu">
-                            <TreeItem key={this.props.data.uid} nodeId={this.props.data} label={this.props.data.object_string} data={this.props.data} onClick={()=>{setTreeItem(this.props.data)}}>
+                            <TreeItem key={this.props.data.fid} nodeId={this.props.data} label={this.props.data.fname} data={this.props.data} onClick={()=>{setTreeItem(this.props.data)}}>
                                 {/* { treeLoad(this.props.data.contents_Folder) } */}
+                                {/* { treeLoad(this.props.data.folderList) } */}
                             </TreeItem>
 
                             <ContextMenu id="homeMenu">
@@ -235,7 +273,8 @@ class Tree extends React.Component {
                         </ContextMenuTrigger>
                     </TreeView>
                 </div>
-                <Table data={this.state.selectedData.contents_Item} selectedTreeData={this.state.selectedData} setTreeItem={setTreeItem}/>
+                {/* <Table data={this.state.selectedData.contents_Item} selectedTreeData={this.state.selectedData} setTreeItem={setTreeItem}/> */}
+                <Table data={this.state.selectedData} selectedTreeData={this.state.selectedData} setTreeItem={setTreeItem}/>
             </div>
         );
     }

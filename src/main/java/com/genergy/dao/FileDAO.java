@@ -12,7 +12,6 @@ import com.genergy.model.File;
 
 public class FileDAO {
 	private static SessionFactory factory;
-	private static Query<?> query;
 	
 	public FileDAO() {
 		factory = HibernateUtil.getSessionFactory();
@@ -25,15 +24,10 @@ public class FileDAO {
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
 
-		query = session.createQuery("select * from file where folder_id=:folder_id");
+		Query<?> query = session.createQuery("select file_name from File where folder_id=:folder_id");
 		query.setParameter("folder_id", folder_id);		
 		lists = (ArrayList<File>) query.list();
 		session.getTransaction().commit();
-		
-		// 데이터 잘 받아오는지 테스트
-		for(File f:lists) {
-			System.out.println(f.getFile_name());
-		}
 		
 		return lists;
 	}
