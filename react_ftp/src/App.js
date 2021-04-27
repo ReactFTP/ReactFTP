@@ -2,7 +2,8 @@
 import Home from "./Home";
 import CompanyManage from "./CompanyManage";
 import UserManage from "./UserManage";
-import userManager from "./SignUp.js";
+import userManager from "./IDPWSearch.js";
+
 import { Link, Route, BrowserRouter as Router } from "react-router-dom";
 
 function App() {

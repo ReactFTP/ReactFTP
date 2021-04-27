@@ -6,17 +6,28 @@ class IDPWSearch extends Component{
     constructor(props){
         super(props);
         this.state = {
-           
+            id : '',
+           name : '',
+           email1 : '',
+           email2 : '',
+           phone1 : '',
+           phone2 : '',
+           phone3 : '',
         };
+        this.openSearcher();
+
     }
     openSearcher = () => {  //props로 함수 받아서 실행 url
-        let win = window.open("http://localhost:3000/searchIdPw", "hel", "height=810px, width=572px");
+        let win = window.open("http://localhost:3000/testys", "", "height=810px, width=572px");
        
         
     }
-
+    componentDidMount(){
+     
+    }
     render(){  
-        this.openSearcher();
+ 
+       
         
         return (
         <section class="member-wrap" > 
@@ -37,7 +48,7 @@ class IDPWSearch extends Component{
                                 </tr>
                                 <tr className="join-form-name">
                                     <th scope="row">이메일</th>
-                                    <td><input type="text" name="email" placeholder="id@genergy.com"/></td>
+                                    <td><input type="text" name="email" placeholder="id@genergy.com" onChange={this.state.name}/></td>
                                 </tr>
                                 <tr className="join-form-name">
                                     <th scope="row">연락처</th>
