@@ -26,6 +26,8 @@
       <!-- <mapping class = "com.orm.model.Member"/> -->
       <mapping class = "com.genergy.model.Test"/>
       <mapping class = "com.genergy.model.Member"/>
+      <mapping class = "com.genergy.model.Folder"/>
+      <mapping class = "com.genergy.model.File"/>
         <mapping class = "com.genergy.model.Company"/>
       
        <!--  참조 :ㅣ https://hayden-archive.tistory.com/362 -->

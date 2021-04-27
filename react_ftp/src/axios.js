@@ -84,12 +84,25 @@ export function signUp(id, pw, name, email, phone, addr1, addr2, companyId, mana
     });
 }
 // get <REACT FTP> home folder
+// export function getHomeContents_BK() {
+//     return axios({
+//         method: 'post',
+//         url : '/home/gethomecontents',
+//         params : {
+//             folder_id : 0,
+//         }
+//     }).then(function(response){
+//         // console.log(response.data);
+//         return response.data;
+//     }).catch(function(error){
+//     });
+// }
 export function getHomeContents_BK() {
     return axios({
-        method: 'post',
-        url : '/home/gethomecontents',
+        method: 'get',
+        url : '/home/getfolderlist',
         params : {
-            // uid : uid,
+            folder_id : 0,
         }
     }).then(function(response){
         // console.log(response.data);

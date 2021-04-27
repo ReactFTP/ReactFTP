@@ -9,12 +9,12 @@ class Home extends React.Component {
         super(props);
         this.state = {
             sessionId : undefined,
-            selectedTreeItem : "Home",
+            selectedTreeItem : "REACT FTP",
             data : {
-                uid: "", 
-                contents_Item: [], 
-                object_string: "", 
-                contents_Folder: []
+                fid: "0", 
+                fname: "REACT FTP", 
+                folderList: [], 
+                fileList: []
             }
         };
     }
@@ -45,12 +45,11 @@ class Home extends React.Component {
 
         console.log(info[0]);
 
-        // this.setState({
-        //     data : info[0]
-        // }, () => {
-        //     alert("FTP 홈 폴더 로딩 완료");
-        //     console.log("첫 로딩 후 data.object_string : " + this.state.data.object_string);
-        // });
+        this.setState({
+            data : info[0]
+        }, () => {
+            // alert("FTP 홈 폴더 로딩 완료");
+        });
     }
 
     // logout = () => {

@@ -65,6 +65,7 @@ class Table extends React.Component {
         //     }
         // };
 
+        // 4/26 전달받는 data 형태 : 현재 선택된 tree = {fid: "0", fname: "REACT FTP", folderList: Array(1), fileList: Array(1)}
         // const mapToComponent = (data) => {
         //     if(data == undefined)
         //         return;
@@ -97,7 +98,7 @@ class Table extends React.Component {
         return (
             <div className="browser-wrap item-wrap">
                 <div className="selected-path-wrap">
-                    선택한 폴더 : {this.props.selectedTreeData.object_string}
+                    선택한 폴더 : {this.props.data.fname}
                 </div>
                 <ul className="tableHead">
                     <li className="fileName">파일명치</li>
