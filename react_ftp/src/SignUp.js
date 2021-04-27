@@ -9,9 +9,8 @@ import HomeIcon from '@material-ui/icons/Home';
 import PhoneIcon from '@material-ui/icons/Phone';
 import * as axios from './axios.js'
 import Modal from 'react-modal';
-
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
-
+import BootstrapTable from 'react-bootstrap-table-next';
 
 class SignUp extends Component{
     state = {
@@ -19,15 +18,24 @@ class SignUp extends Component{
        idCheckResult: '',
        pwCheck: '',
        pwCheckResult: '일치여부',
+       name:'',
        email1: '',
        email2: '',
+       phone1: '',
+       phone2: '',
+       phone3: '',
+       addr1: '',
+       addr2: '',
        company: '',
+       companyId: '',
        companyModal: false,
+       companies:[],
+       searchCompanies:[],
+       type: false,
     }
 
     componentWillMount() {
         Modal.setAppElement('body');
-        axios.getCompanies();    
     }
 
     handleChangeID = async(e) => {
@@ -80,12 +88,40 @@ class SignUp extends Component{
         await this.setState({email2 : e.target.value});
     }
     
-    onSubmit = (e) => {
+    onSubmit = async(e) => {
+
         e.preventDefault();
-        console.log(e.target)
+        let id = this.state.idCheck;
+        let idCheck = this.state.idCheckResult;
+        let pw = this.state.pwCheck;
+        let pwCheck = this.state.pwCheckResult;
+        let name = this.state.name;
+        let email = this.state.email1 + '@' + this.state.email2;
+        let phone = this.state.phone1 + '-' + this.state.phone2 + '-' + this.state.phone3;
+        let addr1 = this.state.addr1;
+        let addr2 = this.state.addr2;
+        let company = this.state.company;
+        let manager = this.state.type;
+
+        console.log(id, idCheck, pw, pwCheck, name, email, phone, addr1, addr2, company, manager);        
+
+        idCheck != '사용가능'? alert('ID 중복을 확인주세요.'):
+        pwCheck != '일치'? alert('PW 일치를 확인해주세요.'):
+        name == ''? alert('이름을 입력해주세요.'):
+        this.state.email1 == '' || this.state.email2 == ''? alert('이메일을 입력해주세요.'):
+        this.state.email1.includes('@') || this.state.email2.includes('@')?  alert('이메일 형식이 올바른지 확인해주세요.'):
+        await axios.emailCheck(email)? alert('이미 존재하는 이메일입니다.'):
+        this.state.phone1 == ''||this.state.phone2 == ''||this.state.phone3 == ''? alert('휴대폰 번호를 입력해주세요.'):
+        await axios.phoneCheck(phone)? alert('이미 존재하는 휴대폰 번호입니다.'):
+        addr1 == '' ? alert('주소를 입력해주세요.'):
+        company == ''?alert('소속 회사를 선택해주세요.'):
+        manager? alert( company + ', Administrator의 가입 승인 후 이용 가능합니다.'):
+        alert( company + ', Manager의 가입 승인 후 이용 가능합니다.');
+        await axios.signUp(id, pw, name, email, phone, addr1, addr2, this.state.companyId, manager);
+        
       };
 
-    handleChangeType =async(e) => { await this.setState({type : e.target.value});    }
+    handleChangeType =async(e) => { await this.setState({type : e.target.checked});    }
     handleChangeName =async(e) => { await this.setState({name : e.target.value});    }
     handleChangePhone1 =async(e) => { await this.setState({phone1 : e.target.value});    }
     handleChangePhone2 =async(e) => { await this.setState({phone2 : e.target.value});    }
@@ -94,7 +130,17 @@ class SignUp extends Component{
     handleChangeAddr2 =async(e) => { await this.setState({addr2 : e.target.value});    }
 
     openCompanyModal = async() => {
+        let result = await axios.getCompanies();
         await this.setState({companyModal: true});
+        console.log(Object.keys(result));
+        const keyList = Object.keys(result);
+        var myArray2 = new Array(keyList.length);
+        for (let i = 0; i < keyList.length; i++){
+            let key = keyList[i];
+            myArray2[i] = result[key];
+        }
+        
+        await this.setState({companies: myArray2, searchCompanies: myArray2});
     }
 
     closeCompanyModal = async() => {
@@ -108,7 +154,28 @@ class SignUp extends Component{
         dataField: 'name',
         text: '회사명'
     }];
+
+    searchCompany = async(e) => {
+        console.log(e.target.value);
+        var input = e.target.value;
+        var list = [];
+        this.state.companies.map(e => {
+            if(e.coId.includes(input) || e.coName.includes(input)){
+                list.push(e);
+            }
+        });
+        await this.setState({
+            searchCompanies : list
+        });
+
+    }
     
+    clickCompany = {
+        onClick: async (e, row, rowIndex) => {
+            await this.setState({company : row.coName, companyId : row.coId});
+            this.closeCompanyModal();
+        }
+      };
    
     render(){
         return(
@@ -189,9 +256,9 @@ class SignUp extends Component{
                 <div className="input-field col s12">
                 <icon className ="material-icons"><PhoneIcon/></icon>
                 <label for="phone"> 연락처 </label>
-                <input id="phone" name="phone" type="text" size="2" onChange={this.handleChangePhone1}/> - 
-                <input id="phone" name="phone" type="text" size="5" onChange={this.handleChangePhone2}/> - 
-                <input id="phone" name="phone" type="text" size="5" onChange={this.handleChangePhone3}/>
+                <input id="phone" name="phone" type="text" size="2" maxlength='3' onChange={this.handleChangePhone1}/> - 
+                <input id="phone" name="phone" type="text" size="5" maxlength='4' onChange={this.handleChangePhone2}/> - 
+                <input id="phone" name="phone" type="text" size="5" maxlength='4' onChange={this.handleChangePhone3}/>
                 </div>
             </div>
 
@@ -233,11 +300,18 @@ class SignUp extends Component{
                                     <span class="icon">
                                         <i class="fa fa-search"></i>
                                     </span>
-                                    <input type="search" id="search" placeholder="회사명 검색..." />
+                                    <input type="search" id="search" placeholder="회사명 검색..." onChange={this.searchCompany}/>
                                  </div>
                             </div>
                             {/*테이블*/}
-                            {this.getCompanies}
+                            <BootstrapTable keyField='id' 
+                            data={this.state.searchCompanies} 
+                            columns={[{dataField: 'coId', text: '회사코드'}, {dataField: 'coName', text: '회사명'}]}
+                            hover
+                            noDataIndication="Table is Empty"
+                            rowEvents={ this.clickCompany } 
+                             />
+
 
                     </Modal>
                 </div>
@@ -245,7 +319,7 @@ class SignUp extends Component{
 
             <div className="row">
                 <div className="input-field col s12">
-                <button type="submit" className="btn waves-effect waves-light col s12">제출</button>
+                <button type="butoon" className="btn waves-effect waves-light col s12" onClick={this.onSubmit}>제출</button>
                 <button type="button" className="btn waves-effect waves-light col s12">취소</button>
                 
                 </div>

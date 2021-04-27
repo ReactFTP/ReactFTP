@@ -19,19 +19,19 @@ public class File implements Serializable {
 
 	@Id
 	@Column(name="file_id")
-	private String file_id;
+	private String fileId;
 	@Column(name="file_name")
-	private String file_name;
+	private String fileName;
 	@Column(name="folder_id")
-	private String folder_id;
+	private String folderId;
 	@Column(name="created_date")
-	private Date created_date;
+	private Date createdDate;
 	@Column(name="last_modified_date")
-	private Date last_modified_date;
+	private Date lastModifiedDate;
 	@Column(name="count")
 	private int count;
 	@Column(name="auth_id")
-	private String auth_id;
+	private String authId;
 	@Column(name="type")
 	private String type;
 }
