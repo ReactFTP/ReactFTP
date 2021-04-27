@@ -41,12 +41,12 @@ public class FolderDAO {
 
 		System.out.println(lists);
 		for(Folder ele : lists) {
-			children.put("fid", ele.getFolder_id());
-			children.put("fname", ele.getFolder_name());
+			children.put("fid", ele.getFolderId());
+			children.put("fname", ele.getFolderName());
 			children.put("folderList", new ArrayList());
 			children.put("fileList", new ArrayList());
 			
-			map.put(ele.getFolder_id(), children);
+			map.put(ele.getFolderId(), children);
 		}
 		
 		return map;

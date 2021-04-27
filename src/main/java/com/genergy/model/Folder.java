@@ -19,33 +19,33 @@ public class Folder implements Serializable {
 
 	@Id
 	@Column(name="folder_id")
-	private String folder_id;
+	private String folderId;
 	@Column(name="folder_name")
-	private String folder_name;
+	private String folderName;
 	@Column(name="path")
 	private String path;
 	@Column(name="create_date")
-	private Date create_date;
+	private Date createdDate;
 	@Column(name="last_modified_date")
-	private Date last_modified_date;
+	private Date lastModifiedDate;
 	@Column(name="count")
 	private int count;
 	@Column(name="auth_id")
-	private String auth_id;
+	private String authId;
 	@Column(name="parents_folder_id")
-	private String parents_folder_id;
+	private String parentsFolderId;
 	
-	public String getFolder_id() {
-		return folder_id;
+	public String getFolderId() {
+		return folderId;
 	}
-	public void setFolder_id(String folder_id) {
-		this.folder_id = folder_id;
+	public void setFolderId(String folderId) {
+		this.folderId = folderId;
 	}
-	public String getFolder_name() {
-		return folder_name;
+	public String getFolderName() {
+		return folderName;
 	}
-	public void setFolder_name(String folder_name) {
-		this.folder_name = folder_name;
+	public void setFolderName(String folderName) {
+		this.folderName = folderName;
 	}
 	public String getPath() {
 		return path;
@@ -53,17 +53,17 @@ public class Folder implements Serializable {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	public Date getCreate_date() {
-		return create_date;
+	public Date getCreatedDate() {
+		return createdDate;
 	}
-	public void setCreate_date(Date created_date) {
-		this.create_date = created_date;
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
-	public Date getLast_modified_date() {
-		return last_modified_date;
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
 	}
-	public void setLast_modified_date(Date last_modified_date) {
-		this.last_modified_date = last_modified_date;
+	public void setLastModifiedDate(Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
 	}
 	public int getCount() {
 		return count;
@@ -71,16 +71,16 @@ public class Folder implements Serializable {
 	public void setCount(int count) {
 		this.count = count;
 	}
-	public String getAuth_id() {
-		return auth_id;
+	public String getAuthId() {
+		return authId;
 	}
-	public void setAuth_id(String auth_id) {
-		this.auth_id = auth_id;
+	public void setAuthId(String authId) {
+		this.authId = authId;
 	}
-	public String getParents_folder_id() {
-		return parents_folder_id;
+	public String getParentsFolderId() {
+		return parentsFolderId;
 	}
-	public void setParents_folder_id(String parents_folder_id) {
-		this.parents_folder_id = parents_folder_id;
+	public void setParentsFolderId(String parentsFolderId) {
+		this.parentsFolderId = parentsFolderId;
 	}
 }

@@ -1,6 +1,7 @@
 package com.genergy.model;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -16,131 +17,166 @@ public class Member implements Serializable {
 
 	@Id
 	@Column(name="member_id")
-	private String member_id;
+	private String memberId;
 	@Column(name="pw")
 	private String pw;
 	@Column(name="member_name")
-	private String member_name;
+	private String memberName;
 	@Column(name="email")
 	private String email;
 	@Column(name="member_phone")
-	private String member_phone;
+	private String memberPhone;
 	@Column(name="addr1")
 	private String addr1;
 	@Column(name="addr2")
 	private String addr2;
 	@Column(name="co_id")
-	private String co_id;
+	private String coId;
 	@Column(name="auth_id")
-	private String auth_id;
+	private String authId;
 	@Column(name="role_id")
-	private String role_id;
+	private String roleId;
 	@Column(name="joined_date")
-	private Date joined_date;
+	private Date joinedDate;
 	@Column(name="joined_check")
-	private String joined_check; //boolean으로 ?
+	private String joinedCheck; //boolean으로 ?
 	@Column(name="active_check")
-	private String active_check; //boolean으로 ?
+	private String activeCheck; //boolean으로 ?
 	@Column(name="joined_check_date")
-	private Date joined_check_date;
+	private Date joinedCheckDate;
 	@Column(name="failed_count")
-	private int failed_count;
+	private int failedCount;
 	
-	public String getMember_name() {
-		return member_name;
+	//회원가입
+	public Member(String id, String pw, String name, String email, String phone, String addr1, String addr2,
+			String companyId, String manager) {
+		SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
+		
+		this.memberId = id;
+		setPw(pw); setMemberName(name); setEmail(email); setMemberPhone(phone); setAddr1(addr1); setAddr2(addr2); 
+		setCoId(companyId); setJoinedDate(new Date()); setJoinedCheck("N"); setActiveCheck("N"); setFailedCount(0);  
+		if(manager.equals("true")) {
+			setRoleId("m");  setAuthId("a");
+		}else {
+			setRoleId("u");  setAuthId("c");
+		}
 	}
-	public void setMember_name(String member_name) {
-		this.member_name = member_name;
+
+	
+	public String getRoleId() {
+		return roleId;
 	}
+
+
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
+	}
+
+
+	public String getMemberName() {
+		return memberName;
+	}
+
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
+
 	public String getEmail() {
 		return email;
 	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getMember_phone() {
-		return member_phone;
+
+	public String getMemberPhone() {
+		return memberPhone;
 	}
-	public void setMember_phone(String member_phone) {
-		this.member_phone = member_phone;
+
+	public void setMemberPhone(String memberPhone) {
+		this.memberPhone = memberPhone;
 	}
+
 	public String getAddr1() {
 		return addr1;
 	}
+
 	public void setAddr1(String addr1) {
 		this.addr1 = addr1;
 	}
+
 	public String getAddr2() {
 		return addr2;
 	}
+
 	public void setAddr2(String addr2) {
 		this.addr2 = addr2;
 	}
-	public String getCo_id() {
-		return co_id;
+
+	public String getCoId() {
+		return coId;
 	}
-	public void setCo_id(String co_id) {
-		this.co_id = co_id;
+
+	public void setCoId(String coId) {
+		this.coId = coId;
 	}
-	public String getAuth_id() {
-		return auth_id;
+
+	public String getAuthId() {
+		return authId;
 	}
-	public void setAuth_id(String auth_id) {
-		this.auth_id = auth_id;
+
+	public void setAuthId(String authId) {
+		this.authId = authId;
 	}
-	public String getRole_id() {
-		return role_id;
+
+	public Date getJoinedDate() {
+		return joinedDate;
 	}
-	public void setRole_id(String role_id) {
-		this.role_id = role_id;
+
+	public void setJoinedDate(Date joinedDate) {
+		this.joinedDate = joinedDate;
 	}
-	public Date getJoined_date() {
-		return joined_date;
+
+	public String getJoinedCheck() {
+		return joinedCheck;
 	}
-	public void setJoined_date(Date joined_date) {
-		this.joined_date = joined_date;
+
+	public void setJoinedCheck(String joinedCheck) {
+		this.joinedCheck = joinedCheck;
 	}
-	public String getJoined_check() {
-		return joined_check;
+
+	public String getActiveCheck() {
+		return activeCheck;
 	}
-	public void setJoined_check(String joined_check) {
-		this.joined_check = joined_check;
+
+	public void setActiveCheck(String activeCheck) {
+		this.activeCheck = activeCheck;
 	}
-	public String getActive_check() {
-		return active_check;
+
+	public Date getJoinedCheckDate() {
+		return joinedCheckDate;
 	}
-	public void setActive_check(String active_check) {
-		this.active_check = active_check;
+
+	public void setJoinedCheckDate(Date joinedCheckDate) {
+		this.joinedCheckDate = joinedCheckDate;
 	}
-	public Date getJoined_check_date() {
-		return joined_check_date;
+
+	public int getFailedCount() {
+		return failedCount;
 	}
-	public void setJoined_check_date(Date joined_check_date) {
-		this.joined_check_date = joined_check_date;
+
+	public void setFailedCount(int failedCount) {
+		this.failedCount = failedCount;
 	}
-	public int getFailed_count() {
-		return failed_count;
+
+	public String getMemberId() {
+		return memberId;
 	}
-	public void setFailed_count(int failed_count) {
-		this.failed_count = failed_count;
-	}
-	public String getMember_id() {
-		return member_id;
-	}
+
 	public void setPw(String pw) {
 		this.pw = pw;
 	}
-	
-	@Override
-	public String toString() {
-		return "Member [member_id=" + member_id + ", member_name=" + member_name + ", email=" + email
-				+ ", member_phone=" + member_phone + ", addr1=" + addr1 + ", addr2=" + addr2 + ", co_id=" + co_id
-				+ ", auth_id=" + auth_id + ", role_id=" + role_id + ", joined_date=" + joined_date + ", joined_check="
-				+ joined_check + ", active_check=" + active_check + ", joined_check_date=" + joined_check_date
-				+ ", failed_count=" + failed_count + "]";
-	}
-	
-	
+
 	
 	
 
