@@ -66,7 +66,7 @@ export function getCompanies() {
     }).catch(function(error){
     });
 }
-//signUp(id, pw, name, email, phone, addr1, addr2, company, manager);
+
 //회원가입
 export function signUp(id, pw, name, email, phone, addr1, addr2, companyId, manager) {
     return axios({

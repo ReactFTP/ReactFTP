@@ -15,10 +15,12 @@ class Login extends React.Component {
     }
 
     componentWillMount(){
+        /*
         if(window.sessionStorage.getItem("sessionId")){
             axios.logout(window.sessionStorage.getItem('appXsession'));
             window.sessionStorage.clear();
         }
+        */
     }
 
     onChange = (e) => {
@@ -47,6 +49,7 @@ class Login extends React.Component {
     }
 
     fetchUserInfo = async(id, pw) => {
+        /*
         const info = await Promise.all([
             axios.getUserInfo(id, pw)
         ]);
@@ -57,6 +60,7 @@ class Login extends React.Component {
             window.sessionStorage.setItem('appXsession', info[0].appXsession);
             this.openLink();
         });
+        */
     }
 
     openLink() {
