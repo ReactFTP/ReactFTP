@@ -25,9 +25,9 @@ public class Folder implements Serializable {
 	@Column(name="path")
 	private String path;
 	@Column(name="create_date")
-	private String createdDate;
+	private Date createdDate;
 	@Column(name="last_modified_date")
-	private String lastModifiedDate;
+	private Date lastModifiedDate;
 	@Column(name="count")
 	private int count;
 	@Column(name="auth_id")
@@ -53,21 +53,17 @@ public class Folder implements Serializable {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	public String getCreatedDate() {
+	public Date getCreatedDate() {
 		return createdDate;
 	}
 	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate.toString();
-	}
-	public String getLastModifiedDate() {
-		System.out.println(lastModifiedDate);
-		return lastModifiedDate;
+		this.createdDate = createdDate;
 	}
 	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate.toString();
-	}
-	public void setLastModifiedDate(String lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
+	}
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
 	}
 	public int getCount() {
 		return count;
@@ -86,5 +82,19 @@ public class Folder implements Serializable {
 	}
 	public void setParentsFolderId(String parentsFolderId) {
 		this.parentsFolderId = parentsFolderId;
+	}
+	
+	// 수정일 일시 포맷 String 반환
+	public String getLastModifiedDateToString() {
+//		System.out.println(lastModifiedDate);
+		String last_modified_date = this.lastModifiedDate.toString();
+		int hour = Integer.parseInt(last_modified_date.substring(11, 13));
+		String time = last_modified_date.substring(11, 16);
+		last_modified_date = last_modified_date.substring(0, 11);
+		if(hour >= 12)
+			last_modified_date = last_modified_date + "오후 " + (hour-12) + time.substring(2);
+		else
+			last_modified_date = last_modified_date + "오전 " + hour + time.substring(2);
+		return last_modified_date;
 	}
 }
