@@ -45,7 +45,6 @@ public class FolderDAO {
 			
 			result.add(child);
 		}
-//		session.close();
 
 		session.getTransaction().commit();
 		return result;

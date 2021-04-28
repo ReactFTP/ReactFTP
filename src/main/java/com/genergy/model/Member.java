@@ -47,6 +47,12 @@ public class Member implements Serializable {
 	@Column(name="failed_count")
 	private int failedCount;
 	
+	
+	public Member() {
+		super();
+	}
+
+
 	//회원가입
 	public Member(String id, String pw, String name, String email, String phone, String addr1, String addr2,
 			String companyId, String manager) {

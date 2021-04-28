@@ -7,8 +7,21 @@ import FingerprintIcon from '@material-ui/icons/Fingerprint';
 import LocationCityIcon from '@material-ui/icons/LocationCity';
 import HomeIcon from '@material-ui/icons/Home';
 import PhoneIcon from '@material-ui/icons/Phone';
+import { Link } from 'react-router-dom';
+import * as axios from './axios.js'
+
 class PasswordCheck extends Component{
 
+    onChange = (e) => {
+        this.setState({
+            [e.target.name] : e.target.value
+        });
+    }
+    onSubmit = async() => {
+        let result = await axios.login(window.sessionStorage.getItem('sessionId'), this.state.pw);
+        result == ''? window.location.assign('./edituser'):
+        alert('비밀번호가 틀렸습니다.');
+    }
     render(){
         return(
         <div id="login-page" className="row">
@@ -24,14 +37,18 @@ class PasswordCheck extends Component{
                 <div className="input-field col s12">
                 <icon className ="material-icons"><VpnKeyIcon/></icon>
                 <label for="password"> 비밀번호 </label>
-                <input id="password" name="password" type="password" />
+                <input id="password" name="pw" type="password" onChange={this.onChange} />
                 </div>
             </div>
 
             <div className="row">
                 <div className="input-field col s12">
-                <button type="submit" className="btn waves-effect waves-light col s12">확인</button>
+                {/* <Link to="./edituser"> */}
+                <button type="button" className="btn waves-effect waves-light col s12" onClick={this.onSubmit}>확인</button>
+                {/* </Link> */}
+                <Link to="./home">
                 <button type="button" className="btn waves-effect waves-light col s12">홈</button>
+                </Link>
                 
                 </div>
                

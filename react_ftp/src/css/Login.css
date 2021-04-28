@@ -92,6 +92,8 @@ body{
 	padding-top: 13px;
 }
 .login-button-wrap button{
+	margin-bottom: 10px;
+    margin-left: 20px;
 	width: 465px;
 	height :60px;
 	font-size: 18px;
@@ -164,4 +166,8 @@ footer .copyright-wrap span img{
 footer .copyright-wrap span{
 	font-size: 13px;
 	line-height: 15px;
+}
+
+.forget-pw{
+	margin-left: 150px;
 }

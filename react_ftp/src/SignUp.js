@@ -1,5 +1,6 @@
 import './SignUp.css';
 import React, {Component} from 'react';
+import { Link } from 'react-router-dom'
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import EmailIcon from '@material-ui/icons/Email';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
@@ -319,9 +320,10 @@ class SignUp extends Component{
 
             <div className="row">
                 <div className="input-field col s12">
-                <button type="butoon" className="btn waves-effect waves-light col s12" onClick={this.onSubmit}>제출</button>
+                <button type="button" className="btn waves-effect waves-light col s12" onClick={this.onSubmit}>제출</button>
+                <Link to="./login">
                 <button type="button" className="btn waves-effect waves-light col s12">취소</button>
-                
+                </Link>
                 </div>
                 <div className="input-field col s12">
                 <p className="margin center medium-small sign-up">Already have an account? <a href="./login">Login</a></p>

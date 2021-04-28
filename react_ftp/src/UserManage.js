@@ -52,9 +52,9 @@ class CompanyManage extends React.Component {
     //     });
     // }
 
-    // logout = () => {
-    //     this.props.history.push('/');
-    // }
+    logout = () => {
+        this.props.history.push('/');
+    }
 
     render () {
         const sessionRole = window.sessionStorage.getItem('roleId');
@@ -97,6 +97,9 @@ class CompanyManage extends React.Component {
                             <div className={sessionRole=='a'?'search-wrap administrator':'sessionNone'}>
                                 <div className="search-select-company-wrap">
                                     <select name="company">
+                                        {
+
+                                        }
                                         <option value="">회사 선택</option>
                                         <option value="">임시회사1</option>
                                         <option value="">임시회사2</option>

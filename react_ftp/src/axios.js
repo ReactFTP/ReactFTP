@@ -83,6 +83,91 @@ export function signUp(id, pw, name, email, phone, addr1, addr2, companyId, mana
     }).catch(function(error){
     });
 }
+
+//회원 ID찾기
+export function findID(name, email, phone) {
+    return axios({
+        method: 'post',
+        url : '/getId',
+        params : {
+            name: name, email: email, phone: phone
+        },
+        headers : {
+            'Access-Control-Allow-Origin': '*'
+           }
+    }).then(function(response){
+        return response.data;
+    }).catch(function(error){
+    });
+}
+
+//회원 PW찾기
+export function getNewPW(id, name, email, phone) {
+    return axios({
+        method: 'post',
+        url : '/getNewPW',
+        params : {
+            id: id, name: name, email: email, phone: phone
+        },
+        headers : {
+            'Access-Control-Allow-Origin': '*'
+           }
+    }).then(function(response){
+        return response.data;
+    }).catch(function(error){
+    });
+}
+//로그인 
+export function login(id,pw) {
+    return axios({
+        method: 'post',
+        url : '/login',
+        params : {
+            id: id, pw: pw
+        },
+        headers : {
+            'Access-Control-Allow-Origin': '*'
+           }
+    }).then(function(response){
+        return response.data;
+    }).catch(function(error){
+    });
+}
+
+//get user
+export function getUser(id) {
+    return axios({
+        method: 'post',
+        url : '/getUser',
+        params : {
+            id: id
+        },
+        headers : {
+            'Access-Control-Allow-Origin': '*'
+           }
+    }).then(function(response){
+        return response.data;
+    }).catch(function(error){
+    });
+}
+
+//edit user
+export function editUser(id, pw, email, phone, addr1, addr2) {
+    return axios({
+        method: 'post',
+        url : '/editUser',
+        params : {
+            id: id, pw: pw, email: email, phone: phone, addr1: addr1, addr2:addr2
+        },
+        headers : {
+            'Access-Control-Allow-Origin': '*'
+           }
+    }).then(function(response){
+        return response.data;
+    }).catch(function(error){
+    });
+}
+
 // get <REACT FTP> home folder
 // export function getHomeContents_BK() {
 //     return axios({

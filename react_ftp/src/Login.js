@@ -1,5 +1,6 @@
 import React from 'react';
 import './css/Login.css';
+import { Link } from 'react-router-dom'
 
 import * as axios from './axios';
 
@@ -15,12 +16,11 @@ class Login extends React.Component {
     }
 
     componentWillMount(){
-        /*
+        //세션 종료하기
         if(window.sessionStorage.getItem("sessionId")){
-            axios.logout(window.sessionStorage.getItem('appXsession'));
+            //axios.logout(window.sessionStorage.getItem('appXsession'));
             window.sessionStorage.clear();
         }
-        */
     }
 
     onChange = (e) => {
@@ -49,27 +49,29 @@ class Login extends React.Component {
     }
 
     fetchUserInfo = async(id, pw) => {
-        /*
-        const info = await Promise.all([
-            axios.getUserInfo(id, pw)
-        ]);
-        this.setState({
-            message : info[0].message,
-        }, () => {
-            window.sessionStorage.setItem('homeUid', info[0].uid);
-            window.sessionStorage.setItem('appXsession', info[0].appXsession);
-            this.openLink();
-        });
-        */
+      console.log(id,pw)
+      await this.setState({message:"" });
+      let result = await axios.login(id,pw);
+      if(result!=''){
+        await this.setState({message: result});
+      }
+      
+      this.openLink();
+
     }
 
-    openLink() {
-        if (this.state.message == "가입하지 않은 아이디이거나, 잘못된 비밀번호입니다."){
+    openLink= async() => {
+        if (this.state.message != ''){
             this.closeModal();
             return;
         }
         window.sessionStorage.setItem('sessionId', this.state.id);
-        this.props.history.push('/Home');
+        let user = await axios.getUser(this.state.id, this.state.pw);
+        console.log(user);
+        window.sessionStorage.setItem('roleId', user[10]);
+        window.sessionStorage.setItem('authId', user[11]);
+        window.sessionStorage.setItem('coId', user[12]);
+        this.props.history.push('/home');
     }
 
     openModal = () => {
@@ -77,6 +79,14 @@ class Login extends React.Component {
     }
     closeModal = () => {
         this.setState({ modalOpen: false });
+    }
+
+    openPopup(){
+        window.open("http://localhost:3000/idpwsearch", "", "height=830px, width=572px");
+    }
+
+    openSignUp(){
+        this.props.history.push('/signup');
     }
 
     render () {
@@ -101,6 +111,8 @@ class Login extends React.Component {
                             </div>
                             <div className="login-button-wrap">
                                 <button onClick={ this.loginCheck }><span>로그인</span></button>
+                                <Link to="./signup"><button><span>회원가입</span></button></Link>
+                                <p className="margin center medium-small forget-pw">Forgot your account? <a onClick={this.openPopup}>ID/PW찾기</a></p>
                             </div>
                         </section>
                         <div className={ this.state.modalOpen ? 'open-modal' : 'close-modal' }>
