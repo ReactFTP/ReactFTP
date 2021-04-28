@@ -25,9 +25,9 @@ public class Folder implements Serializable {
 	@Column(name="path")
 	private String path;
 	@Column(name="create_date")
-	private Date createdDate;
+	private String createdDate;
 	@Column(name="last_modified_date")
-	private Date lastModifiedDate;
+	private String lastModifiedDate;
 	@Column(name="count")
 	private int count;
 	@Column(name="auth_id")
@@ -53,16 +53,20 @@ public class Folder implements Serializable {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	public Date getCreatedDate() {
+	public String getCreatedDate() {
 		return createdDate;
 	}
 	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
+		this.createdDate = createdDate.toString();
 	}
-	public Date getLastModifiedDate() {
+	public String getLastModifiedDate() {
+		System.out.println(lastModifiedDate);
 		return lastModifiedDate;
 	}
 	public void setLastModifiedDate(Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate.toString();
+	}
+	public void setLastModifiedDate(String lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
 	}
 	public int getCount() {

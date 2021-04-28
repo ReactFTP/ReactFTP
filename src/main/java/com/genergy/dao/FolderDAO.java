@@ -21,35 +21,41 @@ public class FolderDAO {
 	}
 	
 	// 특정 폴더의 하위 folder 목록 가져오기
-	public static Map<String, Object> getFolderListByFolder_id(String folder_id) {
-		List<Folder> lists;
-		
+	public static List<Object> getFolderListByFolder_id(String folder_id) {
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
 
-//		Query<?> query = session.createQuery("select folder_name from Folder where parents_folder_id=:folder_id");
-//		query.setParameter("folder_id", folder_id);		
-//		Query<?> query = session.createQuery("select folder_name, last_modified_date from Folder");
-		Query query = session.createQuery("from Folder");
-		lists = query.list();
-		// lists = [pk1:["folder_name", "last_modified_date"], pk2:["folder_name", "last_modified_date"], ..]
-		// 형태로 반환됨.
+		Query query = session.createQuery("from Folder where parentsFolderId=:folder_id");
+		query.setParameter("folder_id", folder_id);
+		List<Folder> queryResult = query.list();
 		session.getTransaction().commit();
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		Map<String, Object> children = new HashMap<String, Object>();
-
-		System.out.println(lists);
-		for(Folder ele : lists) {
-			children.put("fid", ele.getFolderId());
-			children.put("fname", ele.getFolderName());
-			children.put("folderList", new ArrayList());
-			children.put("fileList", new ArrayList());
-			
-			map.put(ele.getFolderId(), children);
-		}
+		List<Object> result = new ArrayList<Object>();
 		
-		return map;
+		for(Folder f : queryResult) {
+			Map<String, Object> child = new HashMap<String, Object>();
+			
+//			String last_modified_date = f.getLastModifiedDate();
+//			System.out.println(last_modified_date);
+//			String[] split = last_modified_date.split(".");
+//			for(String e:split)
+//				System.out.println(e);
+//			System.out.println(split[0]);
+//			f.setLastModifiedDate(split[0]);
+//			
+//			System.out.println(f.getLastModifiedDate());
+			//2021-04-26 18:08:58.217746+09
+			//2021-04-26 09:08:58
+			child.put("fid", f.getFolderId());
+			child.put("fname", f.getFolderName());
+			child.put("folderList", new ArrayList());
+			child.put("fileList", new ArrayList());
+			
+			result.add(child);
+		}
+		session.close();
+		
+		return result;
 	}
 	
 	public static String getFolderNameByFolder_id(String folder_id) {
@@ -58,13 +64,14 @@ public class FolderDAO {
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
 
-		Query<?> query = session.createQuery("select folder_name from Folder where folder_id=:folder_id");
+		Query<?> query = session.createQuery("select folderName from Folder where folderId=:folder_id");
 		query.setParameter("folder_id", folder_id);
 		List<?> list = query.list();
 		session.getTransaction().commit();
 		
 		if(list.size() > 0)
 			result = (String) list.get(0);
+		session.close();
 				
 		return result;
 	}
