@@ -20,7 +20,7 @@ public class FolderDAO {
 		factory = HibernateUtil.getSessionFactory();
 	}
 	
-	// 특정 폴더의 하위 folder 목록 가져오기
+	// 하위 folder 목록 가져오기(folder_id)
 	public static List<Object> getFolderListByFolder_id(String folder_id) {
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
@@ -51,22 +51,52 @@ public class FolderDAO {
 		return result;
 	}
 	
-	public static String getFolderNameByFolder_id(String folder_id) {
+	// folder 데이터 조회(folder_id)
+	public static Folder getFolderByFolder_id(String folder_id) {
+		Folder result = null;
+		
+		Session session = factory.getCurrentSession();
+		session.beginTransaction();
+
+		Query query = session.createQuery("from Folder where folderId=:folder_id");
+		query.setParameter("folder_id", folder_id);
+		List<Folder> queryResult = query.list();
+		
+		if(queryResult.size() > 0)
+			result = queryResult.get(0);
+
+		session.getTransaction().commit();				
+		return result;
+	}
+	
+	// folder 생성 시 부여할 id 시퀀스값 조회
+	public static String getFolderNextSeq() {
 		String result = "";
 		
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
 
-		Query<?> query = session.createQuery("select folderName from Folder where folderId=:folder_id");
-		query.setParameter("folder_id", folder_id);
-		List<?> list = query.list();
-//		session.getTransaction().commit();
+		Query query = session.createQuery("select nextval('folder_id_seq')");
+		List<String> queryResult = query.list();
 		
-		if(list.size() > 0)
-			result = (String) list.get(0);
-//		session.close();
+		if(queryResult.size() > 0)
+			result = queryResult.get(0);
 
 		session.getTransaction().commit();				
 		return result;
+	}
+	
+
+	// folder 생성
+	public static Folder createNewFolder(String parent_folder_id, String new_name) {
+		Folder parent = getFolderByFolder_id(parent_folder_id);
+		Folder newFolder = new Folder(getFolderNextSeq(), new_name, parent.getPath()+"\\"+parent.getFolderName() , parent_folder_id);
+		
+		Session session = factory.getCurrentSession();
+		session.beginTransaction();
+		session.save(newFolder);
+		session.getTransaction().commit();		
+		
+		return newFolder;
 	}
 }

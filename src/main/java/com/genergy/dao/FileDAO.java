@@ -23,7 +23,7 @@ public class FileDAO {
 	
 	// 특정 폴더의 하위 file 목록 가져오기 (table 바인딩할 데이터)
 	public static List<Object> getFileListByFolder_id(String folder_id) {
-		List<Object> result = getFolderListByFolder_id(folder_id);
+		List<Object> result = getFolderListByFolder_id(folder_id);	// table에 그릴 폴더리스트 먼저 담아온다.
 		
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
@@ -41,7 +41,7 @@ public class FileDAO {
 			
 			child.put("fid", f.getFileId());
 			child.put("fname", f.getFileName());
-			child.put("fdate", f.getLastModifiedDate());
+			child.put("fdate", f.getLastModifiedDateToString());
 			child.put("ftype", f.getType());
 //			child.put("fsize", f.getSize());
 			child.put("fsize", "0");
@@ -81,7 +81,7 @@ public class FileDAO {
 			
 			child.put("fid", f.getFolderId());
 			child.put("fname", f.getFolderName());
-			child.put("fdate", f.getLastModifiedDate());
+			child.put("fdate", f.getLastModifiedDateToString());
 			child.put("ftype", "폴더");
 			child.put("fsize", "");
 			

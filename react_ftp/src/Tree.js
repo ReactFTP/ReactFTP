@@ -59,36 +59,52 @@ class Tree extends React.Component {
 
         // storage state 에 찾으려는 fid 데이터가 있는지 검사.
         // 없으면 서버에서 데이터 요청 후 getContents() 메소드를 통해 storage 에 데이터 추가
-        const seekToStorage = (data) => {
-            const result = this.state.storage.filter(storageData => storageData.fid == data.fid);
+        // const seekToStorage = (data) => {
+        //     const result = this.state.storage.filter(storageData => storageData.fid == data.fid);
 
-            if(result){
-                if(result.length > 0)
-                    return false;
-                else
-                    return true;
-            }
-        }
+        //     if(result){
+        //         if(result.length > 0)
+        //             return false;
+        //         else
+        //             return true;
+        //     }
+        // }
 
         const getContents = async(selected) => {    // {fid, fname, folderList, fileList}
             // if(seekToStorage(selected)){    // 저장된 데이터가 없다면
-            //     const info = await Promise.all([
-            //         axios.getContents(selected.uid)
-            //     ]); // {uid, object_string, contents_Item[], contents_Folder[]}
-            //     //selected = info[0];   // 이렇게 하니까 안됐음.
-            //     selected.contents_Item = info[0].contents_Item;
-            //     selected.contents_Folder = info[0].contents_Folder;
-                
-            //     let storage = this.state.storage;
-            //     this.setState({
-            //         storage:storage.concat(selected)
-            //     });
+            const info = await Promise.all([
+                axios.getContents(selected.fid)
+            ]); // {uid, object_string, contents_Item[], contents_Folder[]}
+            //selected = info[0];   // 이렇게 하니까 안됐음.
+            selected.folderList = info[0].folderList;
+            selected.fileList = info[0].fileList;
+            
+            // let storage = this.state.storage;
+            // this.setState({
+            //     storage:storage.concat(selected)
+            // });
             // }
             setTreeItem(selected);
         }
 
         const createFolder = async(selected) => {
             alert("폴더 생성 호출!");
+            let name = prompt("새 폴더명 입력");
+            if(name==null)
+                return;
+            while(name==""){
+                alert("폴더명은 필수 입력사항 입니다.");
+                name = prompt("새 폴더명 입력");
+            }
+            const info = await Promise.all([    // map 
+                axios.createFolder(selected.fid, name)
+            ]);
+            getContents(selected);
+
+            // selected.folderList = selected.folderList.concat(info[0]);
+
+            // 트리에는 추가 반영 되지만 테이블에는 추가 반영 안됨.
+            setTreeItem(selected);
             // let name = prompt("새 폴더명 입력");
             // if(name==null)
             //     return;
