@@ -7,6 +7,9 @@ import FingerprintIcon from '@material-ui/icons/Fingerprint';
 import LocationCityIcon from '@material-ui/icons/LocationCity';
 import HomeIcon from '@material-ui/icons/Home';
 import PhoneIcon from '@material-ui/icons/Phone';
+import { Link } from 'react-router-dom';
+import * as axios from './axios.js'
+
 class PasswordCheck extends Component{
 
     render(){
@@ -30,8 +33,12 @@ class PasswordCheck extends Component{
 
             <div className="row">
                 <div className="input-field col s12">
-                <button type="submit" className="btn waves-effect waves-light col s12">확인</button>
+                <Link to="./edituser">
+                <button type="submit" className="btn waves-effect waves-light col s12" >확인</button>
+                </Link>
+                <Link to="./home">
                 <button type="button" className="btn waves-effect waves-light col s12">홈</button>
+                </Link>
                 
                 </div>
                

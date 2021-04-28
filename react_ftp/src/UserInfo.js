@@ -7,6 +7,8 @@ import FingerprintIcon from '@material-ui/icons/Fingerprint';
 import LocationCityIcon from '@material-ui/icons/LocationCity';
 import HomeIcon from '@material-ui/icons/Home';
 import PhoneIcon from '@material-ui/icons/Phone';
+import { Link } from 'react-router-dom';
+
 class UserInfo extends Component{
 
     render(){
@@ -84,9 +86,12 @@ class UserInfo extends Component{
 
             <div className="row">
                 <div className="input-field col s12">
+                <Link to="./pwcheck">
                 <button type="submit" className="btn waves-effect waves-light col s12">수정</button>
+                </Link>   
+                <Link to="./home">
                 <button type="button" className="btn waves-effect waves-light col s12">취소</button>
-                
+                </Link>
                 </div>
             </div>
 
