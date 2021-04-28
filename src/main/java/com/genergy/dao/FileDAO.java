@@ -34,6 +34,11 @@ public class FileDAO {
 
 		for(File f : queryResult) {
 			Map<String, Object> child = new HashMap<String, Object>();
+			
+//			String last_modified_date = f.getLastModifiedDate();
+//			last_modified_date = last_modified_date.substring(0, 16);
+//			f.setLastModifiedDate(last_modified_date);
+			
 			child.put("fid", f.getFileId());
 			child.put("fname", f.getFileName());
 			child.put("fdate", f.getLastModifiedDate());
@@ -44,7 +49,6 @@ public class FileDAO {
 			result.add(child);
 		}
 		session.getTransaction().commit();
-		
 		return result;
 	}
 	
@@ -56,12 +60,22 @@ public class FileDAO {
 		Query query = session.createQuery("from Folder where parentsFolderId=:folder_id");
 		query.setParameter("folder_id", folder_id);
 		List<Folder> queryResult = query.list();
-		
-		
+
 		List<Object> result = new ArrayList<Object>();
 		
 		for(Folder f : queryResult) {
 			Map<String, Object> child = new HashMap<String, Object>();
+//
+//			String last_modified_date = f.getLastModifiedDate();
+//			int hour = Integer.parseInt(last_modified_date.substring(11, 13));
+//			String time = last_modified_date.substring(11, 16);
+//			last_modified_date = last_modified_date.substring(0, 11);
+//			if(hour >= 12)
+//				last_modified_date = last_modified_date + "오후 " + (hour-12) + time.substring(2);
+//			else
+//				last_modified_date = last_modified_date + "오전 " + hour + time.substring(2);
+//			f.setLastModifiedDate(last_modified_date);
+			
 			child.put("fid", f.getFolderId());
 			child.put("fname", f.getFolderName());
 			child.put("fdate", f.getLastModifiedDate());
@@ -71,6 +85,7 @@ public class FileDAO {
 			result.add(child);
 		}
 		session.getTransaction().commit();
+
 		return result;
 	}
 	

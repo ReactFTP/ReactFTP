@@ -8,7 +8,7 @@ import { makeStyles, ServerStyleSheets } from '@material-ui/core/styles';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
 
 
-// import * as axios from './axios';
+import * as axios from './axios';
 import Table from './Table';
 
 class Tree extends React.Component {
@@ -56,9 +56,11 @@ class Tree extends React.Component {
                 selectedData : data
             })
         }
-/*
+
+        // storage state 에 찾으려는 fid 데이터가 있는지 검사.
+        // 없으면 서버에서 데이터 요청 후 getContents() 메소드를 통해 storage 에 데이터 추가
         const seekToStorage = (data) => {
-            const result = this.state.storage.filter(storageData => storageData.uid == data.uid);
+            const result = this.state.storage.filter(storageData => storageData.fid == data.fid);
 
             if(result){
                 if(result.length > 0)
@@ -67,7 +69,7 @@ class Tree extends React.Component {
                     return true;
             }
         }
-*/
+
         const getContents = async(selected) => {    // {fid, fname, folderList, fileList}
             // if(seekToStorage(selected)){    // 저장된 데이터가 없다면
             //     const info = await Promise.all([
@@ -253,28 +255,16 @@ class Tree extends React.Component {
                         selected={this.state.selected}
                         onNodeToggle={handleToggle}
                         onNodeSelect={handleSelect}
-                        onContextMenu={handleSelect}
+                        // onContextMenu={handleSelect}
                     >
                         <ContextMenuTrigger id="homeMenu">
                             <TreeItem key={this.props.data.fid} nodeId={this.props.data} label={this.props.data.fname} data={this.props.data} onClick={()=>{setTreeItem(this.props.data)}}>
                                 { treeLoad(this.props.data.folderList) }
                             </TreeItem>
-
-                            <ContextMenu id="homeMenu">
-                                <MenuItem data={this.props.data} onClick={ () => { createFolder(this.props.data) } }>
-                                    폴더 생성
-                                </MenuItem>
-                                <MenuItem data={this.props.data} onClick={ () => { modifyFolder(this.props.data) } }>
-                                    폴더 수정
-                                </MenuItem>
-                                <MenuItem data={this.props.data} onClick={ () => { deleteFolder(this.props.data) } }>
-                                    폴더 삭제
-                                </MenuItem>
-                            </ContextMenu>
                         </ContextMenuTrigger>
                     </TreeView>
                 </div>
-                <Table data={this.state.selectedData.fileList} selectedTreeData={this.state.selectedData} setTreeItem={setTreeItem}/>
+                <Table data={this.state.selectedData.fileList} selectedTreeData={this.state.selectedData} setTreeItem={setTreeItem} createFolder={createFolder}/>
             </div>
         );
     }

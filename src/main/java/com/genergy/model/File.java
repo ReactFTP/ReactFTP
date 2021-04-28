@@ -78,5 +78,17 @@ public class File implements Serializable {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
+	// 수정일 일시 포맷 String 반환
+	public String getLastModifiedDateToString() {
+		String last_modified_date = this.lastModifiedDate.toString();
+		int hour = Integer.parseInt(last_modified_date.substring(11, 13));
+		String time = last_modified_date.substring(11, 16);
+		last_modified_date = last_modified_date.substring(0, 11);
+		if(hour >= 12)
+			last_modified_date = last_modified_date + "오후 " + (hour-12) + time.substring(2);
+		else
+			last_modified_date = last_modified_date + "오전 " + hour + time.substring(2);
+		return last_modified_date;
+	}
 }

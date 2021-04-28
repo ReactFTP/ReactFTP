@@ -182,6 +182,8 @@ export function editUser(id, pw, email, phone, addr1, addr2) {
 //     }).catch(function(error){
 //     });
 // }
+
+// Home.js -> 최상위 디렉토리 List 가져오기
 export function getHomeContents_BK() {
     return axios({
         method: 'get',
@@ -195,6 +197,20 @@ export function getHomeContents_BK() {
     }).catch(function(error){
     });
 }
+
+// export function getHomeContents_BK() {
+//     return axios({
+//         method: 'get',
+//         url : '/home/getfolderlist',
+//         params : {
+//             folder_id : 0,
+//         }
+//     }).then(function(response){
+//         console.log(response.data);
+//         return response.data;
+//     }).catch(function(error){
+//     });
+// }
 
 
 export default axios;

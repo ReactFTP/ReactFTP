@@ -84,6 +84,10 @@ class Table extends React.Component {
             // }
         };
 
+        const uploadFile = async(data) => {
+            alert("파일 업로드 호출!");
+        };
+
         const mapToComponent = (fileList) => {
             if(fileList == undefined)
                 return;
@@ -147,6 +151,17 @@ class Table extends React.Component {
                     <li className="size">크기</li>
                 </ul>
                 {mapToComponent(this.props.data)}
+                <ContextMenuTrigger id='empty' >
+                empty
+                    <ContextMenu id='empty'>
+                        <MenuItem data={this.props.data.selectedTreeData} onClick={ () => { this.props.createFolder(this.props.data.selectedTreeData) } }>
+                            폴더 생성
+                        </MenuItem>
+                        <MenuItem data={this.props.data.selectedTreeData} onClick={ () => { uploadFile(this.props.data.selectedTreeData) } }>
+                            파일 업로드
+                        </MenuItem>
+                    </ContextMenu>
+                </ContextMenuTrigger>
             </div>
         );
     }

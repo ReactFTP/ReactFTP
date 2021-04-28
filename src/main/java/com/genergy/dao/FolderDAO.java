@@ -28,24 +28,16 @@ public class FolderDAO {
 		Query query = session.createQuery("from Folder where parentsFolderId=:folder_id");
 		query.setParameter("folder_id", folder_id);
 		List<Folder> queryResult = query.list();
-		session.getTransaction().commit();
 		
 		List<Object> result = new ArrayList<Object>();
 		
 		for(Folder f : queryResult) {
 			Map<String, Object> child = new HashMap<String, Object>();
 			
-//			String last_modified_date = f.getLastModifiedDate();
-//			System.out.println(last_modified_date);
-//			String[] split = last_modified_date.split(".");
-//			for(String e:split)
-//				System.out.println(e);
-//			System.out.println(split[0]);
-//			f.setLastModifiedDate(split[0]);
-//			
-//			System.out.println(f.getLastModifiedDate());
-			//2021-04-26 18:08:58.217746+09
-			//2021-04-26 09:08:58
+			String last_modified_date = f.getLastModifiedDateToString();
+			last_modified_date = last_modified_date.substring(0, 16);
+//			f.setLastModifiedDate(last_modified_date);
+			
 			child.put("fid", f.getFolderId());
 			child.put("fname", f.getFolderName());
 			child.put("folderList", new ArrayList());
@@ -53,7 +45,8 @@ public class FolderDAO {
 			
 			result.add(child);
 		}
-		
+
+		session.getTransaction().commit();
 		return result;
 	}
 	
@@ -66,12 +59,11 @@ public class FolderDAO {
 		Query<?> query = session.createQuery("select folderName from Folder where folderId=:folder_id");
 		query.setParameter("folder_id", folder_id);
 		List<?> list = query.list();
-		session.getTransaction().commit();
 		
 		if(list.size() > 0)
 			result = (String) list.get(0);
-		
-				
+
+		session.getTransaction().commit();				
 		return result;
 	}
 }

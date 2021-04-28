@@ -33,6 +33,7 @@ class Home extends React.Component {
 
         // console.log("this.props.uid : " + 
         //     window.sessionStorage.getItem('homeUid'));
+        console.log("componentWillmount() 호출");
         this.getHome();
     }
 
