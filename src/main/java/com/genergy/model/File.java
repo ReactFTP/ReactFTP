@@ -19,7 +19,7 @@ public class File implements Serializable {
 	private String fileName;
 	@Column(name="folder_id")
 	private String folderId;
-	@Column(name="created_date")
+	@Column(name="create_date")
 	private Date createdDate;
 	@Column(name="last_modified_date")
 	private Date lastModifiedDate;

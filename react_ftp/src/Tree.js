@@ -45,7 +45,8 @@ class Tree extends React.Component {
                 selected : nodeIds,
             })
         };
-        const setTreeItem = (data) => {
+
+        const setTreeItem = (data) => { // {fid, fname, folderList, fileList}
             if(data.folderList.length > 0){
                 this.setState({
                     parentData : data,
@@ -66,86 +67,90 @@ class Tree extends React.Component {
                     return true;
             }
         }
-
-        const getContents = async(selected) => {    // {uid, object_string}
-            if(seekToStorage(selected)){    // 저장된 데이터가 없다면
-                const info = await Promise.all([
-                    axios.getContents(selected.uid)
-                ]); // {uid, object_string, contents_Item[], contents_Folder[]}
-                //selected = info[0];   // 이렇게 하니까 안됐음.
-                selected.contents_Item = info[0].contents_Item;
-                selected.contents_Folder = info[0].contents_Folder;
+*/
+        const getContents = async(selected) => {    // {fid, fname, folderList, fileList}
+            // if(seekToStorage(selected)){    // 저장된 데이터가 없다면
+            //     const info = await Promise.all([
+            //         axios.getContents(selected.uid)
+            //     ]); // {uid, object_string, contents_Item[], contents_Folder[]}
+            //     //selected = info[0];   // 이렇게 하니까 안됐음.
+            //     selected.contents_Item = info[0].contents_Item;
+            //     selected.contents_Folder = info[0].contents_Folder;
                 
-                let storage = this.state.storage;
-                this.setState({
-                    storage:storage.concat(selected)
-                });
-            }
+            //     let storage = this.state.storage;
+            //     this.setState({
+            //         storage:storage.concat(selected)
+            //     });
+            // }
             setTreeItem(selected);
         }
 
         const createFolder = async(selected) => {
-            let name = prompt("새 폴더명 입력");
-            if(name==null)
-                return;
-            while(name==""){
-                alert("폴더명은 필수 입력사항 입니다.");
-                name = prompt("새 폴더명 입력");
-            }
-            let desc = prompt("폴더 설명 입력");
-            const info = await Promise.all([    // map 
-                axios.createComponent(selected.uid, "", name, desc)
-            ]);
-            selected.contents_Folder = selected.contents_Folder.concat(info[0]);
-            setTreeItem(selected);
+            alert("폴더 생성 호출!");
+            // let name = prompt("새 폴더명 입력");
+            // if(name==null)
+            //     return;
+            // while(name==""){
+            //     alert("폴더명은 필수 입력사항 입니다.");
+            //     name = prompt("새 폴더명 입력");
+            // }
+            // let desc = prompt("폴더 설명 입력");
+            // const info = await Promise.all([    // map 
+            //     axios.createComponent(selected.uid, "", name, desc)
+            // ]);
+            // selected.contents_Folder = selected.contents_Folder.concat(info[0]);
+            // setTreeItem(selected);
         };
 
         const deleteFolder = async(data) => {
-            const result = window.confirm("폴더 내용도 모두 삭제됩니다.\n정말로 삭제하시겠습니까?");
-            if(result){
-                await Promise.all([
-                    axios.deleteItem(data.uid)
-                ]);
-                afterDeleteFolder(data);
-            }
+            alert("폴더 삭제 호출!");
+            // const result = window.confirm("폴더 내용도 모두 삭제됩니다.\n정말로 삭제하시겠습니까?");
+            // if(result){
+            //     await Promise.all([
+            //         axios.deleteItem(data.uid)
+            //     ]);
+            //     afterDeleteFolder(data);
+            // }
         };
 
         // 부모 node 의 contents_Folder 배열에서 삭제 대상 content 를 제외하는 기능
-        const afterDeleteFolder = (data) => {
+        // const afterDeleteFolder = (data) => {
 
-            let parent = undefined;
-            if(data.contents_Folder.length > 0){
-                const storage = this.state.storage;
+        //     let parent = undefined;
+        //     if(data.contents_Folder.length > 0){
+        //         const storage = this.state.storage;
 
-                storage.map(storageData => {
-                    const tempArray = storageData.contents_Folder.filter(content => content.uid == data.uid);
-                    if(tempArray.length > 0)
-                        parent = storageData;
-                })
-            }
-            else{
-                parent = this.state.parentData;
-            }
-            parent.contents_Folder = parent.contents_Folder.filter(content => content.uid != data.uid);
-            setTreeItem(data);
-        }
+        //         storage.map(storageData => {
+        //             const tempArray = storageData.contents_Folder.filter(content => content.uid == data.uid);
+        //             if(tempArray.length > 0)
+        //                 parent = storageData;
+        //         })
+        //     }
+        //     else{
+        //         parent = this.state.parentData;
+        //     }
+        //     parent.contents_Folder = parent.contents_Folder.filter(content => content.uid != data.uid);
+        //     setTreeItem(data);
+        // }
 
         const modifyFolder = async(data) => {
-            let name = prompt("선택한 폴더 : " + data.object_string + "\n변경할 폴더명 입력");
-            if(name==null)
-                return;
-            while(name==""){
-                alert("폴더명은 필수 입력사항 입니다.");
-                name = prompt("선택한 폴더 : " + data.object_string + "\n변경할 폴더명 입력");
-            }
-            await Promise.all([
-                axios.modifyItem(data.uid, name)
-            ]);
+            alert("폴더 수정 호출!");
+            // let name = prompt("선택한 폴더 : " + data.object_string + "\n변경할 폴더명 입력");
+            // if(name==null)
+            //     return;
+            // while(name==""){
+            //     alert("폴더명은 필수 입력사항 입니다.");
+            //     name = prompt("선택한 폴더 : " + data.object_string + "\n변경할 폴더명 입력");
+            // }
+            // await Promise.all([
+            //     axios.modifyItem(data.uid, name)
+            // ]);
 
-            data.object_string = name;
-            setTreeItem(data);
+            // data.object_string = name;
+            // setTreeItem(data);
         };
 
+/*
         const createItem = async(data) => {
             let id = prompt("새 아이템 ID 입력");
             if(id==null)
@@ -209,27 +214,23 @@ class Tree extends React.Component {
             if(folderList){
                 return folderList.map((content, i) => {
                     let children = undefined;
-                    if(content.folder && content.folder.length > 0){
-                        children = treeLoad(content.folder);
+                    if(content.folderList && content.folderList.length > 0){
+                        children = treeLoad(content.folderList);
                     }
                     return (
                         <>
                             <ContextMenuTrigger id={content.fid} >
-                                {/* <TreeItem key={content.fid} nodeId={content} label={content.fname} children={ children } selected={this.props.data} onClick={ ()=>{ getContents(content)} } */}
-                                <TreeItem key={content.fid} nodeId={content} label={content.fname} children={ children } selected={this.props.data} onClick={ () => {  } }
+                                <TreeItem key={content.fid} nodeId={content} label={content.fname} children={ children } selected={this.props.data} onClick={ () => { getContents(content) } }
                                 />
                                 <ContextMenu id={content.fid}>
-                                    <MenuItem data={content} onClick={ () => {/*createFolder(content)*/} }>
+                                    <MenuItem data={content} onClick={ () => { createFolder(content) } }>
                                         폴더 생성
                                     </MenuItem>
-                                    <MenuItem data={content} onClick={ () => {/*deleteFolder(content)*/} }>
+                                    <MenuItem data={content} onClick={ () => { modifyFolder(content) } }>
+                                        폴더 수정
+                                    </MenuItem>
+                                    <MenuItem data={content} onClick={ () => { deleteFolder(content) } }>
                                         폴더 삭제
-                                    </MenuItem>
-                                    <MenuItem data={content} onClick={ () => {/*modifyFolder(content)*/} }>
-                                        폴더 변경
-                                    </MenuItem>
-                                    <MenuItem data={content} onClick={ () => {/*createItem(content)*/} }>
-                                        아이템 생성
                                     </MenuItem>
                                 </ContextMenu>
                             </ContextMenuTrigger>
@@ -256,25 +257,24 @@ class Tree extends React.Component {
                     >
                         <ContextMenuTrigger id="homeMenu">
                             <TreeItem key={this.props.data.fid} nodeId={this.props.data} label={this.props.data.fname} data={this.props.data} onClick={()=>{setTreeItem(this.props.data)}}>
-                                {/* { treeLoad(this.props.data.contents_Folder) } */}
-                                {/* { treeLoad(this.props.data.folderList) } */}
+                                { treeLoad(this.props.data.folderList) }
                             </TreeItem>
 
                             <ContextMenu id="homeMenu">
-                                {/* <MenuItem data={this.props.data} onClick={ () => {createFolder(this.props.data)} }> */}
-                                <MenuItem data={this.props.data} onClick={ () => {} }>
+                                <MenuItem data={this.props.data} onClick={ () => { createFolder(this.props.data) } }>
                                     폴더 생성
                                 </MenuItem>
-                                {/* <MenuItem data={this.props.data} onClick={ () => {createItem(this.props.data)} }> */}
-                                <MenuItem data={this.props.data} onClick={ () => {} }>
-                                    아이템 생성
+                                <MenuItem data={this.props.data} onClick={ () => { modifyFolder(this.props.data) } }>
+                                    폴더 수정
+                                </MenuItem>
+                                <MenuItem data={this.props.data} onClick={ () => { deleteFolder(this.props.data) } }>
+                                    폴더 삭제
                                 </MenuItem>
                             </ContextMenu>
                         </ContextMenuTrigger>
                     </TreeView>
                 </div>
-                {/* <Table data={this.state.selectedData.contents_Item} selectedTreeData={this.state.selectedData} setTreeItem={setTreeItem}/> */}
-                <Table data={this.state.selectedData} selectedTreeData={this.state.selectedData} setTreeItem={setTreeItem}/>
+                <Table data={this.state.selectedData.fileList} selectedTreeData={this.state.selectedData} setTreeItem={setTreeItem}/>
             </div>
         );
     }

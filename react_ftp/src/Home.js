@@ -94,7 +94,7 @@ class Home extends React.Component {
                             <div className="title-wrap">
                                 홈
                             </div>
-                            <Tree data={this.state.data} />
+                            <Tree data={this.state.data}/>
                         </section>
                         <footer>
                             <div className="copyright-wrap">copyright-wrap</div>

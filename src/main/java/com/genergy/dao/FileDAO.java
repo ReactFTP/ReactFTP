@@ -1,7 +1,10 @@
 package com.genergy.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -9,6 +12,7 @@ import org.hibernate.query.Query;
 
 import com.genergy.ftp.resources.HibernateUtil;
 import com.genergy.model.File;
+import com.genergy.model.Folder;
 
 public class FileDAO {
 	private static SessionFactory factory;
@@ -17,19 +21,58 @@ public class FileDAO {
 		factory = HibernateUtil.getSessionFactory();
 	}
 	
-	// 특정 폴더의 하위 file 목록 가져오기
-	public static ArrayList<File> getFileListByFolder_id(String folder_id) {
-		ArrayList<File> lists;
+	// 특정 폴더의 하위 file 목록 가져오기 (table 바인딩할 데이터)
+	public static List<Object> getFileListByFolder_id(String folder_id) {
+		List<Object> result = getFolderListByFolder_id(folder_id);
 		
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
 
-		Query<?> query = session.createQuery("select file_name from File where folder_id=:folder_id");
-		query.setParameter("folder_id", folder_id);		
-		lists = (ArrayList<File>) query.list();
+		Query query = session.createQuery("from File where folderId=:folder_id");
+		query.setParameter("folder_id", folder_id);
+		List<File> queryResult = query.list();
+
+		for(File f : queryResult) {
+			Map<String, Object> child = new HashMap<String, Object>();
+			child.put("fid", f.getFileId());
+			child.put("fname", f.getFileName());
+			child.put("fdate", f.getLastModifiedDate());
+			child.put("ftype", f.getType());
+//			child.put("fsize", f.getSize());
+			child.put("fsize", "0");
+			
+			result.add(child);
+		}
+		session.close();
+		
+		return result;
+	}
+	
+	// 특정 폴더의 하위 folder 목록 가져오기 (table 바인딩할 데이터)
+	public static List<Object> getFolderListByFolder_id(String folder_id) {
+		Session session = factory.getCurrentSession();
+		session.beginTransaction();
+
+		Query query = session.createQuery("from Folder where parentsFolderId=:folder_id");
+		query.setParameter("folder_id", folder_id);
+		List<Folder> queryResult = query.list();
 		session.getTransaction().commit();
 		
-		return lists;
+		List<Object> result = new ArrayList<Object>();
+		
+		for(Folder f : queryResult) {
+			Map<String, Object> child = new HashMap<String, Object>();
+			child.put("fid", f.getFolderId());
+			child.put("fname", f.getFolderName());
+			child.put("fdate", f.getLastModifiedDate());
+			child.put("ftype", "폴더");
+			child.put("fsize", "");
+			
+			result.add(child);
+		}
+		session.close();
+		
+		return result;
 	}
 	
 }

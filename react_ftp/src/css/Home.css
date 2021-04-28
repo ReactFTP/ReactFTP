@@ -101,7 +101,6 @@
 	display: flex;
 	flex-direction: column;
 	letter-spacing :-2px;
-	display: none;
 }
 .Home header .top-menu-wrap span:hover{
 	color: rgb(4 129 158);

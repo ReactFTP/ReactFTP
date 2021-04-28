@@ -105,7 +105,7 @@ export function getHomeContents_BK() {
             folder_id : 0,
         }
     }).then(function(response){
-        // console.log(response.data);
+        console.log(response.data);
         return response.data;
     }).catch(function(error){
     });
