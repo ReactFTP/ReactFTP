@@ -133,6 +133,24 @@ export function login(id,pw) {
     }).catch(function(error){
     });
 }
+
+//get user
+export function getUser(id) {
+    return axios({
+        method: 'post',
+        url : '/getUser',
+        params : {
+            id: id
+        },
+        headers : {
+            'Access-Control-Allow-Origin': '*'
+           }
+    }).then(function(response){
+        return response.data;
+    }).catch(function(error){
+    });
+}
+
 //edit user
 export function editUser(id, pw, email, phone, addr1, addr2) {
     return axios({

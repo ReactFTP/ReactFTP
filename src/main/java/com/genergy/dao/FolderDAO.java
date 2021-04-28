@@ -53,7 +53,6 @@ public class FolderDAO {
 			
 			result.add(child);
 		}
-		session.close();
 		
 		return result;
 	}
@@ -71,7 +70,7 @@ public class FolderDAO {
 		
 		if(list.size() > 0)
 			result = (String) list.get(0);
-		session.close();
+		
 				
 		return result;
 	}

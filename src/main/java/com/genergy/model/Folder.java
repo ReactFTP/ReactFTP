@@ -60,7 +60,6 @@ public class Folder implements Serializable {
 		this.createdDate = createdDate.toString();
 	}
 	public String getLastModifiedDate() {
-		System.out.println(lastModifiedDate);
 		return lastModifiedDate;
 	}
 	public void setLastModifiedDate(Date lastModifiedDate) {

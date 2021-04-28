@@ -1,6 +1,6 @@
 import React from 'react';
 import './css/Home.css';
-
+import { Link } from 'react-router-dom';
 import * as axios from './axios';
 import Tree from './Tree';
 
@@ -26,7 +26,7 @@ class Home extends React.Component {
         //     alert("로그인이 필요합니다.");
         //     return;
         // }
-        window.sessionStorage.setItem('sessionId', 'administrator');
+        
         this.setState({
             sessionId : window.sessionStorage.getItem('sessionId')
         });
@@ -74,9 +74,11 @@ class Home extends React.Component {
                             <div className="user-manage-wrap" onClick={ ()=>{ this.props.history.push('/usermanage') } }>
                                 <span>사용자 관리</span>
                             </div>
-                            <div className="my-infomation-wrap" onClick={ ()=>{  } }>
+                            <Link to ="./userinfo">
+                            <div className="my-infomation-wrap">
                                 <span>내 정보 관리</span>
                             </div>
+                            </Link>
                         </div>
                         <div className="user-info-wrap">
                             <div className="logout-button-wrap" onClick={ ()=>{ alert("로그아웃 버튼 클릭!") } }>

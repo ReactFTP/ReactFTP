@@ -1,5 +1,8 @@
 package com.genergy.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -168,5 +171,55 @@ public class MemberDAO {
         session.getTransaction().commit();
         }
         return null;
+	}
+
+	public String[] getUser(String id) {
+
+		Session session = factory.getCurrentSession();
+	    session.beginTransaction();
+	    Member m = session.get(Member.class, id);
+	    String[] userInfo = new String[13];
+	    userInfo[0] = m.getMemberId();
+	    userInfo[1] = m.getMemberName();
+	    
+	   String email = m.getEmail();
+	   String[] emails = email.split("@");
+	   userInfo[2] = emails[0];
+	   userInfo[3] = emails[1];
+	   
+	   String phone = m.getMemberPhone();
+	   String[] phones = phone.split("-");
+	   userInfo[4] = phones[0];
+	   userInfo[5] = phones[1];
+	   userInfo[6] = phones[2];
+	   
+	   userInfo[7] = m.getAddr1();
+	   userInfo[8] = m.getAddr2();
+	   //=========================================
+	   userInfo[10] = m.getRoleId();
+	   userInfo[11] = m.getAuthId();
+	   userInfo[12] = m.getCoId();
+	   String companyId = m.getCoId();
+	   session.getTransaction().commit();
+	   Session session1 = factory.getCurrentSession();
+	    session1.beginTransaction();
+	   Query<?> query = session1.createQuery("select coName from Company where coId=:id");
+	   query.setParameter("id", companyId);
+	   String coName = query.getResultList().get(0).toString();
+	   userInfo[9] = coName;
+	   session1.getTransaction().commit(); 
+		return userInfo;
+	}
+
+	public void editUser(String id, String pw, String email, String phone, String addr1, String addr2) {
+		Session session = factory.getCurrentSession();
+	    session.beginTransaction();
+	    Member m = session.get(Member.class, id);
+	    if (!pw.equals("")) {
+	    	m.setPw(pw);
+	    }
+	    m.setEmail(email); m.setMemberPhone(phone); m.setAddr1(addr1); m.setAddr2(addr2); 
+		session.saveOrUpdate(m);
+		session.getTransaction().commit();
 	}
 }

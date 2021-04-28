@@ -16,6 +16,7 @@ class Login extends React.Component {
     }
 
     componentWillMount(){
+        //세션 종료하기
         if(window.sessionStorage.getItem("sessionId")){
             //axios.logout(window.sessionStorage.getItem('appXsession'));
             window.sessionStorage.clear();
@@ -59,12 +60,17 @@ class Login extends React.Component {
 
     }
 
-    openLink() {
+    openLink= async() => {
         if (this.state.message != ''){
             this.closeModal();
             return;
         }
         window.sessionStorage.setItem('sessionId', this.state.id);
+        let user = await axios.getUser(this.state.id, this.state.pw);
+        console.log(user);
+        window.sessionStorage.setItem('roleId', user[10]);
+        window.sessionStorage.setItem('authId', user[11]);
+        window.sessionStorage.setItem('coId', user[12]);
         this.props.history.push('/home');
     }
 

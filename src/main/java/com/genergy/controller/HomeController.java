@@ -31,7 +31,7 @@ public class HomeController {
 		FolderDAO folderdao = new FolderDAO();
 		
 		Map<String, Object> result = new HashMap<String, Object>();
-
+		
 		result.put("fid", folder_id);
 		result.put("fname", folderdao.getFolderNameByFolder_id(folder_id));
 		result.put("folderList", folderdao.getFolderListByFolder_id(folder_id));

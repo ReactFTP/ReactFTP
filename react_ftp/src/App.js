@@ -7,7 +7,7 @@ import IdPwSearch from "./IDPWSearch.js";
 import PWCheck from "./PasswordCheck.js";
 import EditUser from "./UserManager.js"; 
 import { Link, Route, BrowserRouter as Router } from "react-router-dom";
-import Test from "./UserInfo.js";
+import UserInfo from "./UserInfo.js";
 
 function App() {
   return (
@@ -21,7 +21,7 @@ function App() {
       <Route exact path="/idpwsearch" component={IdPwSearch}/>
       <Route exact path="/pwcheck" component={PWCheck}/>
       <Route exact path="/edituser" component={EditUser}/>
-      <Route exact path="/test" component={Test}/>
+      <Route exact path="/userinfo" component={UserInfo}/>
     </Router>
   );
 }

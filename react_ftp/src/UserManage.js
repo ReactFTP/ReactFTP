@@ -51,9 +51,9 @@ class CompanyManage extends React.Component {
     //     });
     // }
 
-    // logout = () => {
-    //     this.props.history.push('/');
-    // }
+    logout = () => {
+        this.props.history.push('/');
+    }
 
     render () {
         //let contentsFolder = this.state.selectedTreeItem;
@@ -98,6 +98,9 @@ class CompanyManage extends React.Component {
                             <div className="search-wrap administrator">
                                 <div className="search-select-company-wrap">
                                     <select name="company">
+                                        {
+
+                                        }
                                         <option value="">회사 선택</option>
                                         <option value="">임시회사1</option>
                                         <option value="">임시회사2</option>

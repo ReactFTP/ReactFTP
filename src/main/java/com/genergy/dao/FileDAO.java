@@ -43,7 +43,7 @@ public class FileDAO {
 			
 			result.add(child);
 		}
-		session.close();
+		session.getTransaction().commit();
 		
 		return result;
 	}
@@ -56,7 +56,7 @@ public class FileDAO {
 		Query query = session.createQuery("from Folder where parentsFolderId=:folder_id");
 		query.setParameter("folder_id", folder_id);
 		List<Folder> queryResult = query.list();
-		session.getTransaction().commit();
+		
 		
 		List<Object> result = new ArrayList<Object>();
 		
@@ -70,8 +70,7 @@ public class FileDAO {
 			
 			result.add(child);
 		}
-		session.close();
-		
+		session.getTransaction().commit();
 		return result;
 	}
 	
