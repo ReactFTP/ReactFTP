@@ -44,6 +44,15 @@ public class UserController {
 		return true;
 	}
 	
+	@PostMapping("deleteUser")
+	@ResponseBody
+	public boolean deleteUser (HttpServletRequest request) {
+		String id = request.getParameter("id");
+		MemberDAO dao= new MemberDAO();
+		dao.deleteUser(id);
+		return true;
+	}
+	
 	
 	@PostMapping("editUserSet")
 	@ResponseBody

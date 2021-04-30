@@ -30,6 +30,25 @@ public class CompanyController {
 		MemberDAO dao= new MemberDAO();
 		return  dao.getUserInCompany(coId);
 	}
+	@PostMapping("deleteCompany") //FTP도 삭제 
+	@ResponseBody
+	public String deleteCompany (HttpServletRequest request) {
+		String coId = request.getParameter("coId");
+		CompanyDAO dao= new CompanyDAO();
+		return  dao.deleteCompany(coId);
+	}
+	
+	@PostMapping("addCompany") //FTP도 생성
+	@ResponseBody
+	public void addCompany (HttpServletRequest request) {
+		String name = request.getParameter("name");
+		String email = request.getParameter("email");
+		String phone = request.getParameter("phone");
+		String desc = request.getParameter("desc");
+		
+		CompanyDAO dao= new CompanyDAO();
+		dao.addCompany(name, email, phone, desc);
+	}
 	
 	@PostMapping("getCompanyName")
 	@ResponseBody

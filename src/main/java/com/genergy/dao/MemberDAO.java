@@ -125,25 +125,16 @@ public class MemberDAO {
 	}
 
 	public String login(String id, String pw) {
-		Session session = factory.getCurrentSession();
-	    session.beginTransaction();
-	    Query<?> query = session.createQuery("select memberId from Member where memberId=:id and pw=:pw");
-	    query.setParameter("id", id);
-        query.setParameter("pw", pw);
-        boolean b = query.list().size() > 0;
-        //로그인 실패
-        if(!b) {
-        	 session.getTransaction().commit();
+		
         	 Session session1 = factory.getCurrentSession();
         	 session1.beginTransaction();
         	Query<?> query1 = session1.createQuery("select memberId, roleId, activeCheck, failedCount from Member where memberId=:id");
         	query1.setParameter("id", id);
-        	       	
-        	if(query1.list().size() == 0) { //존재하지 않는 회원 
+        	//존재하지 않는 회원 
+        	if(query1.list().size() == 0) { 
        		 session1.getTransaction().commit();
        		return "존재하지 않는 회원입니다.";
         	}
-        	
         	//비활성화 된 회원 
         	Object[] array= (Object[]) query1.list().get(0); //[user1, u, N, 0]
         	String activation = array[2].toString();
@@ -151,27 +142,33 @@ public class MemberDAO {
         		session1.getTransaction().commit();
           		return "비활성화 된 회원입니다.";
         	}
-        	
-        	//실패카운트 위해 user인지 체크
-        	String auth = array[1].toString();
-        	if(auth.equals("u")) { 
-        		Member m = session1.get(Member.class, id);
-        		m.setFailedCount(m.getFailedCount() + 1);
-        		if (m.getFailedCount() >= 5) {//횟수 확인 후 비활성화
-               		m.setActiveCheck("N");
-               		session1.saveOrUpdate(m);
-               		session1.getTransaction().commit();
-               		return "5회이상 실패로 계정이 비활성화 되었습니다."; 
-               	}
-        		session1.saveOrUpdate(m);
-        		session1.getTransaction().commit();
-        		return "로그인 " + m.getFailedCount() + "회 실패! (5회 이상 실패시 계정이 비활성화 됩니다.)"; 
-        	}else {
-        		  session1.getTransaction().commit();
-        		return "비밀번호를 확인해주세요.";
-        	}
+        	//로그인 시도
+	    	    Query<?> query = session1.createQuery("select memberId from Member where memberId=:id and pw=:pw");
+	    	    query.setParameter("id", id);
+	            query.setParameter("pw", pw);
+	            boolean b = query.list().size() > 0;
+	            //로그인 실패
+	            if(!b) {
+		        	//실패카운트 위해 user인지 체크
+		        	String auth = array[1].toString();
+		        	if(auth.equals("u")) { 
+		        		Member m = session1.get(Member.class, id);
+		        		m.setFailedCount(m.getFailedCount() + 1);
+		        		if (m.getFailedCount() >= 5) {//횟수 확인 후 비활성화
+		               		m.setActiveCheck("N");
+		               		session1.saveOrUpdate(m);
+		               		session1.getTransaction().commit();
+		               		return "5회이상 실패로 계정이 비활성화 되었습니다."; 
+		               	}
+		        		session1.saveOrUpdate(m);
+		        		session1.getTransaction().commit();
+		        		return "로그인 " + m.getFailedCount() + "회 실패! (5회 이상 실패시 계정이 비활성화 됩니다.)"; 
+		        	}else {
+		        		  session1.getTransaction().commit();
+		        		return "비밀번호를 확인해주세요.";
+		        	}
         }else { //로그인 성공
-        session.getTransaction().commit();
+        	session1.getTransaction().commit();
         }
         return null;
 	}
@@ -280,5 +277,13 @@ public class MemberDAO {
 		 session.getTransaction().commit();
 		System.out.println("debug");
 		
+	}
+
+	public void deleteUser(String id) {
+		Session session = factory.getCurrentSession();
+	    session.beginTransaction();
+	    Member m = session.get(Member.class, id);
+	    session.delete(m);
+	    session.getTransaction().commit();
 	}
 }

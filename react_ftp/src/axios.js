@@ -17,6 +17,25 @@ export function idCheck(id) {
     }).catch(function(error){
     });
 }
+
+//회원삭제
+export function deleteUser(id) {
+    console.log('axios호출!');
+    return axios({
+        method: 'post',
+        url : '/deleteUser',
+        params : {
+            id : id,
+        },
+        headers : {
+            'Access-Control-Allow-Origin': '*'
+           }
+    }).then(function(response){
+        return response.data;
+    }).catch(function(error){
+    });
+}
+
 //회원가입 이메일중복확인
 export function emailCheck(email) {
     console.log('axios호출!');
@@ -66,6 +85,7 @@ export function getCompanies() {
     }).catch(function(error){
     });
 }
+
 //회사 코드로 이름 가져오기
 export function getCompanyName(coId) {
     return axios({
@@ -84,6 +104,26 @@ export function getCompanyName(coId) {
     });
 }
 
+
+//회사 코드로 삭제하기
+export function deleteCompany(coId) {
+    return axios({
+        method: 'post',
+        url : '/deleteCompany',
+        params : {
+            coId : coId
+        },
+        headers : {
+            'Access-Control-Allow-Origin': '*'
+           }
+    }).then(function(response){
+        console.log(response.data);
+        return response.data;
+    }).catch(function(error){
+    });
+}
+
+
 //회원가입
 export function signUp(id, pw, name, email, phone, addr1, addr2, companyId, manager) {
     return axios({
@@ -96,6 +136,25 @@ export function signUp(id, pw, name, email, phone, addr1, addr2, companyId, mana
             'Access-Control-Allow-Origin': '*'
            }
     }).then(function(response){
+        return response.data;
+    }).catch(function(error){
+    });
+}
+
+
+//회사추가
+export function addCompany(name, email, phone, desc) {
+    return axios({
+        method: 'post',
+        url : '/addCompany',
+        params : {
+            name:name, email:email, phone:phone, desc:desc
+        },
+        headers : {
+            'Access-Control-Allow-Origin': '*'
+           }
+    }).then(function(response){
+        alert('추가되었습니다.');
         return response.data;
     }).catch(function(error){
     });

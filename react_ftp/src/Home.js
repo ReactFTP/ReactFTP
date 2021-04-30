@@ -42,6 +42,7 @@ class Home extends React.Component {
         console.log("componentWillmount() 호출");
         this.getHome();
     }
+    
 
     // 처음 로딩되면서 홈 contents 가져옴
     getHome = async() => {
@@ -74,18 +75,18 @@ class Home extends React.Component {
                             <img src={process.env.PUBLIC_URL + '/logo.png'} onClick={()=>{ this.props.history.push('/home') }} />
                         </div>
                         <div className="top-menu-wrap">
-                            <div className={this.state.roleId=='a'?'company-manage-wrap':'sessionNone'} onClick={ ()=>{ this.props.history.push('/companymanage') } }>
+                            <div className={this.state.userInfo.roleId=='a'?'company-manage-wrap':'sessionNone'} onClick={ ()=>{ this.props.history.push('/companymanage') } }>
                                 <span>회사 관리</span>
                             </div>
-                            <div className={this.state.roleId=='u'?'sessionNone':'user-manage-wrap'} onClick={ ()=>{ this.props.history.push('/usermanage') } }>
+                            <div className={this.state.userInfo.roleId=='u'?'sessionNone':'user-manage-wrap'} onClick={ ()=>{ this.props.history.push('/usermanage') } }>
                                 <span>사용자 관리</span>
                             </div>
-                            <div className={this.state.roleId=='a'?'sessionNone':'my-infomation-wrap'} onClick={ ()=>{ this.props.history.push('/userinfo') } }>
+                            <div className={this.state.userInfo.roleId=='a'?'sessionNone':'my-infomation-wrap'} onClick={ ()=>{ this.props.history.push('/userinfo') } }>
                                 <span>내 정보 관리</span>
                             </div>
                         </div>
                         <div className="user-info-wrap">
-                            <div className="logout-button-wrap" onClick={ ()=>{ alert("로그아웃 버튼 클릭!") } }>
+                            <div className="logout-button-wrap"  onClick={this.logout}>
                                 로그아웃
                             </div>
                             <div className="user-id-wrap">

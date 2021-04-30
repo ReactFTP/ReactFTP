@@ -62,14 +62,28 @@ class UserInfoPopup extends Component{
     }
 
     submit = async() => {
+
         let result = await axios.editUserSet(this.state.id, this.state.auth, this.state.active, this.state.join);
-        result? alert('반영되었습니다.'):
-        alert('실패하였습니다. 개발자에게 문의하세요.')
+        if(result){
+            alert('반영되었습니다.');
+            window.opener.location.reload();
+        }else{
+            alert('실패하였습니다. 개발자에게 문의하세요.')
+        }
+       
+        
 
     }
-
-    cancle = async() => {
+    delete = async() => {
+        let result = await axios.deleteUser(this.state.id);
+        if(result){
+        alert('반영되었습니다.');
         window.opener.location.reload();
+        }else {
+            alert('실패하였습니다. 개발자에게 문의하세요.')
+        }
+    }
+    cancle = () => {
         window.close();
     }
 
@@ -273,6 +287,11 @@ class UserInfoPopup extends Component{
             <div className="row">
                 <div className="input-field col s12">
                 <button type="button" className="btn waves-effect waves-light col s12" onClick={this.submit}>반영</button>
+                {window.sessionStorage.getItem('roleId') == 'a'?<button type="button" className="btn waves-effect waves-light col s12" onClick={this.delete}>삭제</button>:
+                    window.sessionStorage.getItem('roleId') == 'm' && this.state.role == 'u'? <button type="button" className="btn waves-effect waves-light col s12" onClick={this.delete}>삭제</button>:
+                    null
+                }
+                    
                 <button type="button" className="btn waves-effect waves-light col s12" onClick={this.cancle}>취소</button>
                 </div>
             </div>

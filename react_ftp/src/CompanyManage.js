@@ -1,60 +1,58 @@
 import React from 'react';
 import './css/ManagePage.css';
-
-// import * as axios from './axios';
+import * as axios from './axios.js';
 import Tree from './Tree';
 import CompanyItem from './CompanyItem';
 
 class CompanyManage extends React.Component {
-    // constructor(props){
-    //     super(props);
-    //     this.state = {
-    //         sessionId : undefined,
-    //         selectedTreeItem : "Home",
-    //         data : {
-    //             uid: "", 
-    //             contents_Item: [], 
-    //             object_string: "", 
-    //             contents_Folder: []
-    //         }
-    //     };
-    // }
+    constructor(props){
+        super(props);
+        this.state = {
+            companies:[],
+            input: ''
+        }
+    };
 
     componentWillMount() {
-        // if(window.sessionStorage.getItem('sessionId')==undefined 
-        //     || window.sessionStorage.getItem('homeUid')==undefined){
-        //     this.props.history.push('/');
-        //     alert("로그인이 필요합니다.");
-        //     return;
-        // }
-
-        // this.setState({
-        //     sessionId : window.sessionStorage.getItem('sessionId')
-        // });
-
-        // console.log("this.props.uid : " + 
-        //     window.sessionStorage.getItem('homeUid'));
-        // this.getHome();
+        this.setCompanyList();   
     }
 
-    // 처음 로딩되면서 홈 contents 가져옴
-    // getHome = async() => {
-    //     const info = await Promise.all([
-    //         axios.getHomeContents(window.sessionStorage.getItem('homeUid'))
-    //     ]);
-
-    //     this.setState({
-    //         data : info[0]
-    //     }, () => {
-    //         alert("TC 홈 폴더 로딩 완료");
-    //         console.log("첫 로딩 후 data.object_string : " + this.state.data.object_string);
-    //     });
-    // }
-
-    // logout = () => {
-    //     this.props.history.push('/');
-    // }
-
+    setCompanyList = async() => {
+        var companyList = await axios.getCompanies();
+        if(companyList == null){return;}
+        const keyList = Object.keys(companyList);
+        var myArray2 = new Array(keyList.length -1);
+        for (let i = 0; i < keyList.length; i++){
+            
+            let key = keyList[i];
+            if(key!='-'){
+                myArray2[i] = companyList[key];
+            }
+        }
+        console.log(myArray2)
+        await this.setState({
+            companies : myArray2,
+        })
+    }
+   
+    mapToComponent =  (input) => {
+        return this.state.companies.map((company,i) => {
+            if(input == ''){
+                return (<CompanyItem data={company}  num={i} key={i}/>)
+            }
+            if((company.coName.includes(input))){
+                return (<CompanyItem data={company}  num={i} key={i}/>)
+            }
+          
+        })
+    }  
+    
+    handleInput = async(e) => {
+        await this.setState({
+            input : e.target.value
+        })
+        this.mapToComponent(e.target.value)
+    }
     render () {
         //let contentsFolder = this.state.selectedTreeItem;
 
@@ -91,19 +89,14 @@ class CompanyManage extends React.Component {
                             </div>
                             <div className="search-wrap">
                                 <div className="search-input-wrap">
-                                    <input type="text" placeholder="회사이름 검색" maxLength="50"></input>
+                                    <input type="text" placeholder="회사이름 검색" maxLength="50"  onChange={this.handleInput}></input>
                                 </div>
-                                <div className="search-button-wrap" onClick={ ()=>{ alert("회사 검색 버튼 클릭") } }>
-                                    검 색
-                                </div>
+                                
                             </div>
-                            <div className="add-button-wrap" onClick={ ()=>{ alert("회사 추가 버튼 클릭") } }>
+                            <div className="add-button-wrap" onClick={ ()=> {window.open("http://localhost:3000/addCompany", "사용자 추가", "directories=no,resizable=no,status=no,toolbar=no,menubar=no, height=450px, width=400px"); }}>
                                 회사 추가
                             </div>
                             <div className="search-list-wrap">
-                                <div className="search-count-wrap">
-                                    조회된 회사 수 : 
-                                </div>
                                 <ul className="tableHead">
                                     {/* <li className="tableName">회사코드</li>
                                     <li className="tableRev">회사명</li>
@@ -111,15 +104,15 @@ class CompanyManage extends React.Component {
                                     <li className="tableMod">대표 번호</li>
                                     <li className="tableOwner">이메일</li>
                                     <li className="tableDelete">삭제</li> */}
-                                    <li className="no"></li>
-                                    <li className="code">회사코드</li>
+                                    <li className="no">no</li>
                                     <li className="name">회사명</li>
                                     <li className="desc">회사 설명</li>
                                     <li className="phone">대표 번호</li>
                                     <li className="email">이메일</li>
-                                    <li className="delete"></li>
+                                    <li className="delete">삭제</li>
                                 </ul>
-                                <CompanyItem />
+                                {this.mapToComponent(this.state.input)}
+                                
                             </div>
                         </section>
                     </div>

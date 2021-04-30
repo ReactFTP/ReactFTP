@@ -275,7 +275,8 @@
 	text-align: center;
 }
 .Manage .search-list-wrap .desc {
-	width : 200px;
+	width : 300px;
+	text-align: center;
 }
 .Manage .search-list-wrap .phone {
 	width : 150px;

@@ -110,7 +110,8 @@ class DirectSignUp extends Component{
         
         let manager = this.state.type;
 
-        console.log(id, idCheck, pw, pwCheck, name, email, phone, addr1, addr2, company, manager);        
+        console.log(id, idCheck, pw, pwCheck, name, email, phone, addr1, addr2, company, manager);       
+        
 
         idCheck != '사용가능'? alert('ID 중복을 확인주세요.'):
         pwCheck != '일치'? alert('PW 일치를 확인해주세요.'):

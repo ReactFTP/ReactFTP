@@ -1,6 +1,28 @@
 import React from 'react';
+import * as axios from './axios.js';
 
 class CompanyItem extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            num : this.props.num,
+            companies : this.props.data
+        }
+    }
+
+    deleteCompany = async(coId) => {
+        let result  = await axios.deleteCompany(coId);
+        if(result =='회사 삭제완료'){
+            alert(result);
+            window.location.reload();
+        }else{
+            alert('회사 삭제 실패');
+            return;
+        }
+
+            
+    }
+        
     render() {
         return (
             // <ul className="content">
@@ -19,14 +41,13 @@ class CompanyItem extends React.Component {
             //     <li className="delete">{this.props.data.owning_user}</li>
             // </ul>
             <ul className="content">
-                <li className="no">1</li>
-                <li className="code">0001</li>
-                <li className="name">제너지</li>
-                <li className="desc">PLM 솔루션 서울 강서구 마곡중앙로 165 안강프라이빗타워 1차 816, 817호</li>
-                <li className="phone">02-0000-0000</li>
-                <li className="email">admin@genergyplm.com</li>
+                <li className="no">   {this.state.num}</li>
+                <li className="name">{this.props.data.coName}</li>
+                <li className="desc">{this.props.data.coDesc}</li>
+                <li className="phone">{this.props.data.coPhone}</li>
+                <li className="email">{this.props.data.email}</li>
                 <li className="delete">
-                    <div className="deleteBtn" onClick={ ()=>{ alert("회사 삭제 버튼 클릭") } }>삭제</div>
+                    <div className="deleteBtn" onClick={()=>{ this.deleteCompany(this.props.data.coId)}}>삭제</div>
                 </li>
             </ul>
         );

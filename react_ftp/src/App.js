@@ -10,6 +10,7 @@ import { Link, Route, BrowserRouter as Router } from "react-router-dom";
 import UserInfo from "./UserInfo.js";
 import UserInfoPopUp from "./UserInfoPopup.js";
 import DirectSignUp from "./DirectSignUp.js";
+import AddCompany from "./AddCompany.js";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
       <Route exact path="/edituser" component={EditUser}/>
       <Route exact path="/userinfo" component={UserInfo}/>
       <Route exact path="/userinfoformanager" component={UserInfoPopUp}/>
+      <Route exact path="/addCompany" component={AddCompany}/>
     </Router>
   );
 }

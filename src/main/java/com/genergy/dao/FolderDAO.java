@@ -141,6 +141,22 @@ public class FolderDAO {
 		
 		return ParentFolder;
 	}
+	//회사 추가에서 삭제
+	public static boolean deleteFolderInFTP(String folder_id, Session session) {
+		
+		Folder targetFolder = session.get(Folder.class, folder_id);
+		
+		Folder ParentFolder = session.get(Folder.class, targetFolder.getParentsFolderId());
+		
+		// FTP 서버에서 폴더 삭제
+		boolean result = CustomFTPClient.deleteFolder(targetFolder.getPath(), targetFolder.getFolderName());
+		if(!result) {
+			System.out.println("FTP 서버 폴더 삭제 실패");
+		}
+		
+		return result;
+	}
+		
 	
 	// Folder 수정
 	public static Folder modifyFolder(String folder_id, String auth_id, String new_folder_name) {
