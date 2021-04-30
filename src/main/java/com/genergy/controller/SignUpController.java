@@ -69,4 +69,20 @@ public class SignUpController {
 		dao.signUp(id, pw, name, email, phone, addr1, addr2, companyId, manager);
 	}
 	
+	@PostMapping("directSignUp")
+	@ResponseBody
+	public void directSignUp (HttpServletRequest request) {
+		String id = request.getParameter("id");
+		String pw = request.getParameter("pw");
+		String name = request.getParameter("name");
+		String email = request.getParameter("email");
+		String phone = request.getParameter("phone");
+		String addr1 = request.getParameter("addr1");
+		String addr2 = request.getParameter("addr2");
+		String companyId = request.getParameter("companyId");
+		String manager = request.getParameter("manager");
+		String type = request.getParameter("type");
+		MemberDAO dao= new MemberDAO();
+		dao.directSignUp(id, pw, name, email, phone, addr1, addr2, companyId, manager, type);
+	}
 }

@@ -66,6 +66,23 @@ export function getCompanies() {
     }).catch(function(error){
     });
 }
+//회사 코드로 이름 가져오기
+export function getCompanyName(coId) {
+    return axios({
+        method: 'post',
+        url : '/getCompanyName',
+        params : {
+            coId : coId
+        },
+        headers : {
+            'Access-Control-Allow-Origin': '*'
+           }
+    }).then(function(response){
+        console.log(response.data);
+        return response.data;
+    }).catch(function(error){
+    });
+}
 
 //회원가입
 export function signUp(id, pw, name, email, phone, addr1, addr2, companyId, manager) {
@@ -79,6 +96,25 @@ export function signUp(id, pw, name, email, phone, addr1, addr2, companyId, mana
             'Access-Control-Allow-Origin': '*'
            }
     }).then(function(response){
+        return response.data;
+    }).catch(function(error){
+    });
+}
+//다이렉트회원가입
+export function directSignUp(id, pw, name, email, phone, addr1, addr2, companyId, manager, type) {
+    return axios({
+        method: 'post',
+        url : '/directSignUp',
+        params : {
+            id : id, pw : pw, name: name, email: email, phone: phone , addr1: addr1, addr2: addr2, companyId: companyId, manager: manager, type: type
+        },
+        headers : {
+            'Access-Control-Allow-Origin': '*'
+           }
+    }).then(function(response){
+        if(type == 'manager' && manager == 'true'){
+            alert('Administrator의 승인 후 이용이 가능합니다.');
+        }alert("가입완료");
         return response.data;
     }).catch(function(error){
     });
@@ -151,6 +187,23 @@ export function getUser(id) {
     });
 }
 
+//get user InCompany 
+export function getUserInCompany  (coId)  {
+    return axios({
+        method: 'post',
+        url : '/getUserInCompany',
+        params : {
+            coId: coId
+        },
+        headers : {
+            'Access-Control-Allow-Origin': '*'
+           }
+    }).then(function(response){
+        console.log(response.data);
+        return response.data;
+    }).catch(function(error){
+    });
+}
 //edit user
 export function editUser(id, pw, email, phone, addr1, addr2) {
     return axios({
@@ -167,6 +220,24 @@ export function editUser(id, pw, email, phone, addr1, addr2) {
     }).catch(function(error){
     });
 }
+//edit user set 
+export function editUserSet(id, auth, active, join) {
+    return axios({
+        method: 'post',
+        url : '/editUserSet',
+        params : {
+            id:id, auth:auth, active:active, join:join
+        },
+        headers : {
+            'Access-Control-Allow-Origin': '*'
+           }
+    }).then(function(response){
+        return response.data;
+    }).catch(function(error){
+    });
+}
+
+
 
 // get <REACT FTP> home folder
 // export function getHomeContents_BK() {

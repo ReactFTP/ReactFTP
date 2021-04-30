@@ -43,5 +43,19 @@ public class UserController {
 		dao.editUser(id, pw, email, phone, addr1, addr2);
 		return true;
 	}
+	
+	
+	@PostMapping("editUserSet")
+	@ResponseBody
+	public boolean editUserSet (HttpServletRequest request) {
+		String id = request.getParameter("id");
+		String auth = request.getParameter("auth");
+		String active = request.getParameter("active");
+		String join = request.getParameter("join");
+		MemberDAO dao= new MemberDAO();
+		dao.editUserSet(id, auth, active, join);
+		return true;
+	}
+
 
 }

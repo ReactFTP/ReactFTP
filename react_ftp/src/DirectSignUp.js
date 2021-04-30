@@ -13,7 +13,7 @@ import Modal from 'react-modal';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import BootstrapTable from 'react-bootstrap-table-next';
 
-class SignUp extends Component{
+class DirectSignUp extends Component{
     state = {
        idCheck: '',
        idCheckResult: '',
@@ -101,7 +101,13 @@ class SignUp extends Component{
         let phone = this.state.phone1 + '-' + this.state.phone2 + '-' + this.state.phone3;
         let addr1 = this.state.addr1;
         let addr2 = this.state.addr2;
-        let company = this.state.company;
+        let company = '';
+        if (window.sessionStorage.getItem('roleId')=='m'){
+             company = 'manager'
+        }else{
+             company = this.state.company;
+        }
+        
         let manager = this.state.type;
 
         console.log(id, idCheck, pw, pwCheck, name, email, phone, addr1, addr2, company, manager);        
@@ -116,9 +122,14 @@ class SignUp extends Component{
         await axios.phoneCheck(phone)? alert('이미 존재하는 휴대폰 번호입니다.'):
         addr1 == '' ? alert('주소를 입력해주세요.'):
         company == ''?alert('소속 회사를 선택해주세요.'):
-        manager? alert( company + ', Administrator의 가입 승인 후 이용 가능합니다.'):
-        alert( company + ', Manager의 가입 승인 후 이용 가능합니다.');
-        await axios.signUp(id, pw, name, email, phone, addr1, addr2, this.state.companyId, manager);
+        window.sessionStorage.getItem('roleId')=='m'?  await axios.directSignUp(id, pw, name, email, phone, addr1, addr2,window.sessionStorage.getItem('coId'), manager, 'manager'):
+        window.sessionStorage.getItem('roleId')=='a'? await axios.directSignUp(id, pw, name, email, phone, addr1, addr2,this.state.companyId, manager, 'admin'):
+        console.log('end')
+
+        window.opener.location.reload();
+
+        
+        
         
       };
 
@@ -171,13 +182,14 @@ class SignUp extends Component{
 
     }
     
+
     clickCompany = {
         onClick: async (e, row, rowIndex) => {
             await this.setState({company : row.coName, companyId : row.coId});
             this.closeCompanyModal();
         }
       };
-   
+  
     render(){
         return(
         <div id="login-page" className="row">
@@ -185,7 +197,7 @@ class SignUp extends Component{
             <form className="login-form" onSubmit={this.onSubmit}>
             <div className="row">
                 <div className="main-title">
-                <h4>회원가입</h4>
+                <h4>사용자 추가</h4>
                 <p className="center">Join to our community now !</p>
                 </div>
             </div>
@@ -280,6 +292,7 @@ class SignUp extends Component{
             </div>
 
             <div className="row margin">
+                {window.sessionStorage.getItem('roleId') == 'a'? (
                 <div className="input-field col s12">
                 <icon className ="material-icons"> <LocationCityIcon/></icon>
                 <label for="company"> 회사 </label>
@@ -287,6 +300,8 @@ class SignUp extends Component{
                 <button type="button" className="btn1 waves-effect waves-light col s11" onClick={this.openCompanyModal}>
                     <img src="./search_icon.png" height="10" width="10"></img>
                 </button>
+                
+                
                     {/*모달창*/}
 
                     <Modal  className="company-modal"
@@ -315,18 +330,15 @@ class SignUp extends Component{
 
 
                     </Modal>
-                </div>
+                </div>):
+                null
+                }
             </div>
 
             <div className="row">
                 <div className="input-field col s12">
                 <button type="button" className="btn waves-effect waves-light col s12" onClick={this.onSubmit}>제출</button>
-                <Link to="./login">
-                <button type="button" className="btn waves-effect waves-light col s12">취소</button>
-                </Link>
-                </div>
-                <div className="input-field col s12">
-                <p className="margin center medium-small sign-up">Already have an account? <a href="./login">Login</a></p>
+                <button type="button" className="btn waves-effect waves-light col s12" onClick={()=> {window.close()}}>취소</button>
                 </div>
             </div>
 
@@ -337,4 +349,4 @@ class SignUp extends Component{
         );
     }
 }
-export default SignUp;
+export default DirectSignUp;

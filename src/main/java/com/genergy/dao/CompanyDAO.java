@@ -34,4 +34,22 @@ public class CompanyDAO {
 	     
 	     return map;
 	}
+
+	public String getCompanyName(String coId) {
+		Session session = factory.getCurrentSession();
+	     session.beginTransaction();
+	     Query<?> query = session.createQuery("select coName from Company where coId=:coId");
+	     query.setParameter("coId", coId);
+	     String name = null;
+	     
+	     if(query.list().size() == 1) {
+	    	 name = (String) query.list().get(0);
+	    	 session.getTransaction().commit();
+	    	 return name;
+	     }
+	     session.getTransaction().commit();
+	     return name;
+		
+	}
+
 }

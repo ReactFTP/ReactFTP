@@ -35,6 +35,10 @@ public class Folder implements Serializable {
 	@Column(name="parents_folder_id")
 	private String parentsFolderId;
 	
+	public Folder() {
+		super();
+	}
+
 	public Folder(String id, String name, String path, String parentFolderId) {
 		this.folderId = id;
 		this.folderName = name;
