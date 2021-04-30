@@ -177,7 +177,6 @@ public class CustomFTPClient {
 			client.changeWorkingDirectory(filePath);
 			
 			for (FTPFile item : client.listFiles(client.printWorkingDirectory())) {
-				System.out.println("item.getName() : " + item.getName());
 				if(item.getName().indexOf(oldName) != -1){
 					String from = item.getName();
 					// 파일명 변경
@@ -190,5 +189,29 @@ public class CustomFTPClient {
 		}
 		return result;
 	}//	FTP 서버에 파일 수정 완료
+
+	// FTP 서버에 파일 삭제
+	public static boolean deleteFile(String filePath, File targetFile) {
+		String fileName = targetFile.getFileName();
+		
+		try {
+			client.changeWorkingDirectory(filePath);
+
+			System.out.println("삭제할 파일 : " + fileName);
+			for (FTPFile item : client.listFiles(client.printWorkingDirectory())) {
+				System.out.println("item.getName() : " + item.getName());
+				if(item.getName().indexOf(fileName) != -1){
+					String deleteFile = item.getName();
+					// 파일 삭제
+					client.deleteFile(deleteFile);
+					return true;
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}//	FTP 서버에 파일 삭제 완료
 	
 }

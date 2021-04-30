@@ -26,7 +26,8 @@ class Tree extends React.Component {
     }
 
     openModifyModal = (selected) => {
-        if(selected.ftype != '폴더') // 파일인 경우
+        console.log(selected);
+        if(selected.ftype != '폴더' && selected.ftype != undefined) // 파일인 경우
             this.setState({ modalOpenFileModify: true });
         else // 폴더인 경우
             this.setState({ modalOpen: true });
@@ -186,9 +187,23 @@ class Tree extends React.Component {
         };
 
         const deleteFolder = async(selected) => {
-            if(!companyCheck(selected))
-                return;
-            // if(authCheckFolder(selected)){
+            if(selected.ftype != '폴더' && selected.ftype != undefined){    // 파일 삭제
+                const result = window.confirm(selected.fname + " 을(를) 삭제하시겠습니까?");
+                if(result){
+                    const deleteResult = await Promise.all([
+                        axios.deleteFile(selected.folderid, selected.fid)
+                    ]);
+                    console.log(deleteResult[0]) // {uid, object_string, contents_Item[], contents_Folder[]}
+                    
+                    let treeData = this.state.selectedData;
+                    treeData.folderList = deleteResult[0].folderList;
+                    treeData.fileList = deleteResult[0].fileList;
+                    setTreeItem(treeData);
+                }
+            }
+            else{   // 폴더 삭제
+                if(!companyCheck(selected))
+                    return;
                 const result = window.confirm("폴더 내용도 모두 삭제됩니다.\n정말로 삭제하시겠습니까?");
                 if(result){
                     const deleteResult = await Promise.all([
@@ -200,9 +215,7 @@ class Tree extends React.Component {
                     selected.fileList = deleteResult[0].fileList;
                     setTreeItem(deleteResult[0]);
                 }
-            // } else{
-            //     alert("삭제 권한이 없습니다.");
-            // }
+            }
         };
 
         const modifyFolder = (selected) => {
@@ -213,6 +226,7 @@ class Tree extends React.Component {
         };
 
         const modifySubmit = async(selected) => {
+            console.log(selected);
             let authId = this.state.modifyFolderAuth;
             let newFolderName = this.state.modifyFolderName;
             if(newFolderName=="" || newFolderName == undefined){
@@ -220,12 +234,12 @@ class Tree extends React.Component {
                 return;
             }
             console.log(authId);
-            console.log(selected.fauth);
+            console.log(newFolderName);
             if(authId == "" || authId == undefined)
                 authId = selected.fauth;
-            if(selected.ftype != '폴더'){    // 파일 변경
+            if(selected.ftype != '폴더' && selected.ftype != undefined){    // 파일 변경
                 await Promise.all([
-                    axios.modifyFile(selected.folderid ,selected.fid, authId, this.state.modifyFolderName)
+                    axios.modifyFile(selected.folderid, selected.fid, authId, this.state.modifyFolderName)
                 ]);
             }
             else{
@@ -234,9 +248,9 @@ class Tree extends React.Component {
                 ]);
             }
             this.closeModifyModal();
-            selected.fname = this.state.modifyFolderName;
-            selected.fauth = this.state.modifyFolderAuth;
-            if(selected.ftype != '폴더')
+            selected.fname = newFolderName;
+            selected.fauth = authId;
+            if(selected.ftype != '폴더' && selected.ftype != undefined)
                 setTableItem(selected);
             else
                 setTreeItem(selected);

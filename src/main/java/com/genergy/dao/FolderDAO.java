@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -73,20 +74,10 @@ public class FolderDAO {
 	
 	// 부여할 Folder ID count
 	public static String getFolderNextSeq() {
-		String result = "";
+		String fileId = (new Date().getTime()) + "" + (new Random().ints(1000, 9999).findAny().getAsInt());
+		fileId = fileId.substring(8);
 		
-		Session session = factory.getCurrentSession();
-		session.beginTransaction();
-
-		Query query = session.createQuery("select count(*) from Folder");
-		List<Long> queryResult = query.list();
-		
-		if(queryResult.size() > 0) {
-			result = queryResult.get(0).toString();
-		}
-
-		session.getTransaction().commit();				
-		return result;
+		return fileId;
 	}
 	
 	// Folder 생성
