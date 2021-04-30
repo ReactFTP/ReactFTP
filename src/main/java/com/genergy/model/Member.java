@@ -68,7 +68,41 @@ public class Member implements Serializable {
 		}
 	}
 
+//	//매니저의 사용자 추가
+//	public Member(String id, String pw, String name, String email, String phone, String addr1, String addr2,
+//			String companyId, String manager, String string, String string2) {
+//		SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
+//		
+//		this.memberId = id;
+//		setPw(pw); setMemberName(name); setEmail(email); setMemberPhone(phone); setAddr1(addr1); setAddr2(addr2); 
+//		setCoId(companyId); setJoinedDate(new Date());  setFailedCount(0);  
+//		if(manager.equals("true")) {
+//			setRoleId("m");  setAuthId("a"); setJoinedCheck("N"); setActiveCheck("N"); 
+//		}else {
+//			setRoleId("u");  setAuthId("c"); setJoinedCheck(string); setActiveCheck(string2); setJoinedCheckDate(new Date());
+//		}
+//	}
 	
+	//어드민의 사용자 추가
+	public Member(String id, String pw, String name, String email, String phone, String addr1, String addr2,
+			String companyId, String manager, String type) {
+		SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
+		
+		this.memberId = id;
+		setPw(pw); setMemberName(name); setEmail(email); setMemberPhone(phone); setAddr1(addr1); setAddr2(addr2); 
+		setCoId(companyId); setJoinedDate(new Date());  setFailedCount(0); 
+		if(manager.equals("true") && type.equals("manager")) {
+			setRoleId("m");  setAuthId("a");  setJoinedCheck("N"); setActiveCheck("N"); setJoinedCheckDate(new Date()); 
+		}else if(manager.equals("false") && type.equals("manager")) {
+			setRoleId("u");  setAuthId("c"); setJoinedCheck("Y"); setActiveCheck("Y"); setJoinedCheckDate(new Date());  
+		}else if(manager.equals("true") && type.equals("admin")) {
+			setRoleId("m");  setAuthId("a"); setJoinedCheck("Y"); setActiveCheck("Y"); setJoinedCheckDate(new Date());  
+		}else if(manager.equals("false") && type.equals("admin")) {
+			setRoleId("u");  setAuthId("c"); setJoinedCheck("Y"); setActiveCheck("Y"); setJoinedCheckDate(new Date());  
+		}
+	}
+
+
 	public String getRoleId() {
 		return roleId;
 	}

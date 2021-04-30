@@ -294,7 +294,7 @@
 	text-align: center;
 }
 .Manage .search-list-wrap .user_id {
-	width : 80px;
+	width : 100px;
 	text-align: center;
 }
 .Manage .search-list-wrap .user_name {
@@ -327,7 +327,11 @@
 	text-align: center;
 }
 .Manage .search-list-wrap .manage {
-	width : 50px;
+	width : 100px;
+	text-align: center;
+}
+.Manage .search-list-wrap .manage {
+	width : 100px;
 	text-align: center;
 }
 .Manage .search-list-wrap .content > li {

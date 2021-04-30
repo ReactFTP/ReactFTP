@@ -161,7 +161,7 @@ class Table extends React.Component {
                     );
                 }
             });
-        }
+        } // map 함수 테이블 아이템 생성
 
         return (
             <div className="browser-wrap item-wrap">
