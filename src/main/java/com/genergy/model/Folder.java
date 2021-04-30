@@ -5,8 +5,15 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +21,8 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table (name="folder", schema="public")
 public class Folder implements Serializable {
 
@@ -34,12 +43,11 @@ public class Folder implements Serializable {
 	private String authId;
 	@Column(name="parents_folder_id")
 	private String parentsFolderId;
+	@Column(name="co_id")
+	private String coId;
 	
-	public Folder(String id, String name, String path, String parentFolderId) {
-		this.folderId = id;
-		this.folderName = name;
-		this.path = path;
-		this.parentsFolderId = parentFolderId;
+	public Folder() {
+		super();
 	}
 	
 	public String getFolderId() {
@@ -90,10 +98,15 @@ public class Folder implements Serializable {
 	public void setParentsFolderId(String parentsFolderId) {
 		this.parentsFolderId = parentsFolderId;
 	}
+	public String getCoId() {
+		return coId;
+	}
+	public void setCoId(String coId) {
+		this.coId = coId;
+	}
 	
 	// 수정일 일시 포맷 String 반환
 	public String getLastModifiedDateToString() {
-//		System.out.println(lastModifiedDate);
 		String last_modified_date = this.lastModifiedDate.toString();
 		int hour = Integer.parseInt(last_modified_date.substring(11, 13));
 		String time = last_modified_date.substring(11, 16);

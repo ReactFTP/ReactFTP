@@ -15,7 +15,8 @@ class Home extends React.Component {
                 fname: "REACT FTP", 
                 folderList: [], 
                 fileList: []
-            }
+            },
+            userInfo : {},
         };
     }
 
@@ -28,7 +29,12 @@ class Home extends React.Component {
         // }
         
         this.setState({
-            sessionId : window.sessionStorage.getItem('sessionId')
+            sessionId : window.sessionStorage.getItem('sessionId'),
+            userInfo : {
+                roleId : window.sessionStorage.getItem('roleId'),
+                authId : window.sessionStorage.getItem('authId'),
+                coId : window.sessionStorage.getItem('coId'),
+            },
         });
 
         // console.log("this.props.uid : " + 
@@ -40,8 +46,7 @@ class Home extends React.Component {
     // 처음 로딩되면서 홈 contents 가져옴
     getHome = async() => {
         const info = await Promise.all([
-            // axios.getHomeContents_BK(window.sessionStorage.getItem('homeUid'))
-            axios.getHomeContents_BK()
+            axios.ftpConnect(window.sessionStorage.getItem('sessionId'))
         ]);
 
         console.log(info[0]);
@@ -53,9 +58,9 @@ class Home extends React.Component {
         });
     }
 
-    // logout = () => {
-    //     this.props.history.push('/');
-    // }
+    logout = () => {
+        this.props.history.push('/');
+    }
 
     render () {
         //let contentsFolder = this.state.selectedTreeItem;
@@ -69,17 +74,15 @@ class Home extends React.Component {
                             <img src={process.env.PUBLIC_URL + '/logo.png'} onClick={()=>{ this.props.history.push('/home') }} />
                         </div>
                         <div className="top-menu-wrap">
-                            <div className="company-manage-wrap" onClick={ ()=>{ this.props.history.push('/companymanage') } }>
+                            <div className={this.state.roleId=='a'?'company-manage-wrap':'sessionNone'} onClick={ ()=>{ this.props.history.push('/companymanage') } }>
                                 <span>회사 관리</span>
                             </div>
-                            <div className="user-manage-wrap" onClick={ ()=>{ this.props.history.push('/usermanage') } }>
+                            <div className={this.state.roleId=='u'?'sessionNone':'user-manage-wrap'} onClick={ ()=>{ this.props.history.push('/usermanage') } }>
                                 <span>사용자 관리</span>
                             </div>
-                            <Link to ="./userinfo">
-                            <div className="my-infomation-wrap">
+                            <div className={this.state.roleId=='a'?'sessionNone':'my-infomation-wrap'} onClick={ ()=>{ this.props.history.push('/userinfo') } }>
                                 <span>내 정보 관리</span>
                             </div>
-                            </Link>
                         </div>
                         <div className="user-info-wrap">
                             <div className="logout-button-wrap" onClick={ ()=>{ alert("로그아웃 버튼 클릭!") } }>
@@ -97,7 +100,7 @@ class Home extends React.Component {
                             <div className="title-wrap">
                                 홈
                             </div>
-                            <Tree data={this.state.data}/>
+                            <Tree data={this.state.data} userInfo={this.state.userInfo}/>
                         </section>
                         <footer>
                             <div className="copyright-wrap">copyright-wrap</div>

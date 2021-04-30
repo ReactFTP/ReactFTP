@@ -11,6 +11,28 @@ class Table extends React.Component {
     }
 
     render() {
+
+        // 파일 접근 권한와 로그인 계정의 접근 권한 범위 확인
+        const authCheckFile = (file) => {
+            // alert("authCheckFile 호출!");
+            const userAuth = this.props.userInfo.authId;
+            // alert("유저 권한 : " + userAuth + "\파일 권한 : " + file.fauth);
+            if(userAuth=='a'){
+                return true;
+            } else if(userAuth=='b'){
+                if(file.fauth=='a')
+                    return false;
+                return true;
+            }else if(userAuth=='c'){
+                if(file.fauth=='c')
+                    return true;
+                return false;
+            }else{
+                alert("user의 권한이 없습니다.");
+                return false;
+            }
+        }
+
         // 부모 node 의 contents_Item 배열에서 삭제 대상 content 를 제외해주는 기능
         // const afterDeleteItem = (data) => {
         //     let parent = this.props.selectedTreeData;
@@ -20,7 +42,7 @@ class Table extends React.Component {
 
         const deleteFile = async(data) => {
             if(data.ftype == "폴더") {
-                alert("폴더 삭제 호출!");
+                this.props.deleteFolder(data);
             }
             else {
                 alert("파일 삭제 호출!");
@@ -35,12 +57,13 @@ class Table extends React.Component {
         };
 
         const modifyFile = async(data) => {
-            if(data.ftype == "폴더") {
-                alert("폴더 수정 호출!");
-            }
-            else {
-                alert("파일 수정 호출!");
-            }
+            this.props.modifyFolder(data);
+            // if(data.ftype == "폴더") {
+            //     this.props.modifyFolder(data);
+            // }
+            // else {
+            //     alert("파일 수정 호출!");
+            // }
             // let name = prompt("선택한 아이템 : " + data.object_string + "\n변경할 아이템명 입력");
             // if(name==null)
             //     return;
@@ -84,7 +107,7 @@ class Table extends React.Component {
             // }
         };
 
-        const uploadFile = async(data) => {
+        const uploadFile = () => {
             alert("파일 업로드 호출!");
         };
 
@@ -93,33 +116,34 @@ class Table extends React.Component {
                 return;
             
             return fileList.map((content, i) => {
-                console.log(content.fname + content.ftype);
                 if(content.ftype == "폴더"){
-                    return (
-                        <>
-                            <ContextMenuTrigger id={content.fid} >
-                                <TableItem data={content} key={i} />
-    
-                                <ContextMenu id={content.fid}>
-                                    <MenuItem data={content} onClick={ () => { modifyFile(content) } }>
-                                        폴더 수정
-                                    </MenuItem>
-                                    <MenuItem data={content} onClick={ () => { deleteFile(content) } }>
-                                        폴더 삭제
-                                    </MenuItem>
-                                    <MenuItem data={content} onClick={ () => { downloadFile(content) } }>
-                                        압축 다운로드
-                                    </MenuItem>
-                                </ContextMenu>
-                            </ContextMenuTrigger>
-                        </>
-                    );
+                    if(content.fco == this.props.userInfo.coId) {   // 로그인 계정 소속 회사와 폴더 소속 회사가 같은 경우에만 테이블 아이템 생성
+                        return (
+                            <>
+                                <ContextMenuTrigger id={content.fid} >
+                                    <TableItem data={content} key={i} />
+        
+                                    <ContextMenu id={content.fid}>
+                                        <MenuItem data={content} onClick={ () => { modifyFile(content) } }>
+                                            폴더 수정
+                                        </MenuItem>
+                                        <MenuItem data={content} onClick={ () => { deleteFile(content) } }>
+                                            폴더 삭제
+                                        </MenuItem>
+                                        <MenuItem data={content} onClick={ () => { downloadFile(content) } }>
+                                            압축 다운로드
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </ContextMenuTrigger>
+                            </>
+                        );
+                    }
                 }
                 else {
                     return (
                         <>
                             <ContextMenuTrigger id={content.fid + '파일'} >
-                                <TableItem data={content} key={i} />
+                                <TableItem data={content} key={i} setTableItem={this.props.setTableItem} />
     
                                 <ContextMenu id={content.fid + '파일'}>
                                     <MenuItem data={content} onClick={ () => { modifyFile(content) } }>
@@ -141,8 +165,31 @@ class Table extends React.Component {
 
         return (
             <div className="browser-wrap item-wrap">
+                {/* this.state.selectedFileData = {fid, fname, fauth, fdate, fsize, ftype} */}
+                {/* <div className={ 'modify-input-modal' }> */}
+                <div className={ this.props.modalOpenFileModify ? 'modify-file-input-modal' : 'modify-input-close-modal' }>
+                    선택한 파일 : {this.props.selectedFileData.fname}<br></br>
+                    파일 권한 : class {(this.props.selectedFileData.fauth=='a')?'A':(this.props.selectedFileData.fauth=='b')?'B':(this.props.selectedFileData.fauth=='c')?'C':''}<br></br><br></br>
+                    변경할 파일명 : <input value={this.props.modifyFolderName} onChange={this.props.setModifyFolderName} 
+                                    style={{width: '250px'}}/><br></br><br></br>
+                    
+                    권한 변경 : 
+                    <select value={this.props.selectedFileData.fauth} onChange={this.props.setModifyFolderAuth}>
+                        <option value="a">class A</option>
+                        <option value="b">class B</option>
+                        <option value="c">class C</option>
+                    </select>
+
+                    <ul className="custom-btn">
+                        <li onClick={this.props.closeModifyModal}>취소</li>
+                        <li onClick={()=>{ this.props.modifySubmit(this.props.selectedFileData) }}>완료</li>
+                    </ul>
+                </div>
                 <div className="selected-path-wrap">
                     선택한 폴더 : {this.props.selectedTreeData.fname}
+                </div>
+                <div className="add-button-wrap" onClick={ ()=>{ uploadFile() } }>
+                    파일 업로드
                 </div>
                 <ul className="tableHead">
                     <li className="fileName">파일명</li>
@@ -151,7 +198,8 @@ class Table extends React.Component {
                     <li className="size">크기</li>
                 </ul>
                 {mapToComponent(this.props.data)}
-                <ContextMenuTrigger id='empty' >
+                {/* 테이블 빈 공간 우클릭 시 발생하는 컨텍스트 메뉴 */}
+                {/* <ContextMenuTrigger id='empty' >
                 empty
                     <ContextMenu id='empty'>
                         <MenuItem data={this.props.data.selectedTreeData} onClick={ () => { this.props.createFolder(this.props.data.selectedTreeData) } }>
@@ -161,7 +209,7 @@ class Table extends React.Component {
                             파일 업로드
                         </MenuItem>
                     </ContextMenu>
-                </ContextMenuTrigger>
+                </ContextMenuTrigger> */}
             </div>
         );
     }

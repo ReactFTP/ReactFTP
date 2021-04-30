@@ -57,8 +57,8 @@ class CompanyManage extends React.Component {
     }
 
     render () {
-        const sessionRole = window.sessionStorage.getItem('roleId');
-        // const sessionRole = 'u';
+        // const sessionRole = window.sessionStorage.getItem('roleId');
+        const sessionRole = 'm';
 
         return (
             <div className="Manage">

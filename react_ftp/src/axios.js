@@ -183,8 +183,22 @@ export function editUser(id, pw, email, phone, addr1, addr2) {
 //     });
 // }
 
+// Home.js -> FTP 세션 연결
+export function ftpConnect(sessionId) {
+    return axios({
+        method: 'get',
+        url : '/home/ftpconnect',
+        params : {
+            session_id : sessionId,
+        }
+    }).then(function(response){
+        return getHomeContents();
+    }).catch(function(error){
+    });
+}
+
 // Home.js -> 최상위 디렉토리 <REACT FTP> List 가져오기
-export function getHomeContents_BK() {
+export function getHomeContents() {
     return axios({
         method: 'get',
         url : '/home/getfolderlist',
@@ -214,13 +228,14 @@ export function getContents(folder_id) {
 }
 
 // 홈화면 - 폴더 생성
-export function createFolder(parent_folder_id, new_name) {
+export function createFolder(parentFolderId, newName, coId) {
     return axios({
         method: 'get',
         url : '/home/createfolder',
         params : {
-            parent_folder_id : parent_folder_id,
-            new_name : new_name,
+            parent_folder_id : parentFolderId,
+            new_name : newName,
+            co_id : coId,
         }
     }).then(function(response){
         console.log(response.data);
@@ -228,6 +243,57 @@ export function createFolder(parent_folder_id, new_name) {
     }).catch(function(error){
     });
 }
+
+// 홈화면 - 폴더 삭제
+export function deleteFolder(folderId) {
+    return axios({
+        method: 'get',
+        url : '/home/deletefolder',
+        params : {
+            folder_id : folderId,
+        }
+    }).then(function(response){
+        console.log(response.data);
+        return response.data;
+    }).catch(function(error){
+    });
+}
+
+// 홈화면 - 폴더 수정
+export function modifyFolder(folderId, authId, newName) {
+    return axios({
+        method: 'get',
+        url : '/home/modifyfolder',
+        params : {
+            folder_id : folderId,
+            auth_id : authId,
+            new_folder_name : newName,
+        }
+    }).then(function(response){
+        console.log(response.data);
+        return response.data;
+    }).catch(function(error){
+    });
+}
+
+// 홈화면 - 파일 수정
+export function modifyFile(parentFolderId, fileId, authId, newName) {
+    return axios({
+        method: 'get',
+        url : '/home/modifyfile',
+        params : {
+            parent_folder_id : parentFolderId,
+            file_id : fileId,
+            auth_id : authId,
+            new_file_name : newName,
+        }
+    }).then(function(response){
+        console.log(response.data);
+        return response.data;
+    }).catch(function(error){
+    });
+}
+
 
 
 

@@ -11,6 +11,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
 import com.genergy.ftp.resources.HibernateUtil;
+import com.genergy.model.CustomFTPClient;
 import com.genergy.model.File;
 import com.genergy.model.Folder;
 
@@ -35,16 +36,15 @@ public class FileDAO {
 		for(File f : queryResult) {
 			Map<String, Object> child = new HashMap<String, Object>();
 			
-//			String last_modified_date = f.getLastModifiedDate();
-//			last_modified_date = last_modified_date.substring(0, 16);
-//			f.setLastModifiedDate(last_modified_date);
-			
 			child.put("fid", f.getFileId());
 			child.put("fname", f.getFileName());
+			child.put("fauth", f.getAuthId());
+//			child.put("fco", f.getFolderId());	// 부모 폴더의 id 로 회사 정보 가져옴. 현재 필요없음
 			child.put("fdate", f.getLastModifiedDateToString());
 			child.put("ftype", f.getType());
 //			child.put("fsize", f.getSize());
 			child.put("fsize", "0");
+			child.put("folderid", f.getFolderId());
 			
 			result.add(child);
 		}
@@ -65,19 +65,11 @@ public class FileDAO {
 		
 		for(Folder f : queryResult) {
 			Map<String, Object> child = new HashMap<String, Object>();
-//
-//			String last_modified_date = f.getLastModifiedDate();
-//			int hour = Integer.parseInt(last_modified_date.substring(11, 13));
-//			String time = last_modified_date.substring(11, 16);
-//			last_modified_date = last_modified_date.substring(0, 11);
-//			if(hour >= 12)
-//				last_modified_date = last_modified_date + "오후 " + (hour-12) + time.substring(2);
-//			else
-//				last_modified_date = last_modified_date + "오전 " + hour + time.substring(2);
-//			f.setLastModifiedDate(last_modified_date);
 			
 			child.put("fid", f.getFolderId());
 			child.put("fname", f.getFolderName());
+			child.put("fauth", f.getAuthId());
+			child.put("fco", f.getCoId());
 			child.put("fdate", f.getLastModifiedDateToString());
 			child.put("ftype", "폴더");
 			child.put("fsize", "");
@@ -87,6 +79,68 @@ public class FileDAO {
 		session.getTransaction().commit();
 
 		return result;
+	}
+	
+	// File DB 조회(file_id)
+	public static File getFileByFile_id(String file_id) {
+		File result = null;
+		
+		Session session = factory.getCurrentSession();
+		session.beginTransaction();
+
+		Query query = session.createQuery("from File where fileId=:file_id");
+		query.setParameter("file_id", file_id);
+		List<File> queryResult = query.list();
+		
+		if(queryResult.size() > 0)
+			result = queryResult.get(0);
+
+		session.getTransaction().commit();				
+		return result;
+	}
+	
+	// 부여할 File ID count
+	public static String getFileNextSeq() {
+		String result = "";
+		
+		Session session = factory.getCurrentSession();
+		session.beginTransaction();
+
+		Query query = session.createQuery("select count(*) from File");
+		List<Long> queryResult = query.list();
+		
+		if(queryResult.size() > 0) {
+			result = queryResult.get(0).toString();
+		}
+
+		session.getTransaction().commit();				
+		return result;
+	}
+	
+	// File 수정
+	public static File modifyFile(Folder parent_folder, String file_id, String auth_id, String new_file_name) {
+		File targetFile = getFileByFile_id(file_id);
+		String filePath = parent_folder.getPath() + "/" + parent_folder.getFolderName();
+		
+		// FTP 서버에서 파일명 수정
+		boolean result = CustomFTPClient.modifyFile(filePath, targetFile, new_file_name);
+//		if(!result) {
+//			System.out.println("FTP 서버 폴더명 변경 실패");
+//			return null;
+//		}
+		// FTP 서버에 정상 변경 되었지만 result 값을 false로 반환하는 문제. 수정해야하는 사항.
+		
+		// DB 서버 File 테이블에 데이터 업데이트
+		targetFile.setFileName(new_file_name);
+		if(!auth_id.equals("") && auth_id!=null)
+			targetFile.setAuthId(auth_id);
+		
+		Session session = factory.getCurrentSession();
+		session.beginTransaction();
+		session.update(targetFile);
+		session.getTransaction().commit();
+		
+		return targetFile;
 	}
 	
 }
