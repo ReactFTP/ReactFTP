@@ -217,7 +217,7 @@ public class HomeController {
 	public String fileUpload (HttpServletRequest request) {
 		System.out.println("파일 업로드");
 		String fileId = (new Date().getTime()) + "" + (new Random().ints(1000, 9999).findAny().getAsInt());
-		fileId = fileId.substring(10);
+		fileId = fileId.substring(8);
 		System.out.println(fileId);
 		return fileId;
 		/*
