@@ -36,5 +36,6 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Administrator/Downloads/cos.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -1,8 +1,12 @@
 package com.genergy.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,11 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.genergy.dao.FileDAO;
 import com.genergy.dao.FolderDAO;
 import com.genergy.model.CustomFTPClient;
 import com.genergy.model.File;
 import com.genergy.model.Folder;
+import com.oreilly.servlet.MultipartRequest;
 
 @RestController
 @RequestMapping("/home")
@@ -141,7 +147,7 @@ public class HomeController {
 		return result;
 	}
 	
-	// 폴더 수정modifyfile
+	// 폴더 수정
 	@GetMapping("/modifyfolder")
 	@ResponseBody
 	public void modifyFolder (HttpServletRequest request) {
@@ -176,6 +182,117 @@ public class HomeController {
 		
 		if(result_File == null)
 			System.out.println("폴더 수정 실패");
+	}
+	
+	// 파일 삭제
+	@GetMapping("/deletefile")
+	@ResponseBody
+	public Map deleteFile (HttpServletRequest request) {
+		String parent_folder_id = request.getParameter("parent_folder_id");
+		String file_id = request.getParameter("file_id");
+		FolderDAO folderdao = new FolderDAO();
+		FileDAO filedao = new FileDAO();
+
+		// DB file 테이블에 삭제할 파일 데이터 삭제 + FTP 서버에 파일 삭제
+		Folder parentFolder = folderdao.getFolderByFolder_id(parent_folder_id);
+		Folder result_ParentFolder = filedao.deleteFile(parentFolder, file_id);
+		if(result_ParentFolder == null)
+			return null;
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		String parentId = result_ParentFolder.getFolderId();
+		result.put("fid", result_ParentFolder.getFolderId());
+		result.put("fname", result_ParentFolder.getFolderName());
+		result.put("fauth", result_ParentFolder.getAuthId());
+		result.put("fco", result_ParentFolder.getCoId());
+		result.put("folderList", folderdao.getFolderListByFolder_id(parentId));	// 트리에 사용되는 리스트
+		result.put("fileList", filedao.getFileListByFolder_id(parentId));	// 테이블에 사용되는 리스트
+		
+		return result;
+	}
+	
+	// 파일 업로드
+	@PostMapping("/fileupload")
+	@ResponseBody
+	public String fileUpload (HttpServletRequest request) {
+		System.out.println("파일 업로드");
+		String fileId = (new Date().getTime()) + "" + (new Random().ints(1000, 9999).findAny().getAsInt());
+		fileId = fileId.substring(10);
+		System.out.println(fileId);
+		return fileId;
+		/*
+		Map<String, Object> result = new HashMap<String, Object>();
+		
+		String savePath = "/FTP/2021년 상반기 신입사원 교육/REACT_FTP_TEMP_PATH";
+		try {
+			ftpClient.changeWorkingDirectory(savePath);
+			savePath = ftpClient.printWorkingDirectory();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		System.out.println(savePath);
+		
+		
+		String TEMP_PATH = "F:\\myUpload";	// 임시 저장 경로
+		String UPLOAD_PATH = "F:\\myLpload\\realPath";	// 실제 업로드할 경로
+		int MAX_SIZE = 300 * 1024 * 1024;	// 파일 다운로드 할 수 있는 최대 크기, 300MB
+		
+		try {
+			java.io.File file = new java.io.File(TEMP_PATH);
+			if(!file.exists())	// 파일 경로가 존재하지 않을 경우
+				file.mkdirs();	// 파일 경로 만들기
+			
+			// MultipartRequest(request, 저장 경로, 최대 크기, "UTF-8", new DefaultFileRenamePolicy());
+			MultipartRequest multipart = new MultipartRequest(request, TEMP_PATH, MAX_SIZE, "UTF-8");// 임시 경로에 파일 업로드
+			File getFileInfo = new ObjectMapper().readValue(multipart.getParameter("file_info"), File.class);	// String to JSON
+						
+			Enumeration<String> fileEnum = multipart.getFileNames();	// 넘어온 파일 key 값들
+			while(fileEnum.hasMoreElements()) {
+				String fileName = fileEnum.nextElement(); // 클라이언트에서 넣은 파일 key값 ex) file0, file1, ...
+				
+				String fileId = (new Date().getTime()) + "" + (new Random().ints(1000, 9999).findAny().getAsInt());	// 현재 날짜와 랜덤 정수값으로 새로운 파일명 만들기
+				String originName = multipart.getOriginalFileName(fileName);
+				String fileExtension = originName.substring(originName.lastIndexOf(".") + 1);	// ex) jpg
+				originName = originName.substring(0, originName.lastIndexOf("."));	// 파일
+				long fileSize = multipart.getFile(fileName).length();	// 파일 사이즈
+				
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
+		return "데이터 받았음";
+		
+		
+		*/
+		
+		
+		
+		
+		/*
+		String parent_folder_id = request.getParameter("parent_folder_id");
+		String file_id = request.getParameter("file_id");
+		FolderDAO folderdao = new FolderDAO();
+		FileDAO filedao = new FileDAO();
+
+		// DB file 테이블에 삭제할 파일 데이터 삭제 + FTP 서버에 파일 삭제
+		Folder parentFolder = folderdao.getFolderByFolder_id(parent_folder_id);
+		Folder result_ParentFolder = filedao.deleteFile(parentFolder, file_id);
+		if(result_ParentFolder == null)
+			return null;
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		String parentId = result_ParentFolder.getFolderId();
+		result.put("fid", result_ParentFolder.getFolderId());
+		result.put("fname", result_ParentFolder.getFolderName());
+		result.put("fauth", result_ParentFolder.getAuthId());
+		result.put("fco", result_ParentFolder.getCoId());
+		result.put("folderList", folderdao.getFolderListByFolder_id(parentId));	// 트리에 사용되는 리스트
+		result.put("fileList", filedao.getFileListByFolder_id(parentId));	// 테이블에 사용되는 리스트
+		
+		return result;
+		*/
 	}
 	
 	

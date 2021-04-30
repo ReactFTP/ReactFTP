@@ -1,16 +1,29 @@
 import React from 'react';
 import TableItem from './TableItem';
 // import CompanyItem from './CompanyItem';
-// import * as axios from './axios';
+import * as axios from './axios';
 
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
 
 class Table extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            uploadFile : null,
+        };
     }
 
     render() {
+        const fileUploadHandle = (e) => {
+            e.preventDefault();
+
+            let file = e.target.files[0];
+            console.log("file : " + file);
+            this.setState({
+                uploadFile : file,
+            });
+            uploadFile(file);
+        }
 
         // 파일 접근 권한와 로그인 계정의 접근 권한 범위 확인
         const authCheckFile = (file) => {
@@ -33,55 +46,12 @@ class Table extends React.Component {
             }
         }
 
-        // 부모 node 의 contents_Item 배열에서 삭제 대상 content 를 제외해주는 기능
-        // const afterDeleteItem = (data) => {
-        //     let parent = this.props.selectedTreeData;
-        //     parent.contents_Item = parent.contents_Item.filter(content => content.uid != data.uid);
-        //     this.props.setTreeItem(parent);
-        // }
-
         const deleteFile = async(data) => {
-            if(data.ftype == "폴더") {
-                this.props.deleteFolder(data);
-            }
-            else {
-                alert("파일 삭제 호출!");
-            }
-            // const result = window.confirm("아이템을 정말로 삭제하시겠습니까?\n선택된 아이템 : " + data.object_string);
-            // if(result){
-            //     await Promise.all([
-            //         axios.deleteItem(data.uid)
-            //     ])
-            //     afterDeleteItem(data);
-            // }
+            this.props.deleteFolder(data);
         };
 
         const modifyFile = async(data) => {
             this.props.modifyFolder(data);
-            // if(data.ftype == "폴더") {
-            //     this.props.modifyFolder(data);
-            // }
-            // else {
-            //     alert("파일 수정 호출!");
-            // }
-            // let name = prompt("선택한 아이템 : " + data.object_string + "\n변경할 아이템명 입력");
-            // if(name==null)
-            //     return;
-            // while(name==""){
-            //     alert("변경할 아이템명은 필수 입력사항 입니다.");
-            //     name = prompt("선택한 아이템 : " + data.object_string + "\n변경할 아이템명 입력");
-            // }
-            // await Promise.all([
-            //     axios.modifyItem(data.uid, name)
-            // ]);
-
-            // let parent = this.props.selectedTreeData;
-            // const info = await Promise.all([
-            //     axios.searchContentsItem(parent.uid)
-            // ]);
-            // parent.contents_Item = info[0];
-
-            // this.props.setTreeItem(parent);
         };
 
         const downloadFile = async(data) => {
@@ -107,8 +77,19 @@ class Table extends React.Component {
             // }
         };
 
-        const uploadFile = () => {
+        const uploadFile = async() => {
             alert("파일 업로드 호출!");
+            const formData = new FormData();
+            const file = this.props.selectedFileData;   // {fid, fname, fauth, fdate, fsize, ftype}
+            formData.append('file', this.state.uploadFile);
+            formData.append('file_info', JSON.stringify(file));
+
+            const info = await Promise.all([
+                // axios.fileUpload(selected.fid)
+                axios.fileUpload(formData)
+            ]);
+
+            console.log(info.data);
         };
 
         const mapToComponent = (fileList) => {
@@ -165,8 +146,6 @@ class Table extends React.Component {
 
         return (
             <div className="browser-wrap item-wrap">
-                {/* this.state.selectedFileData = {fid, fname, fauth, fdate, fsize, ftype} */}
-                {/* <div className={ 'modify-input-modal' }> */}
                 <div className={ this.props.modalOpenFileModify ? 'modify-file-input-modal' : 'modify-input-close-modal' }>
                     선택한 파일 : {this.props.selectedFileData.fname}<br></br>
                     파일 권한 : class {(this.props.selectedFileData.fauth=='a')?'A':(this.props.selectedFileData.fauth=='b')?'B':(this.props.selectedFileData.fauth=='c')?'C':''}<br></br><br></br>
@@ -188,8 +167,11 @@ class Table extends React.Component {
                 <div className="selected-path-wrap">
                     선택한 폴더 : {this.props.selectedTreeData.fname}
                 </div>
-                <div className="add-button-wrap" onClick={ ()=>{ uploadFile() } }>
-                    파일 업로드
+                <div className="add-button-wrap">
+                    <label for="input-file">
+                        파일 업로드
+                    </label>
+                    <input type="file" id="input-file" multiple style={{display:'none'}} onChange={ fileUploadHandle } />
                 </div>
                 <ul className="tableHead">
                     <li className="fileName">파일명</li>

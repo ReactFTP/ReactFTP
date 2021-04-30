@@ -1,10 +1,12 @@
 package com.genergy.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -36,7 +38,6 @@ public class FileDAO {
 		for(File f : queryResult) {
 			Map<String, Object> child = new HashMap<String, Object>();
 			
-			child.put("fid", f.getFileId());
 			child.put("fname", f.getFileName());
 			child.put("fauth", f.getAuthId());
 //			child.put("fco", f.getFolderId());	// 부모 폴더의 id 로 회사 정보 가져옴. 현재 필요없음
@@ -101,20 +102,10 @@ public class FileDAO {
 	
 	// 부여할 File ID count
 	public static String getFileNextSeq() {
-		String result = "";
+		String fileId = (new Date().getTime()) + "" + (new Random().ints(1000, 9999).findAny().getAsInt());
+		fileId = fileId.substring(8);
 		
-		Session session = factory.getCurrentSession();
-		session.beginTransaction();
-
-		Query query = session.createQuery("select count(*) from File");
-		List<Long> queryResult = query.list();
-		
-		if(queryResult.size() > 0) {
-			result = queryResult.get(0).toString();
-		}
-
-		session.getTransaction().commit();				
-		return result;
+		return fileId;
 	}
 	
 	// File 수정
@@ -141,6 +132,27 @@ public class FileDAO {
 		session.getTransaction().commit();
 		
 		return targetFile;
+	}
+	
+	// File 삭제
+	public static Folder deleteFile(Folder parent_folder, String file_id) {
+		File targetFile = getFileByFile_id(file_id);
+		String filePath = parent_folder.getPath() + "/" + parent_folder.getFolderName();
+		
+		// FTP 서버에서 파일 삭제
+		boolean result = CustomFTPClient.deleteFile(filePath, targetFile);
+		if(!result) {
+			System.out.println("FTP 서버 파일 삭제 실패");
+			return null;
+		}
+		
+		// DB 서버 Folder 테이블에 데이터 삭제
+		Session session = factory.getCurrentSession();
+		session.beginTransaction();
+		session.delete(targetFile);
+		session.getTransaction().commit();
+		
+		return parent_folder;
 	}
 	
 }

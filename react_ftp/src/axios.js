@@ -365,6 +365,38 @@ export function modifyFile(parentFolderId, fileId, authId, newName) {
     });
 }
 
+// 홈화면 - 파일 삭제
+export function deleteFile(parentFolderId, fileId) {
+    return axios({
+        method: 'get',
+        url : '/home/deletefile',
+        params : {
+            parent_folder_id : parentFolderId,
+            file_id : fileId,
+        }
+    }).then(function(response){
+        console.log(response.data);
+        return response.data;
+    }).catch(function(error){
+    });
+}
+
+// 홈화면 - 파일 업로드
+export function fileUpload(formData) {
+    // return axios.post('/home/fileupload',formData);
+    return axios({
+        method: 'post',
+        url : '/home/fileupload',
+        data : {
+            formData : formData,
+        }
+    }).then(function(response){
+        console.log(response.data);
+        return response.data;
+    }).catch(function(error){
+    });
+}
+
 
 
 
