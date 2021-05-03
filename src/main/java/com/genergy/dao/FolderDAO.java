@@ -125,11 +125,48 @@ public class FolderDAO {
 		}
 		
 		// DB 서버 Folder 테이블에 데이터 삭제
+		FileDAO filedao = new FileDAO();
+		
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
-		session.delete(targetFolder);
-		session.getTransaction().commit();
 		
+		// folder 테이블에서 folder_id 참조하는 폴더들(하위폴더들) 목록 조회
+		Query query = session.createQuery("select folderId from Folder where parentsFolderId=:folder_id");
+		query.setParameter("folder_id", folder_id);
+		String[] folderList = new String[query.list().size()];
+		query.list().toArray(folderList);
+		
+		for(String folderId : folderList) {
+//			session.getTransaction().commit();
+
+			// file 테이블에서 각 folder_id 참조하는 파일들(하위파일들) 목록 조회
+			Query query1 = session.createQuery("select fileId from File where folderId=:folder_id");
+			query1.setParameter("folder_id", folderId);
+			String[] fileList = new String[query1.list().size()];
+			query1.list().toArray(fileList);
+			for (String fileId : fileList) {
+				session.getTransaction().commit();
+				File file = session.get(File.class, fileId);
+				session.delete(file);			
+			}
+			Folder folder = session.get(Folder.class, folderId);
+			session.delete(folder);
+		}
+
+		// file 테이블에서 타겟 folder_id 참조하는 파일들(하위파일들) 목록 조회
+		Query query2 = session.createQuery("select fileId from File where folderId=:folder_id");
+		query2.setParameter("folder_id", folder_id);
+		String[] fileList = new String[query2.list().size()];
+		query2.list().toArray(fileList);
+		for (String fileId : fileList) {
+//			session.getTransaction().commit();
+			File file = session.get(File.class, fileId);
+			session.delete(file);			
+		}
+		
+		session.delete(targetFolder);	// 마지막으로 타겟 폴더 삭제
+		session.getTransaction().commit();
+				
 		return ParentFolder;
 	}
 	//회사 추가에서 삭제
@@ -154,16 +191,15 @@ public class FolderDAO {
 		Folder targetFolder = getFolderByFolder_id(folder_id);
 		
 		// FTP 서버에서 폴더명 수정
-		boolean result = CustomFTPClient.modifyFolder(targetFolder, new_folder_name);
-//		if(!result) {
-//			System.out.println("FTP 서버 폴더명 변경 실패");
-//			return null;
-//		}
-		// FTP 서버에 정상 변경 되었지만 result 값을 false로 반환하는 문제. 수정해야하는 사항.
+		// last modify date 수정용으로 호출하는 경우가 있으므로 조건 체크.
+		if(new_folder_name!=null && !new_folder_name.equals(""))
+			CustomFTPClient.modifyFolder(targetFolder, new_folder_name);
 		
 		// DB 서버 Folder 테이블에 데이터 업데이트
-		targetFolder.setFolderName(new_folder_name);
-		if(!auth_id.equals("") && auth_id!=null)
+		targetFolder.setLastModifiedDate(new Date());
+		if(new_folder_name!=null && !new_folder_name.equals(""))
+			targetFolder.setFolderName(new_folder_name);
+		if(auth_id!=null && !auth_id.equals(""))
 			targetFolder.setAuthId(auth_id);
 		
 		Session session = factory.getCurrentSession();

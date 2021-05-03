@@ -31,12 +31,14 @@ class Tree extends React.Component {
         if(selected.ftype != '폴더' && selected.ftype != undefined) // 파일인 경우
             this.setState({ 
                 modalOpenFileModify: true,
-                modifyFileName : selected.fname 
+                modifyFileName : selected.fname,
+                modifyFileAuth : selected.fauth,
             });
         else // 폴더인 경우
             this.setState({ 
                 modalOpen: true,
-                modifyFolderName : selected.fname
+                modifyFolderName : selected.fname,
+                modifyFolderAuth : selected.fauth,
             });
     }
     closeModifyModal = () => {
@@ -113,7 +115,6 @@ class Tree extends React.Component {
 
         // 폴더 접근 권한와 로그인 계정의 접근 권한 범위 확인
         const authCheckFolder = (selected) => {
-            // alert("authCheck 호출!");
             const userAuth = this.props.userInfo.authId;
             // alert("유저 권한 : " + userAuth + "\n폴더 권한 : " + selected.fauth);
             if(userAuth=='a'){
@@ -148,7 +149,7 @@ class Tree extends React.Component {
             console.log(selected);
             if(!companyCheck(selected))
                 return;
-            if(authCheckFolder(selected)){
+            if(authCheckFolder(selected)){  // 폴더에 접근 권한이 있으면 DB 에서 데이터 가져옴
                 const info = await Promise.all([
                     axios.getContents(selected.fid)
                 ]); // {uid, object_string, contents_Item[], contents_Folder[]}
@@ -157,8 +158,8 @@ class Tree extends React.Component {
                 selected.fileList = info[0].fileList;
                 
                 setTreeItem(selected);
-            } else{
-                alert("해당 폴더 접근 권한이 없습니다.");
+            } else{ // 접근권한이 없음.
+                alert("폴더 접근 권한이 없습니다.\n\n대상 : " + selected.fname);
             }
         }
 
@@ -205,10 +206,17 @@ class Tree extends React.Component {
                         axios.deleteFolder(selected.fid)
                     ]);
                     console.log(deleteResult[0]) // {uid, object_string, contents_Item[], contents_Folder[]}
-                    
+                    selected.fname = deleteResult[0].fname;
+                    selected.fid = deleteResult[0].fid;
+                    selected.fauth = deleteResult[0].fauth;
+                    selected.fco = deleteResult[0].fcd;
                     selected.folderList = [];
                     selected.fileList = deleteResult[0].fileList;
-                    setTreeItem(deleteResult[0]);
+                    setTreeItem(selected);
+                    
+                    // selected.folderList = [];
+                    // selected.fileList = [];
+                    // setTreeItem(deleteResult[0]);
                 }
             }
         };
@@ -229,40 +237,52 @@ class Tree extends React.Component {
 
         const modifySubmit = async(selected) => {
             console.log(selected);
-            let authId = this.state.modifyFolderAuth;
-            let newFolderName = this.state.modifyFolderName;
-            if(newFolderName=="" || newFolderName == undefined){
-                alert("새 폴더명을 입력하지 않았습니다.");
-                return;
-            }
-            console.log(authId);
-            console.log(newFolderName);
-            if(authId == "" || authId == undefined)
-                authId = selected.fauth;
             if(selected.ftype != '폴더' && selected.ftype != undefined){    // 파일 변경
+                let authId = this.state.modifyFileAuth;
+                let newFileName = this.state.modifyFileName;
+                if(authId == "" || authId == undefined)
+                    authId = selected.fauth;
+                console.log("authId : " + authId)
+                console.log("newFileName : " + newFileName)
+                if(newFileName=="" || newFileName == undefined){
+                    alert("변경 파일명을 입력하지 않았습니다.");
+                    return;
+                }
                 await Promise.all([
-                    axios.modifyFile(selected.folderid, selected.fid, authId, this.state.modifyFolderName)
+                    axios.modifyFile(selected.folderid, selected.fid, authId, newFileName)
                 ]);
+                selected.fname = newFileName;
+                selected.fauth = authId;
             }
-            else{
-                await Promise.all([     // 폴더 변경
-                    axios.modifyFolder(selected.fid, authId, this.state.modifyFolderName)
+            else{   // 폴더 변경
+                let authId = this.state.modifyFolderAuth;
+                let newFolderName = this.state.modifyFolderName;
+                if(authId == "" || authId == undefined)
+                    authId = selected.fauth;
+                console.log("authId : " + authId)
+                console.log("newFolderName : " + newFolderName)
+                if(newFolderName=="" || newFolderName == undefined){
+                    alert("변경 폴더명을 입력하지 않았습니다.");
+                    return;
+                }
+                await Promise.all([
+                    axios.modifyFolder(selected.fid, authId, newFolderName)
                 ]);
+                selected.fname = newFolderName;
+                selected.fauth = authId;
             }
             this.closeModifyModal();
-            selected.fname = newFolderName;
-            selected.fauth = authId;
             if(selected.ftype != '폴더' && selected.ftype != undefined)
                 setTableItem(selected);
             else
                 setTreeItem(selected);
         }
 
-        const companyTtreeLoad = (folderList) => {
+        const companyTreeLoad = (folderList) => {
             console.log(folderList);
             if(folderList){
                 return folderList.map((content, i) => {
-                    console.log("coID : " + this.props.userInfo.coId);
+                    // console.log("coID : " + this.props.userInfo.coId);
                     if(this.props.userInfo.coId == '-' || this.props.userInfo.coId == content.fco){    // 로그인 계정의 소속회사와 폴더 소속 회사가 같은 경우에만 트리아이템 생성
                         let children = undefined;
                         if(content.folderList && content.folderList.length > 0){
@@ -291,7 +311,7 @@ class Tree extends React.Component {
             console.log(folderList);
             if(folderList){
                 return folderList.map((content, i) => {
-                    console.log("coID : " + this.props.userInfo.coId);
+                    // console.log("coID : " + this.props.userInfo.coId);
                     if(this.props.userInfo.coId == '-' || this.props.userInfo.coId == content.fco){    // 로그인 계정의 소속회사와 폴더 소속 회사가 같은 경우에만 트리아이템 생성
                         let children = undefined;
                         if(content.folderList && content.folderList.length > 0){
@@ -324,19 +344,25 @@ class Tree extends React.Component {
 
         return (
             <div className="browser-wrap">
-                <div className={ this.state.modalOpen ? 'modify-input-modal' : 'modify-input-close-modal' }>
+                <div className={ window.sessionStorage.getItem('roleId') == 'u'
+                    ? (this.state.modalOpen ? 'modify-input-modal-u' : 'modify-input-close-modal')
+                    : (this.state.modalOpen ? 'modify-input-modal' : 'modify-input-close-modal') }>
                     {/* 폴더 수정에 관한 모달창. 평소에는 display : none 상태임 */}
                     선택한 폴더 : {this.state.modifyFolderData.fname}<br></br>
-                    폴더 권한 : class {(this.state.modifyFolderData.fauth=='a')?'A':(this.state.modifyFolderData.fauth=='b')?'B':(this.state.modifyFolderData.fauth=='c')?'C':''}<br></br><br></br>
+                    <span className={window.sessionStorage.getItem('roleId') == 'u'?'sessionNone':''}>
+                    폴더 권한 : class {(this.state.modifyFolderData.fauth=='a')?'A':(this.state.modifyFolderData.fauth=='b')?'B':(this.state.modifyFolderData.fauth=='c')?'C':''}<br></br>
+                    </span><br></br>
                     변경할 폴더명 : <input value={this.state.modifyFolderName} onChange={this.setModifyFolderName} 
                                     style={{width: '250px'}}/><br></br><br></br>
                     
+                    <span className={window.sessionStorage.getItem('roleId') == 'u'?'sessionNone':''}>
                     권한 변경 : 
                     <select value={this.state.modifyFolderAuth} onChange={this.setModifyFolderAuth}>
                         <option value="a">class A</option>
                         <option value="b">class B</option>
                         <option value="c">class C</option>
                     </select>
+                    </span>
 
                     <ul className="custom-btn">
                         <li onClick={this.closeModifyModal}>취소</li>
@@ -356,12 +382,12 @@ class Tree extends React.Component {
                     >
                         <ContextMenuTrigger id="homeMenu">
                             <TreeItem key={this.props.data.fid} nodeId={this.props.data} label={this.props.data.fname} data={this.props.data} onClick={()=>{setTreeItem(this.props.data)}}>
-                                { companyTtreeLoad(this.props.data.folderList) }
+                                { companyTreeLoad(this.props.data.folderList) }
                             </TreeItem>
                         </ContextMenuTrigger>
                     </TreeView>
                 </div>
-                <Table data={this.state.selectedData.fileList} selectedTreeData={this.state.selectedData} userInfo={this.props.userInfo} selectedFileData={this.state.selectedFileData}
+                <Table data={this.state.selectedData.fileList} selectedTreeData={this.state.selectedData} userInfo={this.props.userInfo} authCheckFolder={authCheckFolder} selectedFileData={this.state.selectedFileData}
                     setTreeItem={setTreeItem} createFolder={createFolder} modifyFolder={modifyFolder} deleteFolder={deleteFolder} 
                     modifyFileName={this.state.modifyFileName} modifyFileAuth={this.state.modifyFileAuth} modifyFile={modifyFile} 
                     setTableItem={setTableItem} getContents={getContents} setModifyFolderName={this.setModifyFolderName} setModifyFolderAuth={this.setModifyFolderAuth} 

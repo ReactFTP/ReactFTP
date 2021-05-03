@@ -14,6 +14,7 @@ class Table extends React.Component {
     }
 
     render() {
+        // 파일 업로드 핸들러
         const fileUploadHandle = async(e) => {
             e.preventDefault();
 
@@ -25,27 +26,6 @@ class Table extends React.Component {
                 uploadFile : file,
             });
             uploadFile(file);
-        }
-
-        // 파일 접근 권한와 로그인 계정의 접근 권한 범위 확인
-        const authCheckFile = (file) => {
-            // alert("authCheckFile 호출!");
-            const userAuth = this.props.userInfo.authId;
-            // alert("유저 권한 : " + userAuth + "\파일 권한 : " + file.fauth);
-            if(userAuth=='a'){
-                return true;
-            } else if(userAuth=='b'){
-                if(file.fauth=='a')
-                    return false;
-                return true;
-            }else if(userAuth=='c'){
-                if(file.fauth=='c')
-                    return true;
-                return false;
-            }else{
-                alert("user의 권한이 없습니다.");
-                return false;
-            }
         }
 
         const deleteFile = async(data) => {
@@ -62,27 +42,11 @@ class Table extends React.Component {
         const downloadFile = async(data) => {
             console.log(data);
             if(data.ftype == "폴더") {
-                alert("폴더 압축 다운로드 호출!");
             }
             else {
-                alert("파일 다운로드 호출!");
                 console.log(data.fid);
-                axios.downloadFile(data.fid);
+                axios.downloadFile(data.fid, data.fname);
             }
-            // const result = window.confirm("아이템 리비전을 개정합니다.\n선택된 아이템 : " + data.object_string);
-            // if(result){
-            //     await Promise.all([
-            //         axios.reviseItem(data.uid)
-            //     ]);
-
-            //     let parent = this.props.selectedTreeData;
-            //     const info = await Promise.all([
-            //         axios.searchContentsItem(parent.uid)
-            //     ]);
-            //     parent.contents_Item = info[0];
-    
-            //     this.props.setTreeItem(parent);
-            // }
         };
 
         const uploadFile = async(file) => {
@@ -104,18 +68,35 @@ class Table extends React.Component {
             ]);
 
             console.log(info[0]);
-            if(info[0].status == 200)
-                alert("파일이 업로드 되었습니다.");
-            else
+            if(info[0].status != 200)
                 alert("파일 업로드 실패");
-
+                
             this.props.getContents(this.props.selectedTreeData);
+            this.setState({
+                uploadFile : null,
+            });
         };
 
         const mapToComponent = (fileList) => {
             if(fileList == undefined)
                 return;
-            
+            console.log(fileList.length);
+            console.log(this.props.selectedTreeData.fname);
+            if(fileList.length <= 0){
+                if(this.props.selectedTreeData.fname == 'REACT FTP' ){
+                    return(
+                        <ul className="messageLine a">
+                            <li>회사 폴더를 선택하세요.</li>
+                        </ul>
+                    );
+                } else{
+                    return(
+                        <ul className="messageLine a">
+                            <li>이 폴더는 비어있습니다.</li>
+                        </ul>
+                    );
+                }
+            }
             return fileList.map((content, i) => {
                 if(content.ftype == "폴더"){
                     if(this.props.userInfo.coId == '-' || content.fco == this.props.userInfo.coId) {   // 로그인 계정 소속 회사와 폴더 소속 회사가 같은 경우에만 테이블 아이템 생성
@@ -123,22 +104,21 @@ class Table extends React.Component {
                             return (
                                 <>
                                     <ContextMenuTrigger id={content.fid} >
-                                        <TableItem data={content} key={i} setTreeItem={this.props.setTreeItem} getContents={this.props.getContents} selectedTreeData={this.props.selectedTreeData} />
+                                        <TableItem data={content} key={i} setTreeItem={this.props.setTreeItem} authCheckFolder={this.props.authCheckFolder} getContents={this.props.getContents} selectedTreeData={this.props.selectedTreeData} />
             
-                                        {/* <ContextMenu id={content.fid}>
+                                        <ContextMenu id={content.fid}>
                                             <MenuItem data={content} onClick={ () => { downloadFile(content) } }>
                                                 압축 다운로드
                                             </MenuItem>
-                                        </ContextMenu> */}
+                                        </ContextMenu>
                                     </ContextMenuTrigger>
                                 </>
                             );
-                            
                         }else{
                             return (
                                 <>
                                     <ContextMenuTrigger id={content.fid} >
-                                        <TableItem data={content} key={i} setTreeItem={this.props.setTreeItem} getContents={this.props.getContents} selectedTreeData={this.props.selectedTreeData} />
+                                        <TableItem data={content} key={i} authCheckFolder={this.props.authCheckFolder} setTreeItem={this.props.setTreeItem} getContents={this.props.getContents} selectedTreeData={this.props.selectedTreeData} />
             
                                         <ContextMenu id={content.fid}>
                                             <MenuItem data={content} onClick={ () => { modifyFile(content) } }>
@@ -161,7 +141,7 @@ class Table extends React.Component {
                     return (
                         <>
                             <ContextMenuTrigger id={content.fid + '파일'} >
-                                <TableItem data={content} key={i} setTableItem={this.props.setTableItem} />
+                                <TableItem data={content} key={i} setTableItem={this.props.setTableItem} authCheckFolder={this.props.authCheckFolder}/>
     
                                 <ContextMenu id={content.fid + '파일'}>
                                     <MenuItem data={content} onClick={ () => { modifyFile(content) } }>
@@ -183,18 +163,24 @@ class Table extends React.Component {
 
         return (
             <div className="browser-wrap item-wrap">
-                <div className={ this.props.modalOpenFileModify ? 'modify-file-input-modal' : 'modify-input-close-modal' }>
+                <div className={ window.sessionStorage.getItem('roleId') == 'u'
+                    ? (this.props.modalOpenFileModify ? 'modify-file-input-modal-u' : 'modify-input-close-modal')
+                    : (this.props.modalOpenFileModify ? 'modify-file-input-modal' : 'modify-input-close-modal') }>
                     선택한 파일 : {this.props.selectedFileData.fname}<br></br>
-                    파일 권한 : class {(this.props.selectedFileData.fauth=='a')?'A':(this.props.selectedFileData.fauth=='b')?'B':(this.props.selectedFileData.fauth=='c')?'C':''}<br></br><br></br>
+                    <span className={window.sessionStorage.getItem('roleId') == 'u'?'sessionNone':''}>
+                    파일 권한 : class {(this.props.selectedFileData.fauth=='a')?'A':(this.props.selectedFileData.fauth=='b')?'B':(this.props.selectedFileData.fauth=='c')?'C':''}<br></br>
+                    </span><br></br>
                     변경할 파일명 : <input value={this.props.modifyFileName} onChange={this.props.setModifyFileName} 
                                     style={{width: '250px'}}/><br></br><br></br>
                     
+                    <span className={window.sessionStorage.getItem('roleId') == 'u'?'sessionNone':''}>
                     권한 변경 : 
                     <select value={this.props.modifyFileAuth} onChange={this.props.setModifyFileAuth}>
                         <option value="a">class A</option>
                         <option value="b">class B</option>
                         <option value="c">class C</option>
                     </select>
+                    </span>
 
                     <ul className="custom-btn">
                         <li onClick={this.props.closeModifyModal}>취소</li>

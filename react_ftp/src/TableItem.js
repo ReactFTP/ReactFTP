@@ -8,8 +8,11 @@ class TableItem extends React.Component {
     render() {
         const itemClick = () => {
             if(this.props.data.ftype == '폴더'){
-                this.props.setTreeItem(this.props.data);
-                this.props.getContents(this.props.data);
+                if(this.props.authCheckFolder(this.props.data)){
+                    this.props.setTreeItem(this.props.data);
+                    this.props.getContents(this.props.data);
+                }else
+                    alert("폴더 접근 권한이 없습니다.\n\n대상 : " + this.props.data.fname);
             }
             else
                 this.props.setTableItem(this.props.data);
