@@ -18,8 +18,10 @@ class Table extends React.Component {
             e.preventDefault();
 
             let file = e.target.files[0];
+
+            console.log("file : " + file);
             console.log(file);
-            await this.setState({
+            this.setState({
                 uploadFile : file,
             });
             uploadFile(file);
@@ -51,15 +53,21 @@ class Table extends React.Component {
         };
 
         const modifyFile = async(data) => {
-            this.props.modifyFolder(data);
+            if(data.ftype == "폴더")
+                this.props.modifyFolder(data);
+            else
+                this.props.modifyFile(data);
         };
 
         const downloadFile = async(data) => {
+            console.log(data);
             if(data.ftype == "폴더") {
-                alert("폴더 다운로드 호출!");
+                alert("폴더 압축 다운로드 호출!");
             }
             else {
                 alert("파일 다운로드 호출!");
+                console.log(data.fid);
+                axios.downloadFile(data.fid);
             }
             // const result = window.confirm("아이템 리비전을 개정합니다.\n선택된 아이템 : " + data.object_string);
             // if(result){
@@ -77,22 +85,31 @@ class Table extends React.Component {
             // }
         };
 
-        const uploadFile = async() => {
-            alert("파일 업로드 호출!");
+        const uploadFile = async(file) => {
             const formData = new FormData();
-            const file = this.props.selectedFileData;   // {fid, fname, fauth, fdate, fsize, ftype}
-            formData.append('file', this.state.uploadFile);
-            //formData.append('key', new Blob([JSON.stringify(this.state.uploadFile)],{type:"application/json"}));
-            for (var key of formData.keys()) {
-                console.log(key);
-              }
-            console.log(this.state.uploadFile,formData)
+
+            const company_id = this.props.selectedTreeData.fco;
+            const parent_folder_name = this.props.selectedTreeData.fname;   // {fid, fname, fauth, fdate, fsize, ftype}
+            const folder_id = this.props.selectedTreeData.fid;
+            const owner_auth = window.sessionStorage.getItem('authId');
+            formData.append('file', file);
+            formData.append('company_id', JSON.stringify(company_id));
+            formData.append('parent_folder_name', JSON.stringify(parent_folder_name));
+            formData.append('folder_id', JSON.stringify(folder_id));
+            formData.append('owner_auth', JSON.stringify(owner_auth));
+
             const info = await Promise.all([
                 // axios.fileUpload(selected.fid)
                 axios.fileUpload(formData)
             ]);
 
-            console.log(info.data);
+            console.log(info[0]);
+            if(info[0].status == 200)
+                alert("파일이 업로드 되었습니다.");
+            else
+                alert("파일 업로드 실패");
+
+            this.props.getContents(this.props.selectedTreeData);
         };
 
         const mapToComponent = (fileList) => {
@@ -101,26 +118,43 @@ class Table extends React.Component {
             
             return fileList.map((content, i) => {
                 if(content.ftype == "폴더"){
-                    if(content.fco == this.props.userInfo.coId) {   // 로그인 계정 소속 회사와 폴더 소속 회사가 같은 경우에만 테이블 아이템 생성
-                        return (
-                            <>
-                                <ContextMenuTrigger id={content.fid} >
-                                    <TableItem data={content} key={i} />
-        
-                                    <ContextMenu id={content.fid}>
-                                        <MenuItem data={content} onClick={ () => { modifyFile(content) } }>
-                                            폴더 수정
-                                        </MenuItem>
-                                        <MenuItem data={content} onClick={ () => { deleteFile(content) } }>
-                                            폴더 삭제
-                                        </MenuItem>
-                                        <MenuItem data={content} onClick={ () => { downloadFile(content) } }>
-                                            압축 다운로드
-                                        </MenuItem>
-                                    </ContextMenu>
-                                </ContextMenuTrigger>
-                            </>
-                        );
+                    if(this.props.userInfo.coId == '-' || content.fco == this.props.userInfo.coId) {   // 로그인 계정 소속 회사와 폴더 소속 회사가 같은 경우에만 테이블 아이템 생성
+                        if(content.parentfid == '0'){   // 부모폴더 아이디가 0 == 회사 디렉토리
+                            return (
+                                <>
+                                    <ContextMenuTrigger id={content.fid} >
+                                        <TableItem data={content} key={i} setTreeItem={this.props.setTreeItem} getContents={this.props.getContents} selectedTreeData={this.props.selectedTreeData} />
+            
+                                        {/* <ContextMenu id={content.fid}>
+                                            <MenuItem data={content} onClick={ () => { downloadFile(content) } }>
+                                                압축 다운로드
+                                            </MenuItem>
+                                        </ContextMenu> */}
+                                    </ContextMenuTrigger>
+                                </>
+                            );
+                            
+                        }else{
+                            return (
+                                <>
+                                    <ContextMenuTrigger id={content.fid} >
+                                        <TableItem data={content} key={i} setTreeItem={this.props.setTreeItem} getContents={this.props.getContents} selectedTreeData={this.props.selectedTreeData} />
+            
+                                        <ContextMenu id={content.fid}>
+                                            <MenuItem data={content} onClick={ () => { modifyFile(content) } }>
+                                                폴더 수정
+                                            </MenuItem>
+                                            <MenuItem data={content} onClick={ () => { deleteFile(content) } }>
+                                                폴더 삭제
+                                            </MenuItem>
+                                            <MenuItem data={content} onClick={ () => { downloadFile(content) } }>
+                                                압축 다운로드
+                                            </MenuItem>
+                                        </ContextMenu>
+                                    </ContextMenuTrigger>
+                                </>
+                            );
+                        }
                     }
                 }
                 else {
@@ -152,11 +186,11 @@ class Table extends React.Component {
                 <div className={ this.props.modalOpenFileModify ? 'modify-file-input-modal' : 'modify-input-close-modal' }>
                     선택한 파일 : {this.props.selectedFileData.fname}<br></br>
                     파일 권한 : class {(this.props.selectedFileData.fauth=='a')?'A':(this.props.selectedFileData.fauth=='b')?'B':(this.props.selectedFileData.fauth=='c')?'C':''}<br></br><br></br>
-                    변경할 파일명 : <input value={this.props.modifyFolderName} onChange={this.props.setModifyFolderName} 
+                    변경할 파일명 : <input value={this.props.modifyFileName} onChange={this.props.setModifyFileName} 
                                     style={{width: '250px'}}/><br></br><br></br>
                     
                     권한 변경 : 
-                    <select value={this.props.selectedFileData.fauth} onChange={this.props.setModifyFolderAuth}>
+                    <select value={this.props.modifyFileAuth} onChange={this.props.setModifyFileAuth}>
                         <option value="a">class A</option>
                         <option value="b">class B</option>
                         <option value="c">class C</option>
@@ -170,14 +204,16 @@ class Table extends React.Component {
                 <div className="selected-path-wrap">
                     선택한 폴더 : {this.props.selectedTreeData.fname}
                 </div>
-                <div className="add-button-wrap">
+                <div className={this.props.selectedTreeData.fname=='REACT FTP'?'sessionNone':"add-button-wrap"} >
                     <label for="input-file">
-                        파일 업로드
+                        + 파일 업로드
+                    {/* <form> */}
+                        <input type="file" name="file" id="input-file" style={{display:'none'}} onChange={ fileUploadHandle } />
+                    {/* </form> */}
                     </label>
-                    
-                    <input type="file" name="file" id="input-file" style={{display:'none'}} onChange={fileUploadHandle}/>
+
                 </div>
-                <ul className="tableHead">
+                <ul className="tableHead data">
                     <li className="fileName">파일명</li>
                     <li className="lastModDate">수정된 날짜</li>
                     <li className="type">타입</li>

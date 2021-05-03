@@ -8,9 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.genergy.ftp.resources.HibernateUtil;
 import com.genergy.model.CustomFTPClient;
@@ -37,14 +41,14 @@ public class FileDAO {
 
 		for(File f : queryResult) {
 			Map<String, Object> child = new HashMap<String, Object>();
-			
+
+			child.put("fid", f.getFileId());
 			child.put("fname", f.getFileName());
 			child.put("fauth", f.getAuthId());
 //			child.put("fco", f.getFolderId());	// 부모 폴더의 id 로 회사 정보 가져옴. 현재 필요없음
 			child.put("fdate", f.getLastModifiedDateToString());
 			child.put("ftype", f.getType());
-//			child.put("fsize", f.getSize());
-			child.put("fsize", "0");
+			child.put("fsize", f.getSize()+"KB");
 			child.put("folderid", f.getFolderId());
 			
 			result.add(child);
@@ -68,6 +72,7 @@ public class FileDAO {
 			Map<String, Object> child = new HashMap<String, Object>();
 			
 			child.put("fid", f.getFolderId());
+			child.put("parentfid", f.getParentsFolderId());
 			child.put("fname", f.getFolderName());
 			child.put("fauth", f.getAuthId());
 			child.put("fco", f.getCoId());
@@ -155,4 +160,77 @@ public class FileDAO {
 		return parent_folder;
 	}
 	
+	// File 추가
+	public static File addFile(Folder parent_folder, String file_name, String auth_id, String file_size) {
+		String type = file_name.substring(file_name.lastIndexOf(".")+1);
+		System.out.println(type);
+		System.out.println(file_size);
+		// 파일 이름에 포함된 확장자명 제거
+		if(file_name.indexOf(".") != -1)
+			file_name = file_name.split("\\.")[0];
+		
+		// DB 서버 File 테이블에 데이터 추가
+		String new_file_id = getFileNextSeq();
+		
+		File newFile = new File();
+		newFile.setFileId(new_file_id);
+		newFile.setFileName(file_name);
+		newFile.setFolderId(parent_folder.getFolderId());
+		newFile.setCreatedDate(new Date());
+		newFile.setLastModifiedDate(new Date());
+		newFile.setCount(0);
+		newFile.setAuthId("c");
+		newFile.setType(type);
+		newFile.setSize(Integer.parseInt(file_size));
+		
+		Session session = factory.getCurrentSession();
+		session.beginTransaction();
+		session.save(newFile);
+		session.getTransaction().commit();
+		
+		return newFile;
+	}
+	
+	// File 다운로드 횟수 수정(download)
+	public static File modifyFileDownloadCount(String file_id) {
+		File targetFile = getFileByFile_id(file_id);
+		
+		// DB 서버 File 테이블에 데이터 업데이트
+		int downloadCount = targetFile.getCount()+1;
+		targetFile.setCount(downloadCount);
+		
+		Session session = factory.getCurrentSession();
+		session.beginTransaction();
+		session.update(targetFile);
+		session.getTransaction().commit();
+		
+		return targetFile;
+	}
+	
+	/*
+	// File 다운로드
+	public static File downloadFile(String file_id, String auth_id, String new_folder_name) {
+		File targetFile = getFileByFile_id(file_id);
+		
+		// FTP 서버에서 폴더명 수정
+		boolean result = CustomFTPClient.download(targetFile, new_folder_name);
+//		if(!result) {
+//			System.out.println("FTP 서버 폴더명 변경 실패");
+//			return null;
+//		}
+		// FTP 서버에 정상 변경 되었지만 result 값을 false로 반환하는 문제. 수정해야하는 사항.
+		
+		// DB 서버 Folder 테이블에 데이터 업데이트
+		targetFolder.setFolderName(new_folder_name);
+		if(!auth_id.equals("") && auth_id!=null)
+			targetFolder.setAuthId(auth_id);
+		
+		Session session = factory.getCurrentSession();
+		session.beginTransaction();
+		session.update(targetFolder);
+		session.getTransaction().commit();
+		
+		return targetFolder;
+	}
+	*/
 }

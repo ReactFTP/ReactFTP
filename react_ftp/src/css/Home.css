@@ -245,7 +245,7 @@
 	/* border-style : solid none;
 	border-width : 1px; */
 }
-.Home .item-wrap ul {
+.Home .item-wrap ul.data {
     display: inline-flex;
 }
 .Home .item-wrap ul.tableHead > li {
@@ -445,7 +445,20 @@ nav.react-contextmenu {
 	margin-left: 55px;
 	width: 250px;
 }
-.custom-btn li{
+.modify-input-modal .custom-btn li{
+	width: 60px;
+	height: 35px;
+	background: #2989f7;
+	border-color: var(--genergy-blue-border-color);
+	padding: 7px;
+	text-align: center;
+	color: #fff;
+	border-radius: 5px;
+	float: right;
+	margin-top: 20px;
+	margin-left: 10px;
+}
+.modify-file-input-modal .custom-btn li{
 	width: 60px;
 	height: 35px;
 	background: #2989f7;
@@ -473,7 +486,7 @@ nav.react-contextmenu {
 	margin: 20px 0 10px;
 }
 .Home .item-wrap .add-button-wrap{
-	width: 100px;
+	width: 115px;
 	height: 33px;
 	/* margin: 40px 10px 5px 850px; */
 	margin: 3px 10px;
@@ -493,4 +506,7 @@ nav.react-contextmenu {
 }
 .Home .item-wrap .add-button-wrap:hover{
 	box-shadow: 0 1px 2px 0 rgb(66 133 244 / 30%), 0 1px 3px 1px rgb(66 133 244 / 15%);
+}
+.MuiTypography-body1{
+	font-size: 15px !important;
 }

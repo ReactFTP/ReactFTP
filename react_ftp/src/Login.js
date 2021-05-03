@@ -19,6 +19,7 @@ class Login extends React.Component {
         //세션 종료하기
         if(window.sessionStorage.getItem("sessionId")){
             //axios.logout(window.sessionStorage.getItem('appXsession'));
+            // ftp 세션 끊는것도 추가
             window.sessionStorage.clear();
         }
     }
