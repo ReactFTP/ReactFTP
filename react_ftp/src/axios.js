@@ -446,9 +446,8 @@ export function fileUpload(formData) {
     return axios({
         method: 'post',
         url : '/home/fileupload',
-        data : {
-            formData : formData,
-        }
+        body: formData,
+        headers: { "Content-Type": "multipart/form-data"},
     }).then(function(response){
         console.log(response.data);
         return response.data;

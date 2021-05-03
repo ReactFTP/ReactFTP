@@ -11,11 +11,17 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.net.ftp.FTPClient;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.genergy.dao.FileDAO;
@@ -23,7 +29,6 @@ import com.genergy.dao.FolderDAO;
 import com.genergy.model.CustomFTPClient;
 import com.genergy.model.File;
 import com.genergy.model.Folder;
-import com.oreilly.servlet.MultipartRequest;
 
 @RestController
 @RequestMapping("/home")
@@ -211,10 +216,14 @@ public class HomeController {
 		return result;
 	}
 	
+		
+	
+	
 	// 파일 업로드
 	@PostMapping("/fileupload")
 	@ResponseBody
-	public String fileUpload (HttpServletRequest request) {
+	public String fileUpload (MultipartHttpServletRequest request) {
+		String file = request.getParameter("file");
 		System.out.println("파일 업로드");
 		String fileId = (new Date().getTime()) + "" + (new Random().ints(1000, 9999).findAny().getAsInt());
 		fileId = fileId.substring(8);

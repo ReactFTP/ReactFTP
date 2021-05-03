@@ -14,12 +14,12 @@ class Table extends React.Component {
     }
 
     render() {
-        const fileUploadHandle = (e) => {
+        const fileUploadHandle = async(e) => {
             e.preventDefault();
 
             let file = e.target.files[0];
-            console.log("file : " + file);
-            this.setState({
+            console.log(file);
+            await this.setState({
                 uploadFile : file,
             });
             uploadFile(file);
@@ -82,8 +82,11 @@ class Table extends React.Component {
             const formData = new FormData();
             const file = this.props.selectedFileData;   // {fid, fname, fauth, fdate, fsize, ftype}
             formData.append('file', this.state.uploadFile);
-            formData.append('file_info', JSON.stringify(file));
-
+            //formData.append('key', new Blob([JSON.stringify(this.state.uploadFile)],{type:"application/json"}));
+            for (var key of formData.keys()) {
+                console.log(key);
+              }
+            console.log(this.state.uploadFile,formData)
             const info = await Promise.all([
                 // axios.fileUpload(selected.fid)
                 axios.fileUpload(formData)
@@ -171,7 +174,8 @@ class Table extends React.Component {
                     <label for="input-file">
                         파일 업로드
                     </label>
-                    <input type="file" id="input-file" multiple style={{display:'none'}} onChange={ fileUploadHandle } />
+                    
+                    <input type="file" name="file" id="input-file" style={{display:'none'}} onChange={fileUploadHandle}/>
                 </div>
                 <ul className="tableHead">
                     <li className="fileName">파일명</li>
