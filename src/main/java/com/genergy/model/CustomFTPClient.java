@@ -1,5 +1,6 @@
 package com.genergy.model;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.commons.net.ftp.FTP;
@@ -213,5 +214,41 @@ public class CustomFTPClient {
 		}
 		return true;
 	}//	FTP 서버에 파일 삭제 완료
-	
+/*
+	// FTP 서버의 파일을 다운로드
+	public static boolean download(Folder path, File target, File targetFile) {
+		String targetPath = path.getPath() + "/" + path.getFolderName();
+		client.changeWorkingDirectory(targetPath);
+		
+		// FTP 에서 다운로드 받을 대상 file 객체 생성
+		java.io.File f = new java.io.File(downloadPath, fileName);
+		
+		FileOutputStream fos = new FileOutputStream(null);
+		
+		
+		
+		
+		
+		String fileName = targetFile.getFileName();
+		
+		try {
+			client.changeWorkingDirectory(filePath);
+
+			System.out.println("삭제할 파일 : " + fileName);
+			for (FTPFile item : client.listFiles(client.printWorkingDirectory())) {
+				System.out.println("item.getName() : " + item.getName());
+				if(item.getName().indexOf(fileName) != -1){
+					String deleteFile = item.getName();
+					// 파일 삭제
+					client.deleteFile(deleteFile);
+					return true;
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}//	FTP 서버의 파일을 다운로드 완료
+	*/
 }

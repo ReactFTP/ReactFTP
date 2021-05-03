@@ -29,6 +29,8 @@ public class File implements Serializable {
 	private String authId;
 	@Column(name="type")
 	private String type;
+	@Column(name="size")
+	private int size;
 	
 	public String getFileId() {
 		return fileId;
@@ -77,6 +79,12 @@ public class File implements Serializable {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public int getSize() {
+		return size;
+	}
+	public void setSize(int size) {
+		this.size = size;
 	}
 
 	// 수정일 일시 포맷 String 반환

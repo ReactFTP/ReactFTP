@@ -141,7 +141,7 @@ class CompanyManage extends React.Component {
                             <div className="user-manage-wrap" onClick={ ()=>{ this.props.history.push('/usermanage') } }>
                                 <span>사용자 관리</span>
                             </div>
-                            <div className={sessionRole=='m'?'my-infomation-wrap':'sessionNone'} onClick={ ()=>{  } }>
+                            <div className={sessionRole=='m'?'my-infomation-wrap':'sessionNone'} onClick={ ()=>{ this.props.history.push('/userinfo') } }>
                                 <span>내 정보 관리</span>
                             </div>
                         </div>

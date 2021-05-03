@@ -383,18 +383,48 @@ export function deleteFile(parentFolderId, fileId) {
 
 // 홈화면 - 파일 업로드
 export function fileUpload(formData) {
-    // return axios.post('/home/fileupload',formData);
-    return axios({
-        method: 'post',
-        url : '/home/fileupload',
-        data : {
-            formData : formData,
+    return axios.post('/home/uploadfile',formData, {
+        headers: {
+            'Content-Type' : 'multipart/form-data'
         }
-    }).then(function(response){
-        console.log(response.data);
-        return response.data;
-    }).catch(function(error){
     });
+}
+
+// 홈화면 - 파일 다운로드
+export function downloadFile(fileId) {
+    axios({
+        method: 'get',
+        url : '/home/downloadfile',
+        params : {
+            file_id : fileId,
+        },
+        responseType: 'arraybuffer',
+    }).then(response => {
+        console.log(response);
+        const name = response.headers['content-disposition'].split('filename=')[1];
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) { 
+            const blob = response.data
+            window.navigator.msSaveOrOpenBlob(blob, name) 
+        } else{
+            const url = window.URL.createObjectURL(new Blob([response.data], { type: response.headers['content-type'] }));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', name);
+            document.body.appendChild(link);
+            link.click();
+        }
+    });
+    // axios({
+    //     method: 'get',
+    //     url : '/home/downloadfile',
+    //     params : {
+    //         file_id : fileId,
+    //     },
+    //     responseType: 'arraybuffer'
+    // }).then(response => {
+    //     console.log(response.data);
+    //     // FileSaver.saveAs(new Blob([response.data]), )
+    // });
 }
 
 

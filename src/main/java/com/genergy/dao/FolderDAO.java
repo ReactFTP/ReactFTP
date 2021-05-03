@@ -28,7 +28,7 @@ public class FolderDAO {
 		Session session = factory.getCurrentSession();
 		session.beginTransaction();
 
-		Query query = session.createQuery("from Folder where parentsFolderId=:folder_id");
+		Query query = session.createQuery("from Folder where parentsFolderId=:folder_id order by createdDate");
 		query.setParameter("folder_id", folder_id);
 		List<Folder> queryResult = query.list();
 		
@@ -157,5 +157,6 @@ public class FolderDAO {
 		
 		return targetFolder;
 	}
+	
 	
 }

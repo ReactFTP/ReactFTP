@@ -1,6 +1,5 @@
 import React from 'react';
 import './css/Home.css';
-import { Link } from 'react-router-dom';
 import * as axios from './axios';
 import Tree from './Tree';
 
@@ -21,12 +20,11 @@ class Home extends React.Component {
     }
 
     componentWillMount() {
-        // if(window.sessionStorage.getItem('sessionId')==undefined 
-        //     || window.sessionStorage.getItem('homeUid')==undefined){
-        //     this.props.history.push('/');
-        //     alert("로그인이 필요합니다.");
-        //     return;
-        // }
+        if(window.sessionStorage.getItem('sessionId')==undefined){
+            this.props.history.push('/');
+            alert("로그인이 필요합니다.");
+            return;
+        }
         
         this.setState({
             sessionId : window.sessionStorage.getItem('sessionId'),
@@ -37,8 +35,6 @@ class Home extends React.Component {
             },
         });
 
-        // console.log("this.props.uid : " + 
-        //     window.sessionStorage.getItem('homeUid'));
         console.log("componentWillmount() 호출");
         this.getHome();
     }
@@ -53,8 +49,6 @@ class Home extends React.Component {
 
         this.setState({
             data : info[0]
-        }, () => {
-            // alert("FTP 홈 폴더 로딩 완료");
         });
     }
 
@@ -63,10 +57,7 @@ class Home extends React.Component {
     }
 
     render () {
-        //let contentsFolder = this.state.selectedTreeItem;
-
         return (
-            //<div className="Home" onLoad={ this.HomedataLoad }>
             <div className="Home">
                 <header>
                     <div className="header-wrap">
