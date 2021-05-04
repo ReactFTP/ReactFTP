@@ -296,22 +296,13 @@ export function editUserSet(id, auth, active, join) {
     });
 }
 
-
-
-// get <REACT FTP> home folder
-// export function getHomeContents_BK() {
-//     return axios({
-//         method: 'post',
-//         url : '/home/gethomecontents',
-//         params : {
-//             folder_id : 0,
-//         }
-//     }).then(function(response){
-//         // console.log(response.data);
-//         return response.data;
-//     }).catch(function(error){
-//     });
-// }
+// Home.js -> FTP 세션 종료
+export function ftpDisConnect() {
+    return axios({
+        method: 'get',
+        url : '/home/ftpdisconnect',
+    });
+}
 
 // Home.js -> FTP 세션 연결
 export function ftpConnect(sessionId) {
@@ -450,7 +441,7 @@ export function fileUpload(formData) {
 }
 
 // 홈화면 - 파일 다운로드
-export function downloadFile(fileId) {
+export function downloadFile(fileId, fileName) {
     axios({
         method: 'get',
         url : '/home/downloadfile',
@@ -460,6 +451,7 @@ export function downloadFile(fileId) {
         responseType: 'arraybuffer',
     }).then(response => {
         console.log(response);
+        // const name = response.headers['content-disposition'].split('.')[1];
         const name = response.headers['content-disposition'].split('filename=')[1];
         if (window.navigator && window.navigator.msSaveOrOpenBlob) { 
             const blob = response.data
@@ -468,6 +460,7 @@ export function downloadFile(fileId) {
             const url = window.URL.createObjectURL(new Blob([response.data], { type: response.headers['content-type'] }));
             const link = document.createElement('a');
             link.href = url;
+            // link.setAttribute('download', fileName+"."+name);
             link.setAttribute('download', name);
             document.body.appendChild(link);
             link.click();

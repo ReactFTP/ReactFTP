@@ -127,8 +127,11 @@ public class FileDAO {
 		// FTP 서버에 정상 변경 되었지만 result 값을 false로 반환하는 문제. 수정해야하는 사항.
 		
 		// DB 서버 File 테이블에 데이터 업데이트
+		targetFile.setLastModifiedDate(new Date());
+		if(new_file_name!=null && !new_file_name.equals(""))
+			targetFile.setFileName(new_file_name);
 		targetFile.setFileName(new_file_name);
-		if(!auth_id.equals("") && auth_id!=null)
+		if(auth_id!=null && !auth_id.equals(""))
 			targetFile.setAuthId(auth_id);
 		
 		Session session = factory.getCurrentSession();

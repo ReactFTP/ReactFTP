@@ -235,6 +235,12 @@
 	font-size: bold;
 	display: inline-block;
 }
+.Home .item-wrap .messageLine{
+	margin-left: 260px;
+}
+.Home .item-wrap .messageLine.a{
+	margin-left: 240px;
+}
 .Home .item-wrap > ul > li {
 	display : inline-block;
 	color: rgba(54, 54, 54, 0.7);
@@ -405,12 +411,44 @@ nav.react-contextmenu {
 	box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
 	z-index: 10;
 }
+.modify-input-modal-u{
+	position: absolute;
+	top: 25%;
+	background: #fff;
+	width: 500px;
+	height: 230px;
+	font-size: 15px;
+	color: rgb(75, 75, 75);
+	margin: 0 auto;
+	padding: 50px 50px;
+	left: 0;
+	right: 0;
+	border-radius: 5px;
+	box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
+	z-index: 10;
+}
 .modify-file-input-modal{
 	position: absolute;
 	top: 25%;
 	background: #fff;
 	width: 500px;
 	height: 300px;
+	font-size: 15px;
+	color: rgb(75, 75, 75);
+	margin: 0 auto;
+	padding: 50px 50px;
+	left: 0;
+	right: 0;
+	border-radius: 5px;
+	box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
+	z-index: 10;
+}
+.modify-file-input-modal-u{
+	position: absolute;
+	top: 25%;
+	background: #fff;
+	width: 500px;
+	height: 230px;
 	font-size: 15px;
 	color: rgb(75, 75, 75);
 	margin: 0 auto;
@@ -458,7 +496,33 @@ nav.react-contextmenu {
 	margin-top: 20px;
 	margin-left: 10px;
 }
+.modify-input-modal-u .custom-btn li{
+	width: 60px;
+	height: 35px;
+	background: #2989f7;
+	border-color: var(--genergy-blue-border-color);
+	padding: 7px;
+	text-align: center;
+	color: #fff;
+	border-radius: 5px;
+	float: right;
+	margin-top: 20px;
+	margin-left: 10px;
+}
 .modify-file-input-modal .custom-btn li{
+	width: 60px;
+	height: 35px;
+	background: #2989f7;
+	border-color: var(--genergy-blue-border-color);
+	padding: 7px;
+	text-align: center;
+	color: #fff;
+	border-radius: 5px;
+	float: right;
+	margin-top: 20px;
+	margin-left: 10px;
+}
+.modify-file-input-modal-u .custom-btn li{
 	width: 60px;
 	height: 35px;
 	background: #2989f7;

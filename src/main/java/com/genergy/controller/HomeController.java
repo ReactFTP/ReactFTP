@@ -59,6 +59,7 @@ public class HomeController {
 		System.out.println("hello, home");
 	}
 
+	// FTP 서버 연결
 	@GetMapping("/ftpconnect")
 	@ResponseBody
 	public void ftpConnect (HttpServletRequest request) {
@@ -66,10 +67,20 @@ public class HomeController {
 		if(session_id == null)
 			return;
 		
-		// FTP 서버 연결
-		CustomFTPClient.connection();
+		CustomFTPClient.connection();	// FTP 서버 연결
 		ftpClient = CustomFTPClient.getFTPClient();
-	}
+	}// FTP 서버 연결 완료
+
+	// FTP 서버 연결 종료
+	@GetMapping("/ftpdisconnect")
+	@ResponseBody
+	public void ftpDisConnect (HttpServletRequest request) {
+		try {
+			ftpClient.disconnect();		// FTP 서버 연결 종료
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}// FTP 서버 연결 종료 완료
 	
 	// Home page 최초 바인딩 데이터 (최상위 디렉토리)
 	@GetMapping("/getfolderlist")
@@ -133,6 +144,7 @@ public class HomeController {
 		
 		// DB folder 테이블에 새로운 폴더 데이터 추가 + FTP 서버에 폴더 추가
 		Folder newFolder = folderdao.createNewFolder(parent_folder_id, new_name, co_id);
+		folderdao.modifyFolder(parent_folder_id, "", "");
 		
 		Map<String, Object> result = new HashMap<String, Object>();
 
@@ -203,6 +215,7 @@ public class HomeController {
 		// DB folder 테이블에 수정할 폴더 데이터 업데이트 + FTP 서버에 폴더 수정
 		Folder parentFolder = folderdao.getFolderByFolder_id(parent_folder_id);
 		File result_File = filedao.modifyFile(parentFolder, file_id, auth_id, new_file_name);
+		folderdao.modifyFolder(parent_folder_id, null, null);
 		
 		if(result_File == null)
 			System.out.println("폴더 수정 실패");
@@ -222,6 +235,7 @@ public class HomeController {
 		Folder result_ParentFolder = filedao.deleteFile(parentFolder, file_id);
 		if(result_ParentFolder == null)
 			return null;
+		folderdao.modifyFolder(parent_folder_id, null, null);
 
 		Map<String, Object> result = new HashMap<String, Object>();
 		String parentId = result_ParentFolder.getFolderId();
@@ -266,10 +280,17 @@ public class HomeController {
 		FolderDAO folderdao = new FolderDAO();
 		FileDAO filedao = new FileDAO();
 		Folder parentFolder = folderdao.getFolderByFolder_id(folder_id);
+		folderdao.modifyFolder(folder_id, null, null);
 		String savePath = parentFolder.getPath()+"/"+parentFolder.getFolderName();
 
 		// 로컬에 임시로 생성할 디렉토리 만들기
-		String FILE_SERVER_PATH = "C:/REACT_FTP_UPLOAD_TEMP/";
+//		String FILE_SERVER_PATH = "C:/REACT_FTP_UPLOAD_TEMP/";
+		String FILE_SERVER_PATH=null;
+		try {
+			FILE_SERVER_PATH = ftpClient.printWorkingDirectory()+"FTP/2021년 상반기 신입사원 교육/TEMP/";	//  /
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		java.io.File dir = new java.io.File(FILE_SERVER_PATH);
 		if (!dir.exists())
 			dir.mkdirs();
@@ -309,7 +330,8 @@ public class HomeController {
 	}
 	
 	// 파일 다운로드
-	@GetMapping("/downloadfile")
+//	@GetMapping(value="/downloadfile", produces = "application/text; charset=utf8")
+	@GetMapping(value="/downloadfile")
 	@ResponseBody
 	public boolean downloadFile (HttpServletRequest request, HttpServletResponse response) {
 		String file_id = request.getParameter("file_id");
@@ -333,15 +355,19 @@ public class HomeController {
 		
 		// FTP 서버에서 파일 다운로드
 		try {
+			ftpClient.setControlEncoding("utf-8");
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 			ftpClient.setFileTransferMode(FTP.STREAM_TRANSFER_MODE);
 			ftpClient.enterLocalActiveMode();
 			ftpClient.changeWorkingDirectory(ftpPath);
 			System.out.println(ftpClient.printWorkingDirectory());
 			System.out.println(fileName);
-	        response.setHeader("Content-Disposition", "attachment; filename=" + new String(fileName.getBytes("UTF-8"), "ISO-8859-1"));
-	        response.setContentType("application/octet-stream");
-	        //new String(fileName.getBytes("UTF-8"), "ISO-8859-1")
+	        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+//	        response.setHeader("Content-Transfer-Encoding", "binary"); 
+	        response.setHeader("Content-Type", "application/octet-stream;");
+//	        response.setHeader("Content-Length", "" + fileLength);
+//	        response.setHeader("Pragma", "no-cache;");
+//	        response.setHeader("Expires", "-1;");
 	        
 			InputStream is = new BufferedInputStream(ftpClient.retrieveFileStream(fileName));
 			OutputStream os =  new BufferedOutputStream(response.getOutputStream());
