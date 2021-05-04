@@ -5,12 +5,14 @@ import React from 'react';
 class UserItem extends React.Component {
     constructor(props){
         super(props);
+        this.state = {
+            companyName : ''
+        }
     }
-        
-    handleRow = (e) => {
+ 
+    handleRow = (e) => { 
         window.open("http://localhost:3000/userinfoformanager?"+e.memberId, "회원정보확인", "directories=no,resizable=no,status=no,toolbar=no,menubar=no, height=570px, width=400px");
     }
-
   
     render() {
         console.log('userITem 진입')

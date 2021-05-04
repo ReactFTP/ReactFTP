@@ -31,29 +31,10 @@ class UserManage extends React.Component {
         }
         
 
-        // this.setState({
-        //     sessionId : window.sessionStorage.getItem('sessionId')
-        // });
-
-        // console.log("this.props.uid : " + 
-        //     window.sessionStorage.getItem('homeUid'));
-        // this.getHome();
+     
     }
 
-    // 처음 로딩되면서 홈 contents 가져옴
-    // getHome = async() => {
-    //     const info = await Promise.all([
-    //         axios.getHomeContents(window.sessionStorage.getItem('homeUid'))
-    //     ]);
-
-    //     this.setState({
-    //         data : info[0]
-    //     }, () => {
-    //         alert("TC 홈 폴더 로딩 완료");
-    //         console.log("첫 로딩 후 data.object_string : " + this.state.data.object_string);
-    //     });
-    // }
-
+  
     logout = () => {
         this.props.history.push('/');
     }
@@ -194,7 +175,7 @@ class UserManage extends React.Component {
                                 </div> */}
                                 <ul className="tableHead">
                                     <li className="no">NO</li>
-                                    <li className="com">소속회사ID</li>
+                                    <li className="com">소속회사</li>
                                     <li className="user_id">아이디</li>
                                     <li className="user_name">이름</li>
                                     <li className="email">이메일</li>

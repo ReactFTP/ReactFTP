@@ -250,6 +250,7 @@ public class MemberDAO {
 	    List result = query.getResultList();
 	    Member[] members = new Member[result.size()];
 	    result.toArray(members);
+	    
 	    session.getTransaction().commit();
 		return members;
 	}

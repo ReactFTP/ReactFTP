@@ -56,8 +56,6 @@ public class CompanyController {
 		String coId = request.getParameter("coId");
 		CompanyDAO dao= new CompanyDAO();
 		String result = dao.getCompanyName(coId);
-		System.out.println(result);
-		
 		return result;
 	}
 	

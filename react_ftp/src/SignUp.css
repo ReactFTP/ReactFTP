@@ -1,7 +1,6 @@
 body{
     display: table-cell;
     vertical-align: middle;
-    background-color: #dadada !important;
    
 }
 
@@ -175,4 +174,10 @@ input#company{
   }
   .join{
       margin-left: 20px;
+  }
+
+  .company-modal {
+    margin-left: 30%;
+    margin-right: 30%;
+    width: 40%;
   }

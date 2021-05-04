@@ -40,9 +40,13 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.genergy.dao.FileDAO;
 import com.genergy.dao.FolderDAO;
+import com.genergy.ftp.resources.MakeZipInFTP;
 import com.genergy.model.CustomFTPClient;
 import com.genergy.model.File;
 import com.genergy.model.Folder;
+
+import net.sf.jazzlib.ZipEntry;
+import net.sf.jazzlib.ZipOutputStream;
 
 
 @RestController
@@ -329,23 +333,19 @@ public class HomeController {
 		
 		// FTP 서버에서 파일 다운로드
 		try {
-			ftpClient.setControlEncoding("euc-kr");
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 			ftpClient.setFileTransferMode(FTP.STREAM_TRANSFER_MODE);
 			ftpClient.enterLocalActiveMode();
 			ftpClient.changeWorkingDirectory(ftpPath);
 			System.out.println(ftpClient.printWorkingDirectory());
 			System.out.println(fileName);
-	        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
-//	        response.setHeader("Content-Transfer-Encoding", "binary"); 
-//	        response.setHeader("Content-Type", "application/octet-stream;");
-//	        response.setHeader("Content-Length", "" + fileLength);
-//	        response.setHeader("Pragma", "no-cache;");
-//	        response.setHeader("Expires", "-1;");
-	        
+	        response.setHeader("Content-Disposition", "attachment; filename=" + new String(fileName.getBytes("UTF-8"), "ISO-8859-1"));
+	        response.setContentType("application/octet-stream");
+	        //new String(fileName.getBytes("UTF-8"), "ISO-8859-1")
 	        
 			InputStream is = new BufferedInputStream(ftpClient.retrieveFileStream(fileName));
 			OutputStream os =  new BufferedOutputStream(response.getOutputStream());
+		
 //			ftpClient.retrieveFile(fileName, os);
 			byte[] bytesArray = new byte[4096]; 	// 2의 12승
 			int read = -1;
@@ -353,6 +353,7 @@ public class HomeController {
 				os.write(bytesArray, 0, read);
 			
 			success = ftpClient.completePendingCommand();
+		
 			os.close();
 			is.close();
 		        
@@ -370,6 +371,44 @@ public class HomeController {
 		}
 
 		return success;
+	}
+	
+	
+	
+	// 압축 다운로드
+	@GetMapping("/downloadfolder")
+	@ResponseBody
+	public void downloadFolder (HttpServletRequest request, HttpServletResponse response) {
+		String folder_id = request.getParameter("folder_id");
+		
+		FolderDAO folderdao = new FolderDAO();
+		Folder targetFolder = folderdao.getFolderByFolder_id(folder_id);
+		
+	//	Folder parentFolder = folderdao.getFolderByFolder_id(targetFile.getFolderId());
+		String folderName = targetFolder.getFolderName();
+		//fileName = fileName + "." + targetFile.getType();
+		String ftpPath = targetFolder.getPath() + "/" + targetFolder.getFolderName();
+		
+		System.out.println("ftpPath : " + ftpPath);
+		try {
+			ftpClient.setControlEncoding("euc-kr");
+			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+			ftpClient.setFileTransferMode(FTP.STREAM_TRANSFER_MODE);
+			ftpClient.enterLocalActiveMode();
+			ftpClient.changeWorkingDirectory(ftpPath);
+			System.out.println(ftpClient.printWorkingDirectory());
+//			response.setHeader("Content-Disposition", "attachment; folderName=" + folderName); // .확장자 있어야할수도
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		byte[] bytesArray = new byte[64*1024];
+		FileInputStream is = null;
+		FileOutputStream os = null;
+		ZipOutputStream zoutput = null;
+		MakeZipInFTP.MakeZipInFTP(ftpClient, is, os, zoutput, bytesArray, response);
 	}
 	
 	void setDisposition(String filename, HttpServletRequest request,HttpServletResponse response) throws Exception {

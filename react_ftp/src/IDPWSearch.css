@@ -4,8 +4,7 @@
 	--border-gray-color : #dadada;
 	--genergy-blue-color: #1395ac;
 	--genergy-blue-border-color: #2989f7;
-	padding-left: 20px;
-    padding-right: 20px;
+
 }
 
 *{
@@ -119,7 +118,7 @@ body, th, td, input, select, textarea, button {
 .member-wrap .join-form-wrap legend {
     padding: 30px  10px;
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 2rem;
     line-height: 20px;
     color: #303030;
 }

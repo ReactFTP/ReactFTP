@@ -474,20 +474,33 @@ export function downloadFile(fileId) {
         }
 
     });
-    // axios({
-    //     method: 'get',
-    //     url : '/home/downloadfile',
-    //     params : {
-    //         file_id : fileId,
-    //     },
-    //     responseType: 'arraybuffer'
-    // }).then(response => {
-    //     console.log(response.data);
-    //     // FileSaver.saveAs(new Blob([response.data]), )
-    // });
 }
 
+  // 홈화면 - 폴더 다운로드
+  export function downloadFolder(folderId) {
+    axios({
+        method: 'get',
+        url : '/home/downloadfolder',
+        params : {
+            folder_id : folderId,
+        },
+        responseType: 'arraybuffer',
+    }).then(response => {
+        console.log(response);
+        const name = response.headers['content-disposition'].split('filename=')[1];
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) { 
+            const blob = response.data
+            window.navigator.msSaveOrOpenBlob(blob, name) 
+        } else{
+            const url = window.URL.createObjectURL(new Blob([response.data], { type: response.headers['content-type'] }));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', name);
+            document.body.appendChild(link);
+            link.click();
+        }
 
-
+    });
+  }
 
 export default axios;

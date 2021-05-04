@@ -7,9 +7,9 @@
 	</configSuffixes>
 	<enableImports><![CDATA[false]]></enableImports>
 	<configs>
-		<config>src/main/resources/applicationContext.xml</config>
 	</configs>
 	<autoconfigs>
+		<config>java:com.genergy.controller.ReactProjectApplication</config>
 	</autoconfigs>
 	<configSets>
 	</configSets>

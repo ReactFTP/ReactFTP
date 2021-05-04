@@ -135,8 +135,9 @@ class SignUp extends Component{
         await this.setState({companyModal: true});
         console.log(Object.keys(result));
         const keyList = Object.keys(result);
-        var myArray2 = new Array(keyList.length);
+        var myArray2 = new Array(keyList.length - 1);
         for (let i = 0; i < keyList.length; i++){
+            if(keyList[i]=='-'){continue;}
             let key = keyList[i];
             myArray2[i] = result[key];
         }
@@ -294,23 +295,48 @@ class SignUp extends Component{
                             //onAfterOpen={afterOpenModal}
                             onRequestClose={this.closeCompanyModal}
                             contentLabel="Company Modal"
+                            style={{
+                                overlay: {
+                                    position: 'fixed',
+                                    top:  '50px',
+                                    left:'50px',
+                                    right: '50px',
+                                    bottom: '50px',
+                                    backgroundColor: ''
+                                  },
+                                  content: {
+                                    position: 'absolute',
+                                    top: '40px',
+                                    left: '40px',
+                                    right: '40px',
+                                    bottom: '40px',
+                                    border: '1px solid #ccc',
+                                    background: '#fff',
+                                    overflow: 'auto',
+                                    WebkitOverflowScrolling: 'touch',
+                                    borderRadius: '4px',
+                                    outline: 'none',
+                                    padding: '20px'
+                                  }
+                            }}
                             >
                             
-                            <div class="box">
-                                 <div class="search-container-1">
-                                    <span class="icon">
-                                        <i class="fa fa-search"></i>
-                                    </span>
-                                    <input type="search" id="search" placeholder="회사명 또는 회사 코드 검색..." onChange={this.searchCompany}/>
-                                 </div>
-                            </div>
+                           
                             {/*테이블*/}
                             <BootstrapTable keyField='id' 
                             data={this.state.searchCompanies} 
-                            columns={[{dataField: 'coId', text: '회사코드'}, {dataField: 'coName', text: '회사명'}]}
+                            columns={[{dataField: 'coName', text: '회사명',     headerAlign: 'center',align: 'center'}]}
                             hover
                             noDataIndication="Table is Empty"
                             rowEvents={ this.clickCompany } 
+                            caption={ <div class="box">
+                                         <div class="search-container-1">
+                                            <span class="icon">
+                                                <i class="fa fa-search"></i>
+                                            </span>
+                                            <input type="search" id="search" placeholder="회사명 검색..." onChange={this.searchCompany}/>
+                                        </div>
+                                    </div>}
                              />
 
 

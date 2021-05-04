@@ -63,6 +63,7 @@ class Table extends React.Component {
             console.log(data);
             if(data.ftype == "폴더") {
                 alert("폴더 압축 다운로드 호출!");
+                axios.downloadFolder(data.fid);
             }
             else {
                 alert("파일 다운로드 호출!");
