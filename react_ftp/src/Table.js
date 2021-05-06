@@ -34,7 +34,7 @@ class Table extends React.Component {
 
         const modifyFile = async(data) => {
             if(data.ftype == "폴더")
-                this.props.modifyFolder(data);
+                this.props.modifyFolder(data, true);
             else
                 this.props.modifyFile(data);
         };

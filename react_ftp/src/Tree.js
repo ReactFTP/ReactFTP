@@ -23,6 +23,7 @@ class Tree extends React.Component {
             modalOpenFileModify: false,
             modifyFolderData : this.props.data,
             modifyFileData : this.props.data,
+            isTableItme : false,
         };
     }
 
@@ -221,9 +222,10 @@ class Tree extends React.Component {
             }
         };
 
-        const modifyFolder = (selected) => {
+        const modifyFolder = (selected, isTableItem) => {
             this.setState({
                 modifyFolderData : selected,
+                isTableItem : isTableItem,
             })
             this.openModifyModal(selected);
         };
@@ -272,10 +274,30 @@ class Tree extends React.Component {
                 selected.fauth = authId;
             }
             this.closeModifyModal();
-            if(selected.ftype != '폴더' && selected.ftype != undefined)
+            if(selected.ftype != '폴더' && selected.ftype != undefined) // 파일 변경한 경우 리로딩
                 setTableItem(selected);
-            else
-                setTreeItem(selected);
+            else{                       // 폴더 변경한 경우 리로딩
+                if(this.state.isTableItem == false){ // 트리에 있는 폴더를 변경한 경우 
+                    setTreeItem(selected);
+                }
+                else{                   // 테이블에 있는 폴더를 변경한 경우
+                    console.log(this.state.selectedData);
+                    let setselectedData = this.state.selectedData;
+                    console.log(setselectedData);
+                    setselectedData.folderList.map((content) => {
+                        console.log(content.fid)
+                        if(content.fid == selected.fid){
+                            content.fname = selected.fname
+                        }
+                    });
+                    console.log(setselectedData);
+                    this.setState({
+                        isTableItem : false,
+                        selectedData : setselectedData,
+                    });
+                    console.log(this.state.selectedData);
+                }
+            }
         }
 
         const companyTreeLoad = (folderList) => {
@@ -326,7 +348,7 @@ class Tree extends React.Component {
                                         <MenuItem data={content} onClick={ () => { createFolder(content) } }>
                                             폴더 생성
                                         </MenuItem>
-                                        <MenuItem data={content} onClick={ () => { modifyFolder(content) } }>
+                                        <MenuItem data={content} onClick={ () => { modifyFolder(content, false) } }>
                                             폴더 수정
                                         </MenuItem>
                                         <MenuItem data={content} onClick={ () => { deleteFolder(content) } }>
@@ -366,7 +388,7 @@ class Tree extends React.Component {
 
                     <ul className="custom-btn">
                         <li onClick={this.closeModifyModal}>취소</li>
-                        <li onClick={()=>{ modifySubmit(this.state.selectedData) }}>완료</li>
+                        <li onClick={()=>{ modifySubmit(this.state.modifyFolderData) }}>완료</li>
                     </ul>
                 </div>
                 <div className="browser-wrap folder-wrap">

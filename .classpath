@@ -36,6 +36,5 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/yskim/Documents/ReactFTP/src/main/resources/jazzlib.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
