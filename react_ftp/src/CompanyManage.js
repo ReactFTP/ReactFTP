@@ -57,6 +57,11 @@ class CompanyManage extends React.Component {
         })
         this.mapToComponent(e.target.value)
     }
+
+    logout = () => {
+        this.props.history.push('/');
+    }
+
     render () {
         //let contentsFolder = this.state.selectedTreeItem;
 
