@@ -5,7 +5,7 @@ export function idCheck(id) {
     console.log('axios호출!');
     return axios({
         method: 'post',
-        url : '/idCheck',
+        url : 'cd/idCheck',
         params : {
             id : id,
         },

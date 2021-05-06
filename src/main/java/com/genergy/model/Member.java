@@ -102,7 +102,6 @@ public class Member implements Serializable {
 		}
 	}
 
-
 	public String getRoleId() {
 		return roleId;
 	}

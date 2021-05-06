@@ -11,7 +11,7 @@ class UserItem extends React.Component {
     }
  
     handleRow = (e) => { 
-        window.open("http://localhost:3000/userinfoformanager?"+e.memberId, "회원정보확인", "directories=no,resizable=no,status=no,toolbar=no,menubar=no, height=570px, width=400px");
+        window.open("http://localhost:3000/userinfoformanager?"+e[10], "회원정보확인", "directories=no,resizable=no,status=no,toolbar=no,menubar=no, height=570px, width=400px");
     }
   
     render() {
@@ -24,47 +24,47 @@ class UserItem extends React.Component {
                     </div>
                     </li>
                 <li className="com"> <div className="manageBtn" onClick={ ()=>{ this.handleRow(this.props.data) } }>
-                    {this.props.data.coId}
+                    {this.props.data[14]}
                     </div>    
                 </li>               
                 <li className="user_id">
                     <div className="manageBtn" onClick={ ()=>{ this.handleRow(this.props.data) } }>
-                        {this.props.data.memberId}
+                        {this.props.data[10]}
                     </div>
                 </li>
                 <li className="user_name">
                     <div className="manageBtn" onClick={ ()=>{ this.handleRow(this.props.data) } }>
-                        {this.props.data.memberName}</div></li>
+                        {this.props.data[11]}</div></li>
                 <li className="email">
                     <div className="manageBtn" onClick={ ()=>{ this.handleRow(this.props.data) } }>
-                        {this.props.data.email}
+                        {this.props.data.[5]}
                     </div>        
                 </li>
                 <li className="phone">
                     <div className="manageBtn" onClick={ ()=>{ this.handleRow(this.props.data) } }>
-                        {this.props.data.memberPhone}
+                        {this.props.data[12]}
                     </div>
                 </li>
                 {/* <li className="auth">A</li>
                 <li className="role">user</li>
                 <li className="joined_check">2021-04-26</li> */}
                 <li className="auth">
-                <div className="manageBtn" onClick={ ()=>{ this.handleRow(this.props.data) } }>{this.props.data.authId=='a'?'A class':
-                                                                                                                this.props.data.authId=='b'?'B class':
+                <div className="manageBtn" onClick={ ()=>{ this.handleRow(this.props.data) } }>{this.props.data[3]=='a'?'A class':
+                                                                                                                this.props.data[3]=='b'?'B class':
                                                                                                                     'C class'}</div>
                 </li>
                 <li className="role">
-                    <div className="manageBtn" onClick={ ()=>{ this.handleRow(this.props.data) } }>{this.props.data.roleId=='a'?'Administrator':
-                                                                                                        this.props.data.roleId=='m'?'Manager':
+                    <div className="manageBtn" onClick={ ()=>{ this.handleRow(this.props.data) } }>{this.props.data[13]=='a'?'Administrator':
+                                                                                                        this.props.data[13]=='m'?'Manager':
                                                                                                             'User'}</div>
                 </li>
                 <li className="manage">
-                    <div className="manageBtn" onClick={ ()=>{ this.handleRow(this.props.data) }}>{this.props.data.activeCheck}</div>
+                    <div className="manageBtn" onClick={ ()=>{ this.handleRow(this.props.data) }}>{this.props.data[0]}</div>
                 </li>
                 <li className="manage">
-                    <div className="manageBtn" onClick={ ()=>{ this.handleRow(this.props.data) }}>{this.props.data.joinedCheck=='Y'?'':
-                                                                                                        (window.sessionStorage.getItem('roleId')=='m'&&this.props.data.roleId=='u')?'요청':
-                                                                                                            (window.sessionStorage.getItem('roleId')=='a'&&this.props.data.roleId=='m')?'요청':
+                    <div className="manageBtn" onClick={ ()=>{ this.handleRow(this.props.data) }}>{this.props.data[7]=='Y'?'':
+                                                                                                        (window.sessionStorage.getItem('roleId')=='m'&&this.props.data[13]=='u')?'요청':
+                                                                                                            (window.sessionStorage.getItem('roleId')=='a'&&this.props.data[13]=='m')?'요청':
                                                                                                                 ''}</div>
                 </li>
             </ul>

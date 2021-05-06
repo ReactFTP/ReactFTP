@@ -35,6 +35,10 @@ class CompanyManage extends React.Component {
         })
     }
    
+    logout = () => {
+        this.props.history.push('/');
+    }
+    
     mapToComponent =  (input) => {
         return this.state.companies.map((company,i) => {
             if(input == ''){

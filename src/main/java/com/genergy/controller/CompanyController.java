@@ -25,7 +25,7 @@ public class CompanyController {
 	
 	@PostMapping("getUserInCompany")
 	@ResponseBody
-	public Member[] getUserInCompany (HttpServletRequest request) {
+	public Object[] getUserInCompany (HttpServletRequest request) {
 		String coId = request.getParameter("coId");
 		MemberDAO dao= new MemberDAO();
 		return  dao.getUserInCompany(coId);

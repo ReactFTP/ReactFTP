@@ -62,7 +62,10 @@ public class HomeController {
 	@ResponseBody
 	public void ftpDisConnect (HttpServletRequest request) {
 		try {
-			ftpClient.disconnect();		// FTP 서버 연결 종료
+			if(ftpClient.getKeepAlive()!=false){
+				ftpClient.disconnect();		// FTP 서버 연결 종료
+			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

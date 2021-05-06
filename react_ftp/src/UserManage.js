@@ -77,25 +77,25 @@ class UserManage extends React.Component {
         
 
          return this.state.members.map( (member, i) => {
-                 if(member.roleId == 'a'){
+                 if(member[13] == 'a'){
                      return;
                  }
-                 if((member.memberId.includes(input) || member.memberName.includes(input)) && window.sessionStorage.getItem('roleId') == 'm' ){
+                 if((member[10].includes(input) || member[11].includes(input)) && window.sessionStorage.getItem('roleId') == 'm' ){
                     return (<UserItem data={member} num ={i} key={i} />);
                  }
 
-                 if((member.memberId.includes(input) || member.memberName.includes(input)) && window.sessionStorage.getItem('roleId') == 'a' && member.coId == this.state.company ){
+                 if((member[10].includes(input) || member[11].includes(input)) && window.sessionStorage.getItem('roleId') == 'a' && member[4] == this.state.company ){
                     return (<UserItem data={member} num ={i} key={i} />);
                  }
                  if(input == ''&& this.state.company ==''){
                     return (<UserItem data={member} num ={i} key={i} />);
                  }
 
-                 if((member.memberId.includes(input) || member.memberName.includes(input))&& this.state.company ==''){
+                 if((member[10].includes(input) || member[11].includes(input))&& this.state.company ==''){
                     return (<UserItem data={member} num ={i} key={i} />);
                  }
               
-                 if(input == '' && window.sessionStorage.getItem('roleId') == 'a' &&  member.coId == this.state.company){
+                 if(input == '' && window.sessionStorage.getItem('roleId') == 'a' &&  member[4] == this.state.company){
                     return (<UserItem data={member} num ={i} key={i} />);
                  }
             

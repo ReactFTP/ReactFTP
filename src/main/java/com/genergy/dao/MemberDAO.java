@@ -237,7 +237,7 @@ public class MemberDAO {
 		session.getTransaction().commit();
 	}
 
-	public Member[] getUserInCompany(String coId) {
+	public Object[] getUserInCompany(String coId) {
 		Session session = factory.getCurrentSession();
 	    session.beginTransaction();	    
 	    Query<?> query;
@@ -249,10 +249,33 @@ public class MemberDAO {
 		}
 	    List result = query.getResultList();
 	    Member[] members = new Member[result.size()];
-	    result.toArray(members);
-	    
+	    List<Object[]> r = new ArrayList();
 	    session.getTransaction().commit();
-		return members;
+	    CompanyDAO co = new CompanyDAO();
+	    result.toArray(members);
+	    for (Member member : members) {
+			String CompanyId = member.getCoId();
+			String CompanyName = co.getCompanyName(CompanyId);
+			Object[] o1 = new Object[15];
+			
+			o1[0] = member.getActiveCheck();
+			o1[1] = member.getAddr1();
+			o1[2] = member.getAddr2();
+			o1[3] = member.getAuthId();
+			o1[4] = member.getCoId();
+			o1[5] = member.getEmail();
+			o1[6] = member.getFailedCount();
+			o1[7] = member.getJoinedCheck();
+			o1[8] = member.getJoinedCheckDate();
+			o1[9] = member.getJoinedDate();
+			o1[10] = member.getMemberId();
+			o1[11] = member.getMemberName();
+			o1[12] = member.getMemberPhone();
+			o1[13] = member.getRoleId();	
+			o1[14] = CompanyName;
+			r.add(o1);
+		}
+	    return r.toArray();
 	}
 
 	public void editUserSet(String id, String auth, String active, String join) {

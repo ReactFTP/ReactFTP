@@ -149,6 +149,7 @@ class DirectSignUp extends Component{
         const keyList = Object.keys(result);
         var myArray2 = new Array(keyList.length);
         for (let i = 0; i < keyList.length; i++){
+            if(keyList[i]=='-'){continue;}
             let key = keyList[i];
             myArray2[i] = result[key];
         }
@@ -305,11 +306,28 @@ class DirectSignUp extends Component{
                 
                     {/*모달창*/}
 
-                    <Modal  className="company-modal"
+                    <Modal  className="company-modal1"
                             isOpen={this.state.companyModal}
                             //onAfterOpen={afterOpenModal}
                             onRequestClose={this.closeCompanyModal}
-                            contentLabel="Company Modal"
+                            contentLabel="Company Modal1"
+                            style={{
+                                overlay: {
+                                    position: 'fixed',
+                                    backgroundColor: '',
+                                  },
+                                  content: {
+                                    marginleft: '10px',
+                                    position: 'absolute',
+                                    border: '1px solid #ccc',
+                                    background: '#fff',
+                                    overflow: 'auto',
+                                    WebkitOverflowScrolling: 'touch',
+                                    borderRadius: '4px',
+                                    outline: 'none',
+                                    padding: '20px'
+                                  }
+                            }}
                             >
                             
                             <div class="box">
@@ -317,13 +335,13 @@ class DirectSignUp extends Component{
                                     <span class="icon">
                                         <i class="fa fa-search"></i>
                                     </span>
-                                    <input type="search" id="search" placeholder="회사명 또는 회사 코드 검색..." onChange={this.searchCompany}/>
+                                    <input type="search" id="search" placeholder="회사명 검색..." onChange={this.searchCompany}/>
                                  </div>
                             </div>
                             {/*테이블*/}
                             <BootstrapTable keyField='id' 
                             data={this.state.searchCompanies} 
-                            columns={[{dataField: 'coId', text: '회사코드'}, {dataField: 'coName', text: '회사명'}]}
+                            columns={[{dataField: 'coName', text: '회사명'}]}
                             hover
                             noDataIndication="Table is Empty"
                             rowEvents={ this.clickCompany } 
