@@ -7,15 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
-
-import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,21 +17,14 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
-import org.apache.commons.net.ftp.FTPFile;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartResolver;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.genergy.dao.FileDAO;
 import com.genergy.dao.FolderDAO;
 import com.genergy.ftp.resources.MakeZipInFTP;
@@ -45,7 +32,6 @@ import com.genergy.model.CustomFTPClient;
 import com.genergy.model.File;
 import com.genergy.model.Folder;
 
-import net.sf.jazzlib.ZipEntry;
 import net.sf.jazzlib.ZipOutputStream;
 
 
@@ -436,151 +422,5 @@ public class HomeController {
 		ZipOutputStream zoutput = null;
 		MakeZipInFTP.MakeZipInFTP(ftpClient, is, os, zoutput, bytesArray, response);
 	}
-	
-	void setDisposition(String filename, HttpServletRequest request,HttpServletResponse response) throws Exception {
-        String browser = getBrowser(request);
-        String dispositionPrefix = "attachment; filename=";
-        String encodedFilename = null;
-
-        if (browser.equals("MSIE")) {
-            encodedFilename = URLEncoder.encode(filename, "UTF-8").replaceAll(
-            "\\+", "%20");
-        } else if (browser.equals("Firefox")) {
-            encodedFilename = "\""
-            + new String(filename.getBytes("UTF-8"), "8859_1") + "\"";
-        } else if (browser.equals("Opera")) {
-            encodedFilename = "\""
-            + new String(filename.getBytes("UTF-8"), "8859_1") + "\"";
-        } else if (browser.equals("Chrome")) {
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < filename.length(); i++) {
-            char c = filename.charAt(i);
-            if (c > '~') {
-                sb.append(URLEncoder.encode("" + c, "UTF-8"));
-            } else {
-                sb.append(c);
-            }
-        }
-        encodedFilename = sb.toString();
-        } else {
-            throw new IOException("Not supported browser");
-        }
-
-        response.setHeader("Content-Disposition", dispositionPrefix
-        + encodedFilename);
-
-        if ("Opera".equals(browser)) {
-            response.setContentType("application/octet-stream;charset=UTF-8");
-        }
-    }
-	
-	private String getBrowser(HttpServletRequest request) {
-        String header = request.getHeader("User-Agent");
-        if (header.indexOf("MSIE") > -1) {
-             return "MSIE";
-        } else if (header.indexOf("Chrome") > -1) {
-             return "Chrome";
-        } else if (header.indexOf("Opera") > -1) {
-             return "Opera";
-        } else if (header.indexOf("Firefox") > -1) {
-             return "Firefox";
-        } else if (header.indexOf("Mozilla") > -1) {
-             if (header.indexOf("Firefox") > -1) {
-                  return "Firefox";
-             }else{
-                  return "MSIE";
-             }
-        }
-        return "MSIE";
-   }
-	
-/*
-	@PostMapping("/fileupload")
-	@ResponseBody
-<<<<<<< HEAD
-	public String fileUpload (MultipartHttpServletRequest request) {
-		String file = request.getParameter("file");
-=======
-	public Map fileUpload (HttpServletRequest request) {
->>>>>>> 2870cbd89568122ca124be1f5c40ea057b139322
-		System.out.println("파일 업로드");
-		
-//		String fileId = (new Date().getTime()) + "" + (new Random().ints(1000, 9999).findAny().getAsInt());
-//		fileId = fileId.substring(8);
-//		System.out.println(fileId);
-//		return fileId;
-		
-		Map<String, Object> result = new HashMap<String, Object>();
-		
-		String savePath = "/FTP/2021년 상반기 신입사원 교육/REACT_FTP_TEMP_PATH";
-		
-		try {
-			ftpClient.changeWorkingDirectory(savePath);
-			savePath = ftpClient.printWorkingDirectory();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		System.out.println(savePath);
-		
-		
-		String UPLOAD_PATH = "F:\\myLpload\\realPath";	// 실제 업로드할 경로
-		int MAX_SIZE = 300 * 1024 * 1024;	// 파일 다운로드 할 수 있는 최대 크기, 300MB
-		
-		try {
-			java.io.File file = new java.io.File(savePath);
-			
-			// MultipartRequest(request, 저장 경로, 최대 크기, "UTF-8", new DefaultFileRenamePolicy());
-			MultipartRequest multipart = new MultipartRequest(request, savePath, MAX_SIZE, "UTF-8");// 임시 경로에 파일 업로드
-			File getFileInfo = new ObjectMapper().readValue(multipart.getParameter("file_info"), File.class);	// String to JSON
-						
-			Enumeration<String> fileEnum = multipart.getFileNames();	// 넘어온 파일 key 값들
-			while(fileEnum.hasMoreElements()) {
-				String fileName = fileEnum.nextElement(); // 클라이언트에서 넣은 파일 key값 ex) file0, file1, ...
-				
-				String fileId = (new Date().getTime()) + "" + (new Random().ints(1000, 9999).findAny().getAsInt());	// 현재 날짜와 랜덤 정수값으로 새로운 파일명 만들기
-				String originName = multipart.getOriginalFileName(fileName);
-				String fileExtension = originName.substring(originName.lastIndexOf(".") + 1);	// ex) jpg
-				originName = originName.substring(0, originName.lastIndexOf("."));	// 파일
-				long fileSize = multipart.getFile(fileName).length();	// 파일 사이즈
-				
-				java.io.File tempPath = FileUtils.getFile(savePath + "/" + (originName + "." + fileExtension));// 임시로 저장
-				java.io.File realPath = FileUtils.getFile(UPLOAD_PATH + "/" + (fileId + "." + fileExtension));
-				FileUtils.moveFile(tempPath, realPath);	// 임시 경로에서 실제 저장할 경로로 파일 옮기기, 폴더 없을 경우 자동으로 생성
-				
-				System.out.println("fileId : " + fileId);
-				System.out.println("originName : " + originName);
-				System.out.println("fileExtension : " + fileExtension);
-				System.out.println("fileSize : " + fileSize);
-			}
-			
-			System.out.println("getFileInfo : " + getFileInfo);
-		} catch (Exception e) {
-			e.toString();
-		}
-		
-		
-		return result;
-		
-		
-		
-	}
-*/
-	
-//	@GetMapping("/getFileList")
-//	@ResponseBody
-//	public String idCheck (HttpServletRequest request) {
-//		String folder_id = request.getParameter("folder_id");
-//		FileDAO filedao = new FileDAO();
-//		
-//		System.out.println("/gethomecontents 호출");
-//		
-//		return filedao.getFileList(folder_id);
-//	}
-	
-//	@GetMapping("/createfile")
-//	public void create(File file) {
-//		File newFile = new File();
-//		
-//	}
 	
 }
